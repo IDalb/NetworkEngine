@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.30)
-project(MagnumBootstrap)
+project(NetworkEngine)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 
@@ -18,12 +18,59 @@ find_package(Bullet REQUIRED Dynamics)
 
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
-add_executable(MagnumBootstrap
-        src/main.cpp)
+# YAML-CPP
+FetchContent_Declare(
+    yaml-cpp
+    GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+    GIT_TAG master
+)
 
-target_include_directories(MagnumBootstrap PUBLIC inc)
-set_property(TARGET MagnumBootstrap PROPERTY CXX_STANDARD 20)
-target_link_libraries(MagnumBootstrap PRIVATE
+# Disable contrib and tools
+set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "Disable contrib in yaml-cpp")
+set(YAML_CPP_BUILD_TOOLS OFF CACHE BOOL "Disable tools in yaml-cpp")
+
+# Configure yaml-cpp to build only the static library (without contrib and tools)
+set(YAML_BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared library for yaml-cpp")
+FetchContent_MakeAvailable(yaml-cpp)
+
+
+# Define custom configurations
+set(CMAKE_CONFIGURATION_TYPES Debug Release Shipping CACHE STRING "Available build types" FORCE)
+
+# Set linker flags for each configuration type
+set(CMAKE_CXX_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD")
+set(CMAKE_C_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD")
+set(CMAKE_EXE_LINKER_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD")
+set(CMAKE_SHARED_LINKER_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD" CACHE STRING "Linker flags for shipping configuration")
+
+# Set global definitions for all configurations
+add_compile_definitions(
+    $<$<CONFIG:Shipping>:SHIPPING>
+    $<$<CONFIG:Debug>:DEBUG>
+    $<$<CONFIG:Release>:RELEASE>
+)
+
+add_subdirectory(NetworkEngine)
+add_subdirectory(Game)
+
+target_link_libraries(NetworkEngine PRIVATE
+        Magnum::Application
+        Magnum::GL
+        Magnum::Magnum
+        Magnum::MeshTools
+        Magnum::Primitives
+        Magnum::SceneGraph
+        Magnum::Shaders
+        Magnum::Trade
+        MagnumIntegration::Bullet
+        Bullet::Dynamics
+        MagnumIntegration::ImGui
+        BulletDynamics
+        BulletCollision
+        LinearMath
+        Bullet3Common)
+		
+target_link_libraries(Game PRIVATE
         Magnum::Application
         Magnum::GL
         Magnum::Magnum

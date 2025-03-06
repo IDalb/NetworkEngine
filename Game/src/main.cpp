@@ -1,5 +1,6 @@
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/Platform/GlfwApplication.h>
+#include "yaml-cpp/yaml.h"
 
 using namespace Magnum;
 

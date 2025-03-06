@@ -5,6 +5,12 @@
 # Prerequisites
 *.d
 
+#imgui examples
+externals/imgui/examples/ 
+
+# Visual Studio folder
+.vs/
+
 # Compiled Object files
 *.slo
 *.lo
