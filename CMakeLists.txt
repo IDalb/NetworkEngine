@@ -37,16 +37,22 @@ FetchContent_MakeAvailable(yaml-cpp)
 # Define custom configurations
 set(CMAKE_CONFIGURATION_TYPES Debug Release Shipping CACHE STRING "Available build types" FORCE)
 
-# Ensure CMake recognizes the new configuration
-foreach(lang C CXX)
-    set(CMAKE_${lang}_FLAGS_SHIPPING "${CMAKE_${lang}_FLAGS_SHIPPING} -O2 -DNDEBUG -DSHIPPING" CACHE STRING "Flags for Shipping" FORCE)
-endforeach()
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE "Shipping" CACHE STRING "Choose the type of build" FORCE)
+endif()
 
-# Set linker flags for each configuration type
-#set(CMAKE_SHARED_LINKER_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD" CACHE STRING "Linker flags for shipping configuration")
-#set(CMAKE_CXX_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD")
-#set(CMAKE_C_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD")
-#set(CMAKE_EXE_LINKER_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD")
+# Compiler and linker flags
+if(MSVC)
+    set(CMAKE_CXX_FLAGS_SHIPPING "/O2 /DNDEBUG /DSHIPPING_BUILD" CACHE STRING "Flags for Shipping configuration" FORCE)
+    set(CMAKE_C_FLAGS_SHIPPING "/O2 /DNDEBUG /DSHIPPING_BUILD" CACHE STRING "Flags for Shipping configuration" FORCE)
+    set(CMAKE_EXE_LINKER_FLAGS_SHIPPING "/O2 /DNDEBUG /DSHIPPING_BUILD" CACHE STRING "Linker flags for Shipping configuration" FORCE)
+    set(CMAKE_SHARED_LINKER_FLAGS_SHIPPING "/O2 /DNDEBUG /DSHIPPING_BUILD" CACHE STRING "Linker flags for Shipping configuration" FORCE)
+else()
+    set(CMAKE_CXX_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD" CACHE STRING "Flags for Shipping configuration" FORCE)
+    set(CMAKE_C_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD" CACHE STRING "Flags for Shipping configuration" FORCE)
+    set(CMAKE_EXE_LINKER_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD" CACHE STRING "Linker flags for Shipping configuration" FORCE)
+    set(CMAKE_SHARED_LINKER_FLAGS_SHIPPING "-O2 -DNDEBUG -DSHIPPING_BUILD" CACHE STRING "Linker flags for Shipping configuration" FORCE)
+endif()
 
 # Set global definitions for all configurations
 add_compile_definitions(
