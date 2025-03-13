@@ -311,9 +311,9 @@ void MainApplication::drawEvent() {
 void MainApplication::keyPressEvent(KeyEvent &event) {
     // Movement
     if (event.key() == Key::Down)
-        _cameraObject->rotateX(5.0_degf);
+        _cameraObject->rotate(5.0_degf, _cameraObject->transformation().right());
     else if (event.key() == Key::Up)
-        _cameraObject->rotateX(-5.0_degf);
+        _cameraObject->rotate(-5.0_degf, _cameraObject->transformation().right());
     else if (event.key() == Key::Left)
         _cameraObject->rotateY(-5.0_degf);
     else if (event.key() == Key::Right)
