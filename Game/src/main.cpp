@@ -1,49 +1,26 @@
-#include <Magnum/GL/DefaultFramebuffer.h>
-#include <Magnum/Platform/GlfwApplication.h>
-#include "yaml-cpp/yaml.h"
+#include "Game.h"
 
-#include <Magnum/GL/Renderer.h>
-#include <Magnum/GL/Version.h>
-#include <Magnum/Math/Color.h>
-
-#include "Examples/BulletExample.cpp"
-
-using namespace Magnum;
-using namespace Math::Literals;
-
-// ========== CLASS DEFINITIONS ========== //
-
-class BaseApplication final : public Platform::Application {
+class TPGame final : public GDE::Game
+{
 public:
-    explicit BaseApplication(const Arguments& arguments);
-    virtual ~BaseApplication() = default;
+    explicit TPGame(const Arguments& arguments);
 
-private:
-    void drawEvent() override;
+    void setupSystem() override;
+    void registerComponent() const override;
 };
 
-// ========== CLASS IMPLEMENTATION ========== //
+TPGame::TPGame(const Arguments& arguments): Game(
+    arguments,
+    "TP3 Game",
+    {700, 700}
+) {}
 
-BaseApplication::BaseApplication(const Arguments& arguments): Platform::Application(arguments, NoCreate) {
-{
-    const Vector2 dpiScaling = this->dpiScaling({});
-    Configuration config;
-    config.setTitle("TP 3").setSize({700, 700}, dpiScaling);
-    GLConfiguration glConfig;
-    glConfig.setSampleCount(dpiScaling.max() < 2.0f ? 8 : 2);
-    if (!tryCreate(config, glConfig))
-        create(config, glConfig.setSampleCount(0));
-}
-    GL::Renderer::setClearColor(0x222222_rgbf);
-
-    Debug{} << "Application running on"
-        << GL::Context::current().version() << "using"
-        << GL::Context::current().rendererString();
+void TPGame::setupSystem() {
+    // TODO: Implementation
 }
 
-void BaseApplication::drawEvent() {
-    GL::defaultFramebuffer.clear(GL::FramebufferClear::Color|GL::FramebufferClear::Depth);
-    swapBuffers();
+void TPGame::registerComponent() const {
+    // TODO: Implementation
 }
 
-MAGNUM_APPLICATION_MAIN(BulletExample)
+MAGNUM_APPLICATION_MAIN(TPGame);
