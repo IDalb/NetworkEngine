@@ -10,6 +10,8 @@
 #include <Magnum/GL/Version.h>
 #include <Magnum/Math/Color.h>
 
+#include "System/InputSystem.h"
+
 #include <utility>
 
 using namespace Magnum;
@@ -46,6 +48,36 @@ namespace GDE
             << GL::Context::current().rendererString();
 
         setup();
+    }
+
+    void Game::keyPressEvent(KeyEvent& event)
+    {
+        InputSystem::getInstance().setKeyState(static_cast<GDE::Key::Key>(event.key()), true);
+    }
+
+    void Game::keyReleaseEvent(KeyEvent& event)
+    {
+        InputSystem::getInstance().setKeyState(static_cast<GDE::Key::Key>(event.key()), false);
+    }
+
+    void Game::mousePressEvent(MouseEvent& event)
+    {
+        InputSystem::getInstance().setMouseButtonState(static_cast<GDE::Mouse::Button>(event.button()), true);
+    }
+
+    void Game::mouseReleaseEvent(MouseEvent& event)
+    {
+        InputSystem::getInstance().setMouseButtonState(static_cast<GDE::Mouse::Button>(event.button()), false);
+    }
+
+    void Game::mouseMoveEvent(MouseMoveEvent& event)
+    {
+        InputSystem::getInstance().setMousePos(event.position());
+    }
+
+    void Game::mouseScrollEvent(MouseScrollEvent& event)
+    {
+        InputSystem::getInstance().setMouseScrollValue(event.offset().y());
     }
 
     void Game::setup()
