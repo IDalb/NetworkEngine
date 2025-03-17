@@ -7,17 +7,17 @@ namespace GDE
     void TransformComponent::setup(const ComponentDescription &init_value) {
         const auto params = init_value.parameters;
 
-        _position.x = params.contains("position/x") ? params.at("position/x").as<float>() : 0.0f;
-        _position.y = params.contains("position/y") ? params.at("position/y").as<float>() : 0.0f;
-        _position.z = params.contains("position/z") ? params.at("position/z").as<float>() : 0.0f;
+        _position.x() = params.contains("position/x") ? params.at("position/x").as<float>() : 0.0f;
+        _position.y() = params.contains("position/y") ? params.at("position/y").as<float>() : 0.0f;
+        _position.z() = params.contains("position/z") ? params.at("position/z").as<float>() : 0.0f;
 
-        _rotation.x = params.contains("rotation/x") ? params.at("rotation/x").as<float>() : 0.0f;
-        _rotation.y = params.contains("rotation/y") ? params.at("rotation/y").as<float>() : 0.0f;
-        _rotation.z = params.contains("rotation/z") ? params.at("rotation/z").as<float>() : 0.0f;
+        _rotation.x() = params.contains("rotation/x") ? params.at("rotation/x").as<float>() : 0.0f;
+        _rotation.y() = params.contains("rotation/y") ? params.at("rotation/y").as<float>() : 0.0f;
+        _rotation.z() = params.contains("rotation/z") ? params.at("rotation/z").as<float>() : 0.0f;
 
-        _scale.x = params.contains("scale/x") ? params.at("scale/x").as<float>() : 1.0f;
-        _scale.y = params.contains("scale/y") ? params.at("scale/y").as<float>() : 1.0f;
-        _scale.z = params.contains("scale/z") ? params.at("scale/z").as<float>() : 1.0f;
+        _scale.x() = params.contains("scale/x") ? params.at("scale/x").as<float>() : 1.0f;
+        _scale.y() = params.contains("scale/y") ? params.at("scale/y").as<float>() : 1.0f;
+        _scale.z() = params.contains("scale/z") ? params.at("scale/z").as<float>() : 1.0f;
     }
 
     void TransformComponent::resolve() {
@@ -40,13 +40,13 @@ namespace GDE
         for (const auto& child : owner().getChildren()) {
             if (const auto transform = child->getComponent<TransformComponent>()) {
                 Vector3 relativePosition = transform->getRelativePosition();
-                transform->setPosition(x + relativePosition.x, y + relativePosition.y, z + relativePosition.z);
+                transform->setPosition(x + relativePosition.x(), y + relativePosition.y(), z + relativePosition.z());
             }
         }
 
-        _position.x = x;
-        _position.y = y;
-        _position.z = z;
+        _position.x() = x;
+        _position.y() = y;
+        _position.z() = z;
     }
 
     void TransformComponent::translate(float x, float y, float z) {
@@ -56,9 +56,9 @@ namespace GDE
             }
         }
 
-        _position.x += x;
-        _position.y += y;
-        _position.z += z;
+        _position.x() += x;
+        _position.y() += y;
+        _position.z() += z;
     }
 
     Vector3 TransformComponent::getRelativePosition() const {
@@ -87,7 +87,7 @@ namespace GDE
             return;
         }
 
-        setPosition(parentTransform->_position.x + x, parentTransform->_position.y + y, parentTransform->_position.z + z);
+        setPosition(parentTransform->_position.x() + x, parentTransform->_position.y() + y, parentTransform->_position.z() + z);
     }
 
 
@@ -96,13 +96,13 @@ namespace GDE
         for (const auto& child : owner().getChildren()) {
             if (const auto transform = child->getComponent<TransformComponent>()) {
                 Vector3 relativeRotation = transform->getRelativeRotation();
-                transform->setRotation(x + relativeRotation.x, y + relativeRotation.y, z + relativeRotation.z);
+                transform->setRotation(x + relativeRotation.x(), y + relativeRotation.y(), z + relativeRotation.z());
             }
         }
 
-        _rotation.x = x;
-        _rotation.y = y;
-        _rotation.z = z;
+        _rotation.x() = x;
+        _rotation.y() = y;
+        _rotation.z() = z;
     }
 
     void TransformComponent::rotate(float x, float y, float z) {
@@ -112,9 +112,9 @@ namespace GDE
             }
         }
 
-        _rotation.x += x;
-        _rotation.y += y;
-        _rotation.z += z;
+        _rotation.x() += x;
+        _rotation.y() += y;
+        _rotation.z() += z;
     }
 
     Vector3 TransformComponent::getRelativeRotation() const {
@@ -143,7 +143,7 @@ namespace GDE
             return;
         }
 
-        setRotation(parentTransform->_rotation.x + x, parentTransform->_rotation.y + y, parentTransform->_rotation.z + z);
+        setRotation(parentTransform->_rotation.x() + x, parentTransform->_rotation.y() + y, parentTransform->_rotation.z() + z);
     }
 
 
@@ -152,13 +152,13 @@ namespace GDE
         for (const auto& child : owner().getChildren()) {
             if (const auto transform = child->getComponent<TransformComponent>()) {
                 Vector3 relativeScale = transform->getRelativeScale();
-                transform->setScale(x + relativeScale.x, y + relativeScale.y, z + relativeScale.z);
+                transform->setScale(x + relativeScale.x(), y + relativeScale.y(), z + relativeScale.z());
             }
         }
 
-        _scale.x = x;
-        _scale.y = y;
-        _scale.z = z;
+        _scale.x() = x;
+        _scale.y() = y;
+        _scale.z() = z;
     }
 
     Vector3 TransformComponent::getRelativeScale() const {
@@ -187,6 +187,6 @@ namespace GDE
             return;
         }
 
-        setScale(parentTransform->_scale.x + x, parentTransform->_scale.y + y, parentTransform->_scale.z + z);
+        setScale(parentTransform->_scale.x() + x, parentTransform->_scale.y() + y, parentTransform->_scale.z() + z);
     }
 }

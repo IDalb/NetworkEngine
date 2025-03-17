@@ -61,7 +61,7 @@ add_compile_definitions(
     $<$<CONFIG:Debug>:DEBUG>
     $<$<CONFIG:Release>:RELEASE>
 )
-file(WRITE "${CMAKE_BINARY_DIR}/generated/source_dir.h" "#pragma once\n constexpr const const char * SOURCE_DIR = \"${CMAKE_SOURCE_DIR}\";")
+file(WRITE "${CMAKE_BINARY_DIR}/generated/source_dir.h" "#pragma once\n constexpr const char * SOURCE_DIR = \"${CMAKE_SOURCE_DIR}\";")
 
 include_directories("${CMAKE_BINARY_DIR}/generated")
 
