@@ -55,7 +55,7 @@ namespace GDE {
         Component& operator=(Component&&) = default;
 
         virtual void setup(const ComponentDescription& init_value) = 0;
-        virtual void resolve();
+        virtual void resolve() {}
 
         // Register the type (std::string T::Type), with the corresponding creation function
         // This let the Create function below be able to create a component with only its name

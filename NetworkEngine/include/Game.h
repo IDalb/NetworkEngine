@@ -4,6 +4,7 @@
 
 #include "Engine.h"
 #include "Corrade/Utility/Arguments.h"
+#include "source_dir.h"
 
 using namespace std;
 using namespace Magnum;
