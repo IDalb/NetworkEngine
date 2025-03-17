@@ -1,0 +1,13 @@
+- name: "Ground"
+  description:
+    children:
+    components:
+      Transform:
+        position:
+          x: 0.0
+          y: 0.0
+          z: 0.0
+        scale:
+          x: 8.0
+          y: 0.5
+          z: 8.0
