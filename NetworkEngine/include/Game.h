@@ -12,7 +12,7 @@ using namespace Math::Literals;
 
 namespace GDE
 {
-    class Game : public Magnum::Platform::Application
+    class Game : public Magnum::Platform::GlfwApplication
     {
     protected:
         // App properties
@@ -20,11 +20,15 @@ namespace GDE
         const Vector2i _windowSize;
         float _fps = 60.f;
         void setFps(const float fps) { _fps = fps; }
-
+        void setup();
+        virtual void setupScene() {}
         // Data
         std::vector<System*> _systems;
         template<typename T> void addSystem() { _systems.push_back(&T::getInstance()); }
 
+        std::chrono::milliseconds _framerate_ms{};
+        std::chrono::steady_clock::time_point _old_time{};
+        unsigned int _frame = 0;
         // Methods
         void drawEvent() override;
     public:

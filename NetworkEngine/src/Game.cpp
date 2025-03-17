@@ -1,7 +1,9 @@
 #include "Game.h"
 #include "Engine.h"
+#include <Scene.h>
 
 #include "yaml-cpp/yaml.h"
+#include <Magnum/Platform/GlfwApplication.h>
 
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Renderer.h>
@@ -30,7 +32,7 @@ namespace GDE
             Configuration config;
             GLConfiguration glConfig;
 
-            config.setTitle(_title).setSize(_windowSize, dpiScaling);
+            config.setTitle(_title).setSize(_windowSize, dpiScaling).setWindowFlags(Configuration::WindowFlag::Maximized | Configuration::WindowFlag::Resizable);
             glConfig.setSampleCount(dpiScaling.max() < 2.0f ? 8 : 2);
 
             if (!tryCreate(config, glConfig))
@@ -42,10 +44,38 @@ namespace GDE
         Debug{} << "Application running on"
             << GL::Context::current().version() << "using"
             << GL::Context::current().rendererString();
+
+        setup();
+    }
+
+    void Game::setup()
+    {
+        setupScene();
+        _framerate_ms = static_cast<std::chrono::milliseconds>(static_cast<int>((1 / _fps) * 1000));
+        _old_time = std::chrono::high_resolution_clock::now();
+
     }
 
     void Game::drawEvent() {
+
+
+        auto current_time = std::chrono::high_resolution_clock::now();
+        auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - _old_time);
+
+        if (dt < _framerate_ms)
+        {
+            std::this_thread::sleep_for(_framerate_ms - dt);
+            current_time = std::chrono::high_resolution_clock::now();
+            dt = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - _old_time);
+        }
+        _old_time = current_time;
+
         GL::defaultFramebuffer.clear(GL::FramebufferClear::Color|GL::FramebufferClear::Depth);
+        for (auto& system : _systems)
+        {
+            system->iterate({ static_cast<float>(dt.count()), _frame});
+        }
+
         swapBuffers();
     }
 }

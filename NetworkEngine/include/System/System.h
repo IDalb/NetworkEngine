@@ -1,6 +1,5 @@
 #pragma once
-#include "Magnum/Magnum.h"
-
+#include "Timing.h"
 namespace GDE {
 
     class System {
@@ -13,6 +12,6 @@ namespace GDE {
 
         virtual ~System() = default;
 
-        virtual void iterate(const Magnum::Float dt_ms) {}
+        virtual void iterate(const Timing& dt) {}
     };
 }

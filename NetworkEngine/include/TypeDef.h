@@ -1,6 +1,5 @@
 #pragma once
-#include <memory>
-#include "yaml-cpp/yaml.h"
+#include "std.h"
 
 namespace YAML {
     class Node;

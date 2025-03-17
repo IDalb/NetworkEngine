@@ -4,7 +4,11 @@
 
 namespace GDE
 {
-    Description load(const std::string &path) {
-        return YAML::LoadFile(path);
+    namespace Descr
+    {
+        Description load(const std::string& path)
+        {
+            return YAML::LoadFile(path);
+        }
     }
 }

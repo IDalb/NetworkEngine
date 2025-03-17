@@ -1,10 +1,5 @@
 #pragma once
-#include <map>
-#include <memory>
-#include <string>
-#include <unordered_map>
-#include <vector>
-#include <span>
+#include "std.h"
 
 #include "TypeDef.h"
 #include "Component/Component.h"

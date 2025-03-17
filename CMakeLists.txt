@@ -68,6 +68,7 @@ include_directories("${CMAKE_BINARY_DIR}/generated")
 
 add_subdirectory(NetworkEngine)
 add_subdirectory(Game)
+add_subdirectory(Editor)
 
 target_link_libraries(NetworkEngine PRIVATE
         Magnum::Application
@@ -87,6 +88,23 @@ target_link_libraries(NetworkEngine PRIVATE
         Bullet3Common)
 		
 target_link_libraries(Game PRIVATE
+        Magnum::Application
+        Magnum::GL
+        Magnum::Magnum
+        Magnum::MeshTools
+        Magnum::Primitives
+        Magnum::SceneGraph
+        Magnum::Shaders
+        Magnum::Trade
+        MagnumIntegration::Bullet
+        Bullet::Dynamics
+        MagnumIntegration::ImGui
+        BulletDynamics
+        BulletCollision
+        LinearMath
+        Bullet3Common)
+		
+target_link_libraries(Editor PRIVATE
         Magnum::Application
         Magnum::GL
         Magnum::Magnum

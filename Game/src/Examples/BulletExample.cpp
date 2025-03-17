@@ -373,3 +373,4 @@ void BulletExample::pointerPressEvent(PointerEvent &event) {
 
     event.setAccepted();
 }
+MAGNUM_APPLICATION_MAIN(BulletExample);
