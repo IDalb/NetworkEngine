@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "Engine.h"
 
 #include "yaml-cpp/yaml.h"
 
@@ -23,6 +24,7 @@ namespace GDE
     _title(std::move(title)),
     _windowSize(windowSize)
     {
+        // Application initialization
         {
             const Vector2 dpiScaling = this->dpiScaling({});
             Configuration config;
