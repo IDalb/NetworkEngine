@@ -41,5 +41,12 @@ namespace GDE
 
         virtual void setupSystem() = 0;
         virtual void registerComponent() const = 0;
+
+        virtual void keyPressEvent(KeyEvent& event) override;
+        virtual void keyReleaseEvent(KeyEvent& event) override;
+        virtual void mousePressEvent(MouseEvent& event) override;
+        virtual void mouseReleaseEvent(MouseEvent& event) override;
+        virtual void mouseMoveEvent(MouseMoveEvent& event) override;
+        virtual void mouseScrollEvent(MouseScrollEvent& event) override;
     };
 }

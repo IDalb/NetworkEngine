@@ -2,6 +2,10 @@
 #include <source_dir.h>
 
 
+#include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/GL/Renderer.h>
+#include <Magnum/GL/Version.h>
+#include <Magnum/Math/Color.h>
 namespace GDEEditor
 {
 	Editor::Editor(const Arguments& arguments) : Game(
@@ -38,5 +42,13 @@ namespace GDEEditor
 		GDE::Scene::load(GDE::Descr::load(std::string(SOURCE_DIR) + "/Editor/data/scene/Game/default.yaml"));
 #endif // !SHIPPING
 
+	}
+
+	void Editor::drawEvent()
+	{
+		GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
+
+
+		swapBuffers();
 	}
 }
