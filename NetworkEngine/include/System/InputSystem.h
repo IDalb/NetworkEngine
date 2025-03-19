@@ -114,7 +114,7 @@ namespace GDE
 		std::vector<Mouse::Button> updated_mouse_buttons_{};
 
 		float mouse_scroll_value_{};
-		Magnum::Vectori _mousePos;
+		Magnum::Vector4i _mousePos;
 	};
 }
 
