@@ -405,5 +405,3 @@ namespace Magnum
 
     }
 }
-
-MAGNUM_APPLICATION_MAIN(Magnum::Examples::BulletExample)

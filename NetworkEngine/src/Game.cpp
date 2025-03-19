@@ -13,7 +13,12 @@
 #include "System/InputSystem.h"
 #include "System/GuiSystem.h"
 
-#include <utility>
+#include "Component/CameraComponent.h"
+#include "Component/ColoredDrawableComponent.h"
+#include "Component/MeshGroupComponent.h"
+#include "Component/RigidbodyComponent.h"
+#include "Component/ShapeComponent.h"
+#include "Component/TransformComponent.h"
 
 using namespace Magnum;
 using namespace Math::Literals;
@@ -67,6 +72,12 @@ namespace GDE
 
     void Game::registerBasicComponent() const
     {
+        Component::Register<CameraComponent>();
+        Component::Register<ColoredDrawableComponent>();
+        Component::Register<MeshGroupComponent>();
+        Component::Register<RigidbodyComponent>();
+        Component::Register<ShapeComponent>();
+        Component::Register<TransformComponent>();
     }
 
     void Game::keyPressEvent(KeyEvent& event)

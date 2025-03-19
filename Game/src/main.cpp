@@ -23,4 +23,4 @@ void TPGame::registerComponent() const {
     // TODO: Implementation
 }
 
-//MAGNUM_APPLICATION_MAIN(TPGame);
+MAGNUM_APPLICATION_MAIN(TPGame);
