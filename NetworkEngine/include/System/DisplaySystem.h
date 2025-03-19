@@ -2,6 +2,10 @@
 #include "System/System.h"
 #include "Component/DisplayComponent.h"
 #include "std.h"
+
+#include <Magnum/Shaders/PhongGL.h>
+#include <Magnum/SceneGraph/Drawable.h>
+
 namespace GDE
 {
     class DisplaySystem :
@@ -24,8 +28,12 @@ namespace GDE
         void removeComponent(DisplayComponent* display_component);
 
         static DisplaySystem& getInstance();
+
+        Magnum::SceneGraph::DrawableGroup3D& getDrawable() { return _drawable; }
     private:
         std::unordered_set<DisplayComponent*> _displayComponents;
+        Magnum::Shaders::PhongGL _shader{NoCreate};
+        Magnum::SceneGraph::DrawableGroup3D _drawable;
     };
 }
 

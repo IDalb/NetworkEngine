@@ -13,8 +13,11 @@ namespace GDE
 		}
 		else
 		{
-			_shape = SPHERE;
-			_data["radius"] = init_value.parameters.at("radius").as<float>();
+			if (init_value.parameters.at("shape").as<std::string>() == "sphere")
+			{
+				_shape = SPHERE;
+				_data["radius"] = init_value.parameters.at("radius").as<float>();
+			}
 		}
 	}
 }

@@ -16,13 +16,19 @@ namespace GDE
 	}
 
 
+	void DisplaySystem::setup()
+	{
+	}
+
 	void DisplaySystem::iterate(const Timing& dt)
 	{
+
+
 		for (auto& display_component : _displayComponents)
 		{
 			if (display_component->enabled() && display_component->owner().active())
 			{
-				display_component->display(dt);
+				display_component->display(_shader, dt);
 			}
 		}
 		if (GuiSystem::_exist)

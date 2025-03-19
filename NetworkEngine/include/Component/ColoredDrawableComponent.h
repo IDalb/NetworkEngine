@@ -1,26 +1,28 @@
 #pragma once
-#include "DisplayComponent.h"
+#include "Component/Component.h"
 #include "Magnum/Math/Color.h"
 #include "Magnum/Math/Matrix4.h"
 #include "Magnum/SceneGraph/Drawable.h"
-
-using namespace Magnum;
+#include "Magnum/Math/Vector.h"
 
 namespace GDE
 {
-    class ColoredDrawableComponent : public GDE::DisplayComponent, public Magnum::SceneGraph::Drawable3D {
+    class ColoredDrawableComponent :  GDE::Component {
     private:
-        Color3 _color;
-        void draw(const Magnum::Matrix4& transformation, SceneGraph::Camera3D&) override {
-            const Matrix4 t = transformation * _primitiveTransformation;
-            arrayAppend(_instanceData, InPlaceInit, t, t.normalMatrix(), _color);
-        }
+		static constexpr auto type = "ColoredDrawable";
 
-        Containers::Array<InstanceData>& _instanceData;
-        Matrix4 _primitiveTransformation;
+		ColoredDrawableComponent(Entity& owner) : Component(owner) {}
+		ColoredDrawableComponent(const ColoredDrawableComponent&) = default;
+		ColoredDrawableComponent& operator=(const ColoredDrawableComponent&) = default;
+		ColoredDrawableComponent(ColoredDrawableComponent&&) = default;
+		ColoredDrawableComponent& operator=(ColoredDrawableComponent&&) = default;
+
+		void setup(const ComponentDescription& init_value) override;
+		void resolve();
 
     public:
-        explicit ColoredDrawableComponent(Object3D& object, Containers::Array<InstanceData>& instanceData, const Color3& color, const Matrix4& primitiveTransformation, SceneGraph::DrawableGroup3D& drawables):
-        SceneGraph::Drawable3D(object, &drawables), _instanceData(instanceData), _color(color), _primitiveTransformation(primitiveTransformation) {}
+		std::unique_ptr<Magnum::SceneGraph::Drawable3D> _object;
+		std::string _meshGroup = "";
+		Magnum::Vector3 _color;
     };
 }

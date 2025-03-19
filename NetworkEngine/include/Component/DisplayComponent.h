@@ -9,13 +9,13 @@ namespace GDE
 	public:
 
 		DisplayComponent();
-		~DisplayComponent();
+		virtual ~DisplayComponent();
 		DisplayComponent(const DisplayComponent&) = default;
 		DisplayComponent& operator=(const DisplayComponent&) = default;
 		DisplayComponent(DisplayComponent&&) = default;
 		DisplayComponent& operator=(DisplayComponent&&) = default;
 
-		virtual void display(const Timing& dt) = 0;
+		virtual void display(Magnum::Shaders::PhongGL& shader, const Timing& dt) = 0;
 
 	};
 }
