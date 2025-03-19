@@ -5,9 +5,9 @@
 namespace GDE
 {
     void TransformComponent::setup(const ComponentDescription &init_value) {
-        const auto params = init_value.parameters;
+       /* const auto& params = init_value.parameters;
 
-        _position.x() = params.contains("position/x") ? params.at("position/x").as<float>() : 0.0f;
+        _position.x() = params.contains("position") ? params.at("position")["x"].as<float>() : 0.0f;
         _position.y() = params.contains("position/y") ? params.at("position/y").as<float>() : 0.0f;
         _position.z() = params.contains("position/z") ? params.at("position/z").as<float>() : 0.0f;
 
@@ -17,21 +17,21 @@ namespace GDE
 
         _scale.x() = params.contains("scale/x") ? params.at("scale/x").as<float>() : 1.0f;
         _scale.y() = params.contains("scale/y") ? params.at("scale/y").as<float>() : 1.0f;
-        _scale.z() = params.contains("scale/z") ? params.at("scale/z").as<float>() : 1.0f;
+        _scale.z() = params.contains("scale/z") ? params.at("scale/z").as<float>() : 1.0f;*/
     }
 
     void TransformComponent::resolve() {
-        for (const auto& child : owner().getChildren()) {
-            if (const auto transform = child->getComponent<TransformComponent>()) {
-                Vector3 worldPosition = transform->getPosition();
-                transform->setPosition(worldPosition);
-
-                Vector3 worldRotation = transform->getRotation();
-                transform->setRotation(worldRotation);
-
-                Vector3 worldScale = transform->getScale();
-                transform->setScale(worldScale);
-            }
+        //for (const auto& child : owner().getChildren()) {
+        //    if (const auto transform = child->getComponent<TransformComponent>()) {
+        //        Vector3 worldPosition = transform->getPosition();
+        //        transform->setPosition(worldPosition);
+        //
+        //        Vector3 worldRotation = transform->getRotation();
+        //        transform->setRotation(worldRotation);
+        //
+        //        Vector3 worldScale = transform->getScale();
+        //        transform->setScale(worldScale);
+        //    }
         }
     }
 
