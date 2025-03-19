@@ -77,7 +77,7 @@ namespace GDE
 
 		// In main window coords
 		Magnum::Vector2i getScreenMousePosition();
-		Magnum::Vector2i getNormalizedMousePosition();
+		Magnum::Vector2 getNormalizedMousePosition();
 
 		// -1 scroll down, 1 scroll up
 		int getMouseScrollDirection();
@@ -114,7 +114,7 @@ namespace GDE
 		std::vector<Mouse::Button> updated_mouse_buttons_{};
 
 		float mouse_scroll_value_{};
-		Magnum::Vectori _mousePos;
+		Magnum::Vector2i _mousePos;
 	};
 }
 

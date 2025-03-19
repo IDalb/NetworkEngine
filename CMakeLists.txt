@@ -3,7 +3,29 @@ project(NetworkEngine)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
+set(MAGNUM_WITH_GLM ON CACHE BOOL "" FORCE)
+set(MAGNUM_WITH_imguiContext ON CACHE BOOL "" FORCE)
 
+include(FetchContent)
+
+# YAML-CPP
+FetchContent_Declare(
+    yaml-cpp
+    GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+    GIT_TAG master
+)
+
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(glm)
+
+link_libraries(glm)
+
+set(GLM_INCLUDE_DIR ${glm_SOURCE_DIR}/glm)
+	
 add_subdirectory(externals)
 find_package(Magnum REQUIRED
         GL
@@ -14,17 +36,14 @@ find_package(Magnum REQUIRED
         MeshTools
         Primitives
         SceneGraph)
-find_package(MagnumIntegration REQUIRED ImGui Bullet)
+			
+
+find_package(MagnumIntegration REQUIRED ImGui Bullet Glm)
 find_package(Bullet REQUIRED Dynamics)
 
 set_directory_properties(PROPERTIES CORRADE_USE_PEDANTIC_FLAGS ON)
 
-# YAML-CPP
-FetchContent_Declare(
-    yaml-cpp
-    GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
-    GIT_TAG master
-)
+
 
 # Disable contrib and tools
 set(YAML_CPP_BUILD_CONTRIB OFF CACHE BOOL "Disable contrib in yaml-cpp")
@@ -65,13 +84,15 @@ file(WRITE "${CMAKE_BINARY_DIR}/generated/source_dir.h" "#pragma once\n constexp
 
 include_directories("${CMAKE_BINARY_DIR}/generated")
 
+include_directories(${glm_SOURCE_DIR})
+
 
 add_subdirectory(NetworkEngine)
 add_subdirectory(Game)
 add_subdirectory(Editor)
 
 target_link_libraries(NetworkEngine PRIVATE
-        Magnum::Application
+        Magnum::GlfwApplication 
         Magnum::GL
         Magnum::Magnum
         Magnum::MeshTools
@@ -82,13 +103,14 @@ target_link_libraries(NetworkEngine PRIVATE
         MagnumIntegration::Bullet
         Bullet::Dynamics
         MagnumIntegration::ImGui
+        MagnumIntegration::Glm
         BulletDynamics
         BulletCollision
         LinearMath
         Bullet3Common)
 		
 target_link_libraries(Game PRIVATE
-        Magnum::Application
+        Magnum::GlfwApplication 
         Magnum::GL
         Magnum::Magnum
         Magnum::MeshTools
@@ -99,13 +121,14 @@ target_link_libraries(Game PRIVATE
         MagnumIntegration::Bullet
         Bullet::Dynamics
         MagnumIntegration::ImGui
+		MagnumIntegration::Glm
         BulletDynamics
         BulletCollision
         LinearMath
         Bullet3Common)
 		
 target_link_libraries(Editor PRIVATE
-        Magnum::Application
+        Magnum::GlfwApplication 
         Magnum::GL
         Magnum::Magnum
         Magnum::MeshTools
@@ -116,6 +139,7 @@ target_link_libraries(Editor PRIVATE
         MagnumIntegration::Bullet
         Bullet::Dynamics
         MagnumIntegration::ImGui
+        MagnumIntegration::Glm
         BulletDynamics
         BulletCollision
         LinearMath

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Magnum/Platform/GlfwApplication.h>
+#include <Magnum/GL/DefaultFramebuffer.h>
 
 #include "Engine.h"
 #include "Corrade/Utility/Arguments.h"
@@ -31,16 +32,21 @@ namespace GDE
         unsigned int _frame = 0;
         // Methods
         void drawEvent() override;
+
+        bool _init = true;
     public:
+        inline static Game* _app = nullptr;
+
         explicit Game(
             const Arguments& arguments,
             string title = "Game",
             Vector2i windowSize = {500, 500}
         );
-        virtual ~Game() = default;
+        virtual ~Game();
 
         virtual void setupSystem() = 0;
         virtual void registerComponent() const = 0;
+        virtual void registerBasicComponent() const;
 
         virtual void keyPressEvent(KeyEvent& event) override;
         virtual void keyReleaseEvent(KeyEvent& event) override;
@@ -48,5 +54,8 @@ namespace GDE
         virtual void mouseReleaseEvent(MouseEvent& event) override;
         virtual void mouseMoveEvent(MouseMoveEvent& event) override;
         virtual void mouseScrollEvent(MouseScrollEvent& event) override;
+        virtual void textInputEvent(TextInputEvent& event) override;
+
+        virtual void viewportEvent(ViewportEvent& event) override;
     };
 }

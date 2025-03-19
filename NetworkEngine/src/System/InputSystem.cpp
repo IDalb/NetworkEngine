@@ -42,9 +42,9 @@ namespace GDE
 		return _mousePos;
 	}
 
-	Magnum::Vector2i InputSystem::getNormalizedMousePosition()
+	Magnum::Vector2 InputSystem::getNormalizedMousePosition()
 	{
-		return _mousePos.normalized();
+		return static_cast<Magnum::Vector2>(_mousePos) / std::sqrt(_mousePos.dot());
 	}
 
 	int InputSystem::getMouseScrollDirection()

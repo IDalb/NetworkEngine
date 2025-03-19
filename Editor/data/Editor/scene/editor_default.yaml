@@ -1,0 +1,8 @@
+- name: "gui"
+  description:
+    children:
+    components:
+      ProjectTreeGui:
+      PropertiesEditorGui:
+      ProjectTemplateGui:
+      ActionGui:

@@ -16,5 +16,6 @@ namespace GDE
 		DisplayComponent& operator=(DisplayComponent&&) = default;
 
 		virtual void display(const Timing& dt) = 0;
+
 	};
 }
