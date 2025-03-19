@@ -6,7 +6,7 @@ namespace GDE
 {
 	struct Timing
 	{
-		Magnum::Float dt_;
-		unsigned int frame_;
+		Magnum::Float _dt;
+		unsigned int _frame;
 	};
 }

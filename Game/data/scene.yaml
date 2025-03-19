@@ -3,11 +3,5 @@
     children:
     components:
       Transform:
-        position:
-          x: 0.0
-          y: 0.0
-          z: 0.0
-        scale:
-          x: 8.0
-          y: 0.5
-          z: 8.0
+        position: [0.0, 0.0, 0.0]
+        scale: [8.0, 0.5, 8.0]
