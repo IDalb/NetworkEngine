@@ -1,5 +1,6 @@
 #pragma once
 #include "std.h"
+#include "Magnum/SceneGraph/Object.h"
 
 namespace YAML {
     class Node;
@@ -13,5 +14,8 @@ namespace GDE {
     namespace Descr {
         Description load(const std::string& path);
     }
+
+    typedef Magnum::SceneGraph::Object<Magnum::SceneGraph::MatrixTransformation3D> Object3D;
+    typedef Magnum::SceneGraph::Scene<Magnum::SceneGraph::MatrixTransformation3D> Scene3D;
 
 }
