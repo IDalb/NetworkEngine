@@ -24,7 +24,7 @@ namespace GDE
 
 		Shape _shape{};
 
-		float getData(const std::string& data) const {return _data.contains(data) ? _data.at(data) : 0 }
+		float getData(const std::string& data) const { return _data.contains(data) ? _data.at(data) : 0; }
 
 	protected:
 		std::map<std::string, float> _data{};
