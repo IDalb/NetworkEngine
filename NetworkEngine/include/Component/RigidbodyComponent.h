@@ -4,11 +4,10 @@
 #include "BulletDynamics/Dynamics/btDynamicsWorld.h"
 #include "Corrade/Containers/Pointer.h"
 #include "Magnum/BulletIntegration/MotionState.h"
-#include "Magnum/Math/TypeTraits.h"
 
 namespace GDE
 {
-    class RigidbodyComponent : public Component, public Object3D {
+    class RigidbodyComponent : public Component {
     private:
         float _mass;
         btCollisionShape* _bShape;

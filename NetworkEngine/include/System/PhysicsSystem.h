@@ -3,17 +3,18 @@
 #include "BulletDynamics/Dynamics/btDiscreteDynamicsWorld.h"
 #include "System/System.h"
 
-using namespace GDE;
+namespace GDE
+{
+    class PhysicsSystem : public System {
+    private:
+        btDiscreteDynamicsWorld *_bWorld;
+    public:
+        PhysicsSystem();
+        ~PhysicsSystem() = default;
+        void iterate(const Timing &dt) override;
 
-class PhysicsSystem : public System {
-private:
-    btDiscreteDynamicsWorld *_bWorld;
-public:
-    PhysicsSystem();
-    ~PhysicsSystem() = default;
-    void iterate(const Timing &dt) override;
+        static PhysicsSystem& getInstance();
 
-    static PhysicsSystem& getInstance();
-
-    btDiscreteDynamicsWorld* getWorld() const { return _bWorld; };
-};
+        btDiscreteDynamicsWorld* getWorld() const { return _bWorld; };
+    };
+}
