@@ -2,12 +2,17 @@
 
 #include "BulletDynamics/Dynamics/btRigidBody.h"
 
-GDE::RigidbodyComponent::~RigidbodyComponent() override {
-    _bWorld.removeRigidBody(_bRigidbody.get());
+GDE::RigidbodyComponent::~RigidbodyComponent() {
+    _bWorld->removeRigidBody(_bRigidbody.get());
 }
 
-void GDE::RigidbodyComponent::setup(const ComponentDescription &init_value) {
+void GDE::RigidbodyComponent::setup(const ComponentDescription &init_value)
+{
+    _mass = init_value.parameters.at("mass").as<float>();
+}
 
+void GDE::RigidbodyComponent::resolve()
+{
 }
 
 void GDE::RigidbodyComponent::syncPose() {
