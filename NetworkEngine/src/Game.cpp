@@ -170,6 +170,11 @@ namespace GDE
                 gui_system->setup(Vector2{ windowSize() } / dpiScaling(),
                     windowSize(), framebufferSize(), this);
             }
+            if (auto* display_system = dynamic_cast<DisplaySystem*>(system))
+            {
+                display_system->setup();
+            }
+
         }
         registerBasicComponent();
         registerComponent();
@@ -200,7 +205,7 @@ namespace GDE
         }
         _old_time = current_time;
 
-        GL::defaultFramebuffer.clear(GL::FramebufferClear::Color|GL::FramebufferClear::Depth);
+        GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
         for (auto& system : _systems)
         {
             system->iterate({ static_cast<float>(dt.count()), _frame});

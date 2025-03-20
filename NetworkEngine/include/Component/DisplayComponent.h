@@ -18,6 +18,7 @@ namespace GDE
 		DisplayComponent& operator=(DisplayComponent&&) = default;
 
 		virtual void display(Magnum::Shaders::PhongGL& shader, const Timing& dt) = 0;
+		virtual void preRender() = 0;
 
 	};
 }

@@ -36,9 +36,12 @@ namespace GDE
 
 	void MeshGroupComponent::display(Magnum::Shaders::PhongGL& shader, const Timing& dt)
 	{
-		arrayResize(_instanceData, 0);
 		_buffer->setData(_instanceData, Magnum::GL::BufferUsage::DynamicDraw);
 		_mesh->setInstanceCount(_instanceData.size());
 		shader.draw(*_mesh.get());
+	}
+	void MeshGroupComponent::preRender()
+	{
+		arrayResize(_instanceData, 0);
 	}
 }

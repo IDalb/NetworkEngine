@@ -29,6 +29,7 @@ namespace GDE
 
 		void setup(const ComponentDescription& init_value) override;
 		void display(Magnum::Shaders::PhongGL& shader, const Timing& dt) override;
+		void preRender() override;
 		void clean()
 		{
 			_mesh.reset();

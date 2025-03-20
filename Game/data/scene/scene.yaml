@@ -4,7 +4,7 @@
     children:
     components:
       Transform:
-        position: [-5,0,1]
+        position: [15,0,15]
       Camera:
         aspect_ratio: 1.0
 
@@ -25,6 +25,7 @@
         shape: "box"
         size: [8, 8, 0.5]
       RigidBody:
+        mass: 0
       ColoredDrawable:
         color: [1,1,1]
         mesh_group: "BoxGroup"

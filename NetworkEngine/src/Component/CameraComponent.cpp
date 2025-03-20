@@ -16,7 +16,7 @@ namespace GDE
     }
 
     void CameraComponent::setup(const ComponentDescription &init_value) {
-        _projectionAngle = getValue(init_value, "projection_angle", 35.0);
+        _projectionAngle = getValue(init_value, "projection_angle", 45);
         _aspectRatio = getValue(init_value, "aspect_ratio", 1.0);
         _nearDistance = getValue(init_value, "near_distance", 0.001f);
         _farDistance = getValue(init_value, "far_distance", 100.0f);
@@ -30,10 +30,7 @@ namespace GDE
             operator ""_degf(_projectionAngle),_aspectRatio, _nearDistance, _farDistance));
         _camera->setViewport(Magnum::GL::defaultFramebuffer.viewport().size());
 
-        _lookAtMatrix = glm::lookAt(
-            glm::vec3(owner().getComponent<TransformComponent>()->getTransform().absoluteTransformation().translation()),     // Camera position
-            glm::vec3(0.0f, 0.0f, 0.0f),
-            glm::vec3(0.0f, 0.0f, 1.0f));
-        owner().getComponent<TransformComponent>()->getTransform().setTransformation(Magnum::Matrix4(_lookAtMatrix));
+        // Look at (0,0,0) with (0,0,1) as the up vector
+        owner().getComponent<TransformComponent>()->getTransform().setTransformation(Magnum::Matrix4::lookAt(Magnum::Vector3{ owner().getComponent<TransformComponent>()->getTransform().absoluteTransformation().translation() }, Magnum::Vector3{ 0.0f, 0.0f, 0.0f }, Magnum::Vector3{ 0.0f, 0.0f, 1.0f }));
     }
 }

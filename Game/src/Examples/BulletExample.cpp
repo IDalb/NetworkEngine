@@ -282,9 +282,11 @@ namespace Magnum
                 /* Populate instance data with transformations and colors */
                 arrayResize(_boxInstanceData, 0);
                 arrayResize(_sphereInstanceData, 0);
-                _camera->draw(_drawables);
 
+                _camera->draw(_drawables);
                 _shader.setProjectionMatrix(_camera->projectionMatrix());
+
+             
 
                 /* Upload instance data to the GPU (orphaning the previous buffer
                    contents) and draw all cubes in one call, and all spheres (if any)
@@ -405,3 +407,4 @@ namespace Magnum
 
     }
 }
+//MAGNUM_APPLICATION_MAIN(Magnum::Examples::BulletExample);

@@ -25,16 +25,22 @@ namespace GDE
 
 	void DisplaySystem::setup()
 	{
-		_shader = Magnum::Shaders::PhongGL{ Magnum::Shaders::PhongGL::Configuration{}
+		_shader = std::make_unique<Magnum::Shaders::PhongGL>(Magnum::Shaders::PhongGL::Configuration{}
 			   .setFlags(Magnum::Shaders::PhongGL::Flag::VertexColor |
-						 Magnum::Shaders::PhongGL::Flag::InstancedTransformation) };
-		_shader.setAmbientColor(0x111111_rgbf)
+						 Magnum::Shaders::PhongGL::Flag::InstancedTransformation));
+		_shader->setAmbientColor(0x111111_rgbf)
 			.setSpecularColor(0x330000_rgbf)
-			.setLightPositions({ {10.0f, 15.0f, 5.0f, 0.0f} });
+			.setLightPositions({ {0, 0, 15.0f, 0.0f} });
+
+		Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::DepthTest);
+		Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::FaceCulling);
+		Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::PolygonOffsetFill);
+		Magnum::GL::Renderer::setPolygonOffset(2.0f, 0.5f);
 	}
 
 	void DisplaySystem::clean()
 	{
+		_shader.reset();
 		for (auto& component : _displayComponents)
 		{
 			if (auto meshComp = dynamic_cast<MeshGroupComponent*>(component))
@@ -46,17 +52,23 @@ namespace GDE
 
 	void DisplaySystem::iterate(const Timing& dt)
 	{
+		for (auto& display_component : _displayComponents)
+		{
+			if (display_component->enabled() && display_component->owner().active())
+			{
+				display_component->preRender();
+			}
+		}
+
 		auto camera = Scene::findEntityWithTag("camera")->getComponent<CameraComponent>()->getCamera();
-
 		camera->draw(_drawable);
-
-		_shader.setProjectionMatrix(camera->projectionMatrix());
+		_shader->setProjectionMatrix(camera->projectionMatrix());
 
 		for (auto& display_component : _displayComponents)
 		{
 			if (display_component->enabled() && display_component->owner().active())
 			{
-				display_component->display(_shader, dt);
+				display_component->display(*_shader.get(), dt);
 			}
 		}
 		if (GuiSystem::_exist)
