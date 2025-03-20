@@ -31,6 +31,7 @@ namespace GDE
         _camera->setViewport(Magnum::GL::defaultFramebuffer.viewport().size());
 
         // Look at (0,0,0) with (0,0,1) as the up vector
-        owner().getComponent<TransformComponent>()->getTransform().setTransformation(Magnum::Matrix4::lookAt(Magnum::Vector3{ owner().getComponent<TransformComponent>()->getTransform().absoluteTransformation().translation() }, Magnum::Vector3{ 0.0f, 0.0f, 0.0f }, Magnum::Vector3{ 0.0f, 0.0f, 1.0f }));
+        _CameraView = Magnum::Matrix4::lookAt(Magnum::Vector3{ owner().getComponent<TransformComponent>()->getTransform().absoluteTransformation().translation() }, Magnum::Vector3{ 0.0f, 0.0f, 0.0f }, Magnum::Vector3{ 0.0f, 0.0f, 1.0f });
+        owner().getComponent<TransformComponent>()->getTransform().setTransformation(_CameraView);
     }
 }

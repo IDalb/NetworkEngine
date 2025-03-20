@@ -17,7 +17,7 @@ namespace GDE
         float _farDistance = 0.001f;
         float _nearDistance = 100.f;
 
-        glm::mat4 _lookAtMatrix;
+        Magnum::Matrix4 _CameraView;
     public:
         static constexpr auto type = "Camera";
 
