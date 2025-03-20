@@ -1,7 +1,0 @@
-- name: "Ground"
-  description:
-    children:
-    components:
-      Transform:
-        position: [0.0, 0.0, 0.0]
-        scale: [8.0, 0.5, 8.0]

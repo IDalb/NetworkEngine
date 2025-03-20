@@ -12,7 +12,7 @@ namespace GDE
     class RigidbodyComponent : public Component {
     private:
         float _mass;
-        btCollisionShape* _bShape;
+        std::unique_ptr<btCollisionShape> _bShape;
         btDynamicsWorld* _bWorld;
         Magnum::Containers::Pointer<btRigidBody> _bRigidbody;
 

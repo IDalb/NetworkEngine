@@ -1,0 +1,35 @@
+- name: "BoxGroup"
+  description:
+    children:
+    components:
+      MeshGroup:
+        shape: "box"
+      
+- name: "Ground"
+  description:
+    children:
+    components:
+      Transform:
+        scale: [8.0, 8, 0.5]
+      Shape: 
+        shape: "box"
+        size: [8, 8, 0.5]
+      RigidBody:
+      ColoredDrawable:
+        color: [1,1,1]
+        mesh_group: "BoxGroup"
+      
+- name: "TestBox"
+  description:
+    children:
+    components:
+      Transform:
+        position: [0,0,5]
+      Shape: 
+        shape: "box"
+        size: [1, 1, 1]
+      RigidBody:
+      ColoredDrawable:
+        color: [1,0,0]
+        mesh_group: "BoxGroup"
+      

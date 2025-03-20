@@ -7,9 +7,9 @@ namespace GDE
 		if (init_value.parameters.at("shape").as<std::string>() == "box")
 		{
 			_shape = BOX;
-			_data["width"] = init_value.parameters.at("width").as<float>();
-			_data["height"] = init_value.parameters.at("height").as<float>();
-			_data["depth"] = init_value.parameters.at("depth").as<float>();
+			_data["sx"] = init_value.parameters.at("size")[0].as<float>();
+			_data["sy"] = init_value.parameters.at("size")[1].as<float>();
+			_data["sz"] = init_value.parameters.at("size")[2].as<float>();
 		}
 		else
 		{

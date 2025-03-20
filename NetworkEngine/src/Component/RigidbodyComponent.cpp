@@ -5,6 +5,8 @@
 #include "Entity.h"
 #include "Component/TransformComponent.h"
 
+#include "Component/ShapeComponent.h"
+
 GDE::RigidbodyComponent::~RigidbodyComponent() {
     _bWorld->removeRigidBody(_bRigidbody.get());
 }
@@ -18,6 +20,17 @@ void GDE::RigidbodyComponent::resolve()
 {
     _bWorld = PhysicsSystem::getInstance().getWorld();
 
+    auto shape = owner().getComponent<ShapeComponent>();
+    switch (shape->_shape)
+    {
+    case ShapeComponent::BOX:
+        _bShape = std::make_unique<btBoxShape>(btVector3(shape->getData("sx"), shape->getData("sy") , shape->getData("sz")));
+        break;
+    case ShapeComponent::SPHERE:
+        _bShape = std::make_unique<btSphereShape>(shape->getData("radius"));
+        break;
+    }
+
     btVector3 bInertia(0.0f, 0.0f, 0.0f);
     if (!Magnum::Math::TypeTraits<Magnum::Float>::equals(_mass, 0.0f))
         _bShape->calculateLocalInertia(_mass, bInertia);
@@ -27,7 +40,7 @@ void GDE::RigidbodyComponent::resolve()
     _bRigidbody.emplace(btRigidBody::btRigidBodyConstructionInfo{
         _mass,
         &motionState->btMotionState(),
-        _bShape,
+        _bShape.get(),
         bInertia
     });
     _bRigidbody->forceActivationState(DISABLE_DEACTIVATION);
