@@ -7,7 +7,7 @@ namespace GDE
     class TransformComponent : public Component
     {
     private:
-        Object3D _transform;
+        Object3D* _transform;
 
     public:
         static constexpr auto type = "Transform";
@@ -17,9 +17,10 @@ namespace GDE
         TransformComponent& operator=(const TransformComponent&) = default;
         TransformComponent(TransformComponent&&) = default;
         TransformComponent& operator=(TransformComponent&&) = default;
+        ~TransformComponent();
 
         void setup(const ComponentDescription &init_value) override;
 
-        Object3D& getTransform() { return _transform; }
+        Object3D& getTransform() { return *_transform; }
     };
 }

@@ -21,14 +21,14 @@ namespace GDE
 	{
 		if (init_value.parameters.at("shape").as<std::string>() == "box")
 		{
-			_mesh = Magnum::MeshTools::compile(Magnum::Primitives::cubeSolid());
+			_mesh = std::make_unique<Magnum::GL::Mesh>(Magnum::MeshTools::compile(Magnum::Primitives::cubeSolid()));
 		}
 		if (init_value.parameters.at("shape").as<std::string>() == "sphere")
 		{
-			_mesh = Magnum::MeshTools::compile(Magnum::Primitives::uvSphereSolid(16, 32));
+			_mesh = std::make_unique<Magnum::GL::Mesh>(Magnum::MeshTools::compile(Magnum::Primitives::uvSphereSolid(16, 32)));
 		}
-		_buffer = Magnum::GL::Buffer{};
-		_mesh.addVertexBufferInstanced(_buffer, 1, 0,
+		_buffer = std::make_unique<Magnum::GL::Buffer>();
+		_mesh->addVertexBufferInstanced(*_buffer.get(), 1, 0,
 			Magnum::Shaders::PhongGL::TransformationMatrix{},
 			Magnum::Shaders::PhongGL::NormalMatrix{},
 			Magnum::Shaders::PhongGL::Color3{});
@@ -37,8 +37,8 @@ namespace GDE
 	void MeshGroupComponent::display(Magnum::Shaders::PhongGL& shader, const Timing& dt)
 	{
 		arrayResize(_instanceData, 0);
-		_buffer.setData(_instanceData, Magnum::GL::BufferUsage::DynamicDraw);
-		_mesh.setInstanceCount(_instanceData.size());
-		shader.draw(_mesh);
+		_buffer->setData(_instanceData, Magnum::GL::BufferUsage::DynamicDraw);
+		_mesh->setInstanceCount(_instanceData.size());
+		shader.draw(*_mesh.get());
 	}
 }

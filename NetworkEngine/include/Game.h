@@ -24,7 +24,7 @@ namespace GDE
         float _fps = 60.f;
         void setFps(const float fps) { _fps = fps; }
         void setup();
-        virtual void setupScene() {}
+        virtual void setupScene() = 0;
         // Data
         std::vector<System*> _systems;
         template<typename T> void addSystem() { _systems.push_back(&T::getInstance()); }

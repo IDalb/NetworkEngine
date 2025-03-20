@@ -11,6 +11,7 @@ public:
 
     void setupSystem() override;
     void registerComponent() const override;
+    void setupScene() override;
 };
 
 TPGame::TPGame(const Arguments& arguments): Game(
@@ -23,12 +24,16 @@ TPGame::TPGame(const Arguments& arguments): Game(
 void TPGame::setupSystem() {
     addSystem<GDE::PhysicsSystem>();
     addSystem<GDE::DisplaySystem>();
-    addSystem<GDE::GuiSystem>();
     addSystem<GDE::InputSystem>();
 }
 
 void TPGame::registerComponent() const {
 
+}
+
+void TPGame::setupScene()
+{
+    GDE::Scene::load(GDE::Descr::load(std::string(SOURCE_DIR) + "/Game/data/scene/scene.yaml"));
 }
 
 MAGNUM_APPLICATION_MAIN(TPGame);

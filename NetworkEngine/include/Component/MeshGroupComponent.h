@@ -29,11 +29,16 @@ namespace GDE
 
 		void setup(const ComponentDescription& init_value) override;
 		void display(Magnum::Shaders::PhongGL& shader, const Timing& dt) override;
+		void clean()
+		{
+			_mesh.reset();
+			_buffer.reset();
+		}
 
 		Magnum::Containers::Array<InstanceData>& getInstanceData() { return _instanceData; }
 	protected:
-		Magnum::GL::Buffer _buffer{ Magnum::NoCreate };
-		Magnum::GL::Mesh _mesh;
+		std::unique_ptr <Magnum::GL::Buffer> _buffer;
+		std::unique_ptr<Magnum::GL::Mesh> _mesh;
 		Magnum::Containers::Array<InstanceData> _instanceData;
 	};
 

@@ -24,7 +24,7 @@ namespace GDE
 		void resolve();
 
     private:
-		std::unique_ptr<ColoredDrawable> _object;
+		ColoredDrawable* _object;
 		std::string _meshGroup = "";
 		Magnum::Vector3 _color;
     };

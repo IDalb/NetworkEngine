@@ -17,6 +17,8 @@
 
 #include "System/InputSystem.h"
 #include "System/GuiSystem.h"
+#include "System/DisplaySystem.h"
+#include "System/PhysicsSystem.h"
 
 #include "Component/CameraComponent.h"
 #include "Component/ColoredDrawableComponent.h"
@@ -81,6 +83,13 @@ namespace GDE
             {
                 gui_system->remove();
             }
+            if (auto* display_system = dynamic_cast<DisplaySystem*>(system))
+            {
+                display_system->clean();
+            } if (auto* physic_system = dynamic_cast<PhysicsSystem*>(system))
+            {
+                physic_system->clean();
+            }
         }
     }
 
@@ -97,48 +106,56 @@ namespace GDE
     void Game::keyPressEvent(KeyEvent& event)
     {
         InputSystem::getInstance().setKeyState(static_cast<GDE::Key::Key>(event.key()), true);
-        GuiSystem::getInstance().keyPressEvent(event);
+        if(GuiSystem::_exist)
+            GuiSystem::getInstance().keyPressEvent(event);
     }
 
     void Game::keyReleaseEvent(KeyEvent& event)
     {
         InputSystem::getInstance().setKeyState(static_cast<GDE::Key::Key>(event.key()), false);
-        GuiSystem::getInstance().keyPressEvent(event);
+        if (GuiSystem::_exist)
+            GuiSystem::getInstance().keyPressEvent(event);
     }
 
     void Game::mousePressEvent(MouseEvent& event)
     {
         InputSystem::getInstance().setMouseButtonState(static_cast<GDE::Mouse::Button>(event.button()), true);
-        GuiSystem::getInstance().mousePressEvent(event);
+        if (GuiSystem::_exist)
+            GuiSystem::getInstance().mousePressEvent(event);
     }
 
     void Game::mouseReleaseEvent(MouseEvent& event)
     {
         InputSystem::getInstance().setMouseButtonState(static_cast<GDE::Mouse::Button>(event.button()), false);
-        GuiSystem::getInstance().mouseReleaseEvent(event);
+        if (GuiSystem::_exist)
+            GuiSystem::getInstance().mouseReleaseEvent(event);
     }
 
     void Game::mouseMoveEvent(MouseMoveEvent& event)
     {
         InputSystem::getInstance().setMousePos(event.position());
-        GuiSystem::getInstance().mouseMoveEvent(event);
+        if (GuiSystem::_exist)
+            GuiSystem::getInstance().mouseMoveEvent(event);
     }
 
     void Game::mouseScrollEvent(MouseScrollEvent& event)
     {
         InputSystem::getInstance().setMouseScrollValue(event.offset().y());
-        GuiSystem::getInstance().mouseScrollEvent(event);
+        if (GuiSystem::_exist)
+            GuiSystem::getInstance().mouseScrollEvent(event);
     }
     
     void Game::textInputEvent(TextInputEvent& event)
     {
-        GuiSystem::getInstance().textInputEvent(event);
+        if (GuiSystem::_exist)
+            GuiSystem::getInstance().textInputEvent(event);
     }
 
     void Game::viewportEvent(ViewportEvent& event)
     {
         GL::defaultFramebuffer.setViewport({ {}, event.framebufferSize() });
-        GuiSystem::getInstance().relayout(Vector2{ event.windowSize() } / dpiScaling(), event.windowSize(), framebufferSize());
+        if (GuiSystem::_exist)
+            GuiSystem::getInstance().relayout(Vector2{ event.windowSize() } / dpiScaling(), event.windowSize(), framebufferSize());
 
     }
 

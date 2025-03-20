@@ -21,6 +21,7 @@ namespace GDE
         ~DisplaySystem() = default;
 
         void setup();
+        void clean();
 
         void iterate(const Timing& dt) override;
 

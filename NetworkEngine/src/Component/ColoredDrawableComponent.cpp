@@ -3,6 +3,7 @@
 #include "Scene.h"
 
 #include "Component/TransformComponent.h"
+#include "Component/RigidbodyComponent.h"
 #include "Component/MeshGroupComponent.h"
 
 #include "System/DisplaySystem.h"
@@ -21,11 +22,23 @@ namespace GDE
 	}
 	void ColoredDrawableComponent::resolve()
 	{
-		_object = std::make_unique<ColoredDrawable>(
-			owner().getComponent<TransformComponent>()->getTransform(),
-			Scene::findEntity(_meshGroup)->getComponent<MeshGroupComponent>()->getInstanceData(),
-			Magnum::Color3(_color),
-			Magnum::Matrix4::scaling(Magnum::Vector3{ 0.5f }),
-			DisplaySystem::getInstance().getDrawable());
+		//if (auto rigidBody = owner().getComponent<RigidbodyComponent>())
+		//{
+		//	_object = std::make_unique<ColoredDrawable>(
+		//		rigidBody->getRigidBody(),
+		//		Scene::findEntity(_meshGroup)->getComponent<MeshGroupComponent>()->getInstanceData(),
+		//		Magnum::Color3(_color),
+		//		Magnum::Matrix4::scaling(Magnum::Vector3{ 0.5f }),
+		//		DisplaySystem::getInstance().getDrawable());
+		//}
+		//else
+		{
+			_object = new ColoredDrawable(
+				owner().getComponent<TransformComponent>()->getTransform(),
+				Scene::findEntity(_meshGroup)->getComponent<MeshGroupComponent>()->getInstanceData(),
+				Magnum::Color3(_color),
+				Magnum::Matrix4::scaling(Magnum::Vector3{ 0.5f }),
+				DisplaySystem::getInstance().getDrawable());
+		}
 	}
 }

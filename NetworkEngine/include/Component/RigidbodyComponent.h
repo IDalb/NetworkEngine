@@ -17,7 +17,7 @@ namespace GDE
         btDynamicsWorld* _bWorld;
         TransformComponent* _transform;
         Magnum::Containers::Pointer<btRigidBody> _bRigidbody;
-
+        Magnum::BulletIntegration::MotionState* _motionState;
     public:
         static constexpr auto type = "RigidBody";
 

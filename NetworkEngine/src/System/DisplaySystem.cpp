@@ -1,7 +1,10 @@
 #include "System/DisplaySystem.h"
 #include "Component/DisplayComponent.h"
+#include "Component/MeshGroupComponent.h"
+#include "Component/CameraComponent.h"
 
 #include "Entity.h"
+#include "Scene.h"
 #include "GlobalConstants.h"
 #include "System/GuiSystem.h"
 
@@ -30,8 +33,25 @@ namespace GDE
 			.setLightPositions({ {10.0f, 15.0f, 5.0f, 0.0f} });
 	}
 
+	void DisplaySystem::clean()
+	{
+		for (auto& component : _displayComponents)
+		{
+			if (auto meshComp = dynamic_cast<MeshGroupComponent*>(component))
+			{
+				meshComp->clean();
+			}
+		}
+	}
+
 	void DisplaySystem::iterate(const Timing& dt)
 	{
+		auto camera = Scene::findEntityWithTag("camera")->getComponent<CameraComponent>()->getCamera();
+
+		camera->draw(_drawable);
+
+		_shader.setProjectionMatrix(camera->projectionMatrix());
+
 		for (auto& display_component : _displayComponents)
 		{
 			if (display_component->enabled() && display_component->owner().active())

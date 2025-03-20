@@ -1,29 +1,17 @@
 #include "System/PhysicsSystem.h"
 
-#include "BulletCollision/BroadphaseCollision/btDbvtBroadphase.h"
-#include "BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h"
-#include "BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
-#include "Magnum/BulletIntegration/DebugDraw.h"
-
 namespace GDE
 {
     PhysicsSystem::PhysicsSystem()
     {
         // Debug Draw
-        Magnum::BulletIntegration::DebugDraw _debugDraw{Corrade::NoCreate};
-        _debugDraw = Magnum::BulletIntegration::DebugDraw{};
-        _debugDraw.setMode(Magnum::BulletIntegration::DebugDraw::Mode::DrawWireframe);
+        _debugDraw = std::make_unique<Magnum::BulletIntegration::DebugDraw>();
+        _debugDraw->setMode(Magnum::BulletIntegration::DebugDraw::Mode::DrawWireframe);
 
-        // Bullet world initialization
-        btDbvtBroadphase _bBroadphase;
-        btDefaultCollisionConfiguration _bCollisionConfig;
-        btCollisionDispatcher _bDispatcher{ &_bCollisionConfig };
-        btSequentialImpulseConstraintSolver _bSolver;
-
-        _bWorld = new btDiscreteDynamicsWorld(&_bDispatcher, &_bBroadphase, &_bSolver, &_bCollisionConfig);
+        _bWorld = std::make_unique<btDiscreteDynamicsWorld>(&_bDispatcher, &_bBroadphase, &_bSolver, &_bCollisionConfig);
 
         _bWorld->setGravity({ 0.0f, -10.0f, 0.0f });
-        _bWorld->setDebugDrawer(&_debugDraw);
+        _bWorld->setDebugDrawer(_debugDraw.get());
     }
 
     PhysicsSystem& PhysicsSystem::getInstance()

@@ -112,6 +112,12 @@ namespace GDE
                 map.erase(tag);
         }
 
+        Scene3D& getMagnumScene()
+        {
+            static Scene3D scene;
+            return scene;
+        }
+
         Entity* findEntityWithTag(const std::string_view& tag)
         {
             if (const std::string str_tag(tag); tagMap().contains(str_tag))

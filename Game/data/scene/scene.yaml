@@ -1,3 +1,13 @@
+- name: "Camera"
+  tag: "camera"
+  description:
+    children:
+    components:
+      Transform:
+        position: [-5,0,1]
+      Camera:
+        aspect_ratio: 1.0
+
 - name: "BoxGroup"
   description:
     children:
@@ -32,10 +42,3 @@
       ColoredDrawable:
         color: [1,0,0]
         mesh_group: "BoxGroup"
-
-- name: "Camera"
-  description:
-    children:
-    components:
-      Camera:
-        aspect_ratio: 1.0f

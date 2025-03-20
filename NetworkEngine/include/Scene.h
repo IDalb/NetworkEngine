@@ -15,6 +15,8 @@ namespace GDE
         std::vector<Entity*>* findEntitiesWithTag(const std::string_view& tag);
         void removeTagFromEntity(const EntityRef& entity, const std::string& tag);
 
+        Scene3D& getMagnumScene();
+
         void load(const Description& description);
         void clear();
     }
