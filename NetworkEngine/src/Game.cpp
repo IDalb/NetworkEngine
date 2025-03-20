@@ -33,7 +33,8 @@ namespace GDE
     Game::Game(
         const Arguments& arguments,
         string title,
-        const Vector2i windowSize
+        const Vector2i windowSize,
+        WindowMode windowMode
     ):
     Platform::Application(arguments, NoCreate),
     _title(std::move(title)),
@@ -45,7 +46,15 @@ namespace GDE
             Configuration config;
             GLConfiguration glConfig;
 
-            config.setTitle(_title).setSize(_windowSize, dpiScaling).setWindowFlags(Configuration::WindowFlag::Maximized | Configuration::WindowFlag::Resizable);
+            Configuration::WindowFlag windowModeFlag;
+            switch (windowMode) {
+                case Windowed: default: windowModeFlag = Configuration::WindowFlag::Focused; break;
+                case Maximized: windowModeFlag = Configuration::WindowFlag::Maximized; break;
+                case Borderless: windowModeFlag = Configuration::WindowFlag::Borderless; break;
+                case Fullscreen: windowModeFlag = Configuration::WindowFlag::Fullscreen; break;
+            }
+
+            config.setTitle(_title).setSize(_windowSize, dpiScaling).setWindowFlags(windowModeFlag | Configuration::WindowFlag::Resizable);
             glConfig.setSampleCount(dpiScaling.max() < 2.0f ? 8 : 2);
 
             if (!tryCreate(config, glConfig))

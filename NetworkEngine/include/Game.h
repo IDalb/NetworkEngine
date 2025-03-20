@@ -13,6 +13,8 @@ using namespace Math::Literals;
 
 namespace GDE
 {
+    enum WindowMode {Windowed, Maximized, Borderless, Fullscreen};
+
     class Game : public Magnum::Platform::GlfwApplication
     {
     protected:
@@ -40,7 +42,8 @@ namespace GDE
         explicit Game(
             const Arguments& arguments,
             string title = "Game",
-            Vector2i windowSize = {500, 500}
+            Vector2i windowSize = {500, 500},
+            WindowMode windowMode = WindowMode::Windowed
         );
         virtual ~Game();
 
