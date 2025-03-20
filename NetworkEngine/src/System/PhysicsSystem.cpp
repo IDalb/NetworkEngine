@@ -10,7 +10,7 @@ namespace GDE
 
         _bWorld = std::make_unique<btDiscreteDynamicsWorld>(&_bDispatcher, &_bBroadphase, &_bSolver, &_bCollisionConfig);
 
-        _bWorld->setGravity({ 0.0f, -10.0f, 0.0f });
+        _bWorld->setGravity({ 0.0f, 0.f, -10.0f });
         _bWorld->setDebugDrawer(_debugDraw.get());
     }
 
