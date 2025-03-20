@@ -1,4 +1,5 @@
 #include "System/DisplaySystem.h"
+#include "System/PhysicsSystem.h"
 #include "Component/DisplayComponent.h"
 #include "Component/MeshGroupComponent.h"
 #include "Component/CameraComponent.h"
@@ -70,7 +71,15 @@ namespace GDE
 			{
 				display_component->display(*_shader.get(), dt);
 			}
-		}
+		}                 
+
+		Magnum::GL::Renderer::setDepthFunction(Magnum::GL::Renderer::DepthFunction::LessOrEqual);
+		PhysicsSystem::getInstance().getDebugDraw()->setTransformationProjectionMatrix(
+			camera->projectionMatrix() * camera->cameraMatrix());
+		PhysicsSystem::getInstance().getWorld()->debugDrawWorld();
+		Magnum::GL::Renderer::setDepthFunction(Magnum::GL::Renderer::DepthFunction::Less);
+
+
 		if (GuiSystem::_exist)
 		{
 			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::Blending);

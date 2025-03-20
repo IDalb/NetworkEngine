@@ -16,6 +16,7 @@ namespace GDE
     void RigidbodyComponent::setup(const ComponentDescription &init_value)
     {
         _mass = init_value.parameters.contains("mass") ? init_value.parameters.at("mass").as<float>() : 1.0f;
+        _bInertia = btVector3(0.0f, 0.0f, 0.0f);
     }
 
     void RigidbodyComponent::resolve()
@@ -34,9 +35,8 @@ namespace GDE
             break;
         }
 
-            btVector3 bInertia(0.0f, 0.0f, 0.0f);
             if (!Magnum::Math::TypeTraits<Magnum::Float>::equals(_mass, 0.0f))
-                _bShape->calculateLocalInertia(_mass, bInertia);
+                _bShape->calculateLocalInertia(_mass, _bInertia);
 
         /* Bullet rigidbody setup */
         _motionState = new Magnum::BulletIntegration::MotionState(owner().getComponent<TransformComponent>()->getTransform());
@@ -44,10 +44,12 @@ namespace GDE
             _mass,
             &_motionState->btMotionState(),
             _bShape.get(),
-            bInertia
+            _bInertia
         });
         _bRigidbody->forceActivationState(DISABLE_DEACTIVATION);
         _bWorld->addRigidBody(_bRigidbody.get());
+
+        syncPose();
     }
 
     void RigidbodyComponent::syncPose() {

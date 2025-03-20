@@ -3,7 +3,7 @@
 #include "Scene.h"
 
 #include "Component/TransformComponent.h"
-#include "Component/RigidbodyComponent.h"
+#include "Component/ShapeComponent.h"
 #include "Component/MeshGroupComponent.h"
 
 #include "System/DisplaySystem.h"
@@ -32,12 +32,13 @@ namespace GDE
 		//		DisplaySystem::getInstance().getDrawable());
 		//}
 		//else
+		
 		{
 			_object = new ColoredDrawable(
 				owner().getComponent<TransformComponent>()->getTransform(),
 				Scene::findEntity(_meshGroup)->getComponent<MeshGroupComponent>()->getInstanceData(),
 				Magnum::Color3(_color),
-				Magnum::Matrix4::scaling(Magnum::Vector3{ 0.5f }),
+				Magnum::Matrix4::scaling(owner().getComponent<ShapeComponent>()->getGlobalSize()),
 				DisplaySystem::getInstance().getDrawable());
 		}
 	}

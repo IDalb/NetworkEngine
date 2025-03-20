@@ -18,6 +18,9 @@ namespace GDE
         TransformComponent* _transform;
         Magnum::Containers::Pointer<btRigidBody> _bRigidbody;
         Magnum::BulletIntegration::MotionState* _motionState;
+
+        btVector3 _bInertia;
+
     public:
         static constexpr auto type = "RigidBody";
 

@@ -2,6 +2,7 @@
 #include "System/DisplaySystem.h"
 #include "System/GuiSystem.h"
 #include "System/InputSystem.h"
+#include "System/LogicSystem.h"
 #include "System/PhysicsSystem.h"
 
 class TPGame final : public GDE::Game
@@ -22,6 +23,7 @@ TPGame::TPGame(const Arguments& arguments): Game(
 ) {}
 
 void TPGame::setupSystem() {
+    addSystem<GDE::LogicSystem>();
     addSystem<GDE::PhysicsSystem>();
     addSystem<GDE::DisplaySystem>();
     addSystem<GDE::InputSystem>();

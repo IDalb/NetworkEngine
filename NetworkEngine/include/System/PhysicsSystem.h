@@ -31,6 +31,7 @@ namespace GDE
         }
         static PhysicsSystem& getInstance();
 
+        Magnum::BulletIntegration::DebugDraw* getDebugDraw() { return _debugDraw.get(); }
         btDiscreteDynamicsWorld* getWorld() const { return _bWorld.get(); };
     };
 }

@@ -20,7 +20,6 @@
     children:
     components:
       Transform:
-        scale: [8.0, 8, 0.5]
       Shape: 
         shape: "box"
         size: [8, 8, 0.5]

@@ -25,9 +25,10 @@ namespace GDE
 		Shape _shape{};
 
 		float getData(const std::string& data) const { return _data.contains(data) ? _data.at(data) : 0; }
-
+		const Magnum::Vector3& getGlobalSize() const { return _globalSize; }
 	protected:
 		std::map<std::string, float> _data{};
+		Magnum::Vector3 _globalSize{};
 	};
 
 }
