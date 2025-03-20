@@ -15,10 +15,14 @@ namespace GDEEditor
 		arguments,
 #ifndef SHIPPING
 		"TP3 Editor",
+		{640, 360},
+		GDE::Maximized
 #else
 		"TP3 Game",
+		{700, 700},
+		GDE::Windowed
 #endif
-		{ 640, 360})
+	)
 	{
 		_imguiContext = ImGuiIntegration::Context(Vector2{ windowSize() } / dpiScaling(),
 			windowSize(), framebufferSize());

@@ -10,6 +10,8 @@
 #endif
 #include <Game.h>
 
+#include "Magnum/ImGuiIntegration/Context.hpp"
+
 namespace GDEEditor
 {
     class Editor final : public GDE::Game
