@@ -4,6 +4,7 @@
 #include "Magnum/Math/Matrix4.h"
 #include "Magnum/SceneGraph/Drawable.h"
 #include "Magnum/Math/Vector.h"
+#include "Utils/ColoredDrawable.h"
 
 namespace GDE
 {
@@ -21,7 +22,7 @@ namespace GDE
 		void resolve();
 
     public:
-		std::unique_ptr<Magnum::SceneGraph::Drawable3D> _object;
+		std::unique_ptr<ColoredDrawable> _object;
 		std::string _meshGroup = "";
 		Magnum::Vector3 _color;
     };

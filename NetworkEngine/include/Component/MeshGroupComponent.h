@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Component/DisplayComponent.h"
+
 #include "Magnum/GL/Buffer.h"
 #include "Magnum/GL/Mesh.h"
 #include "Magnum/Math/Matrix.h"
@@ -8,17 +9,14 @@
 #include "Magnum/Math/Color.h"
 #include <Magnum/Shaders/PhongGL.h>
 
+#include "Utils/InstanceData.h"
+
 namespace GDE
 {
 	class MeshGroupComponent : public GDE::DisplayComponent
 	{
 	public:
-		struct InstanceData
-		{
-			Magnum::Matrix4 transformationMatrix;
-			Magnum::Matrix3x3 normalMatrix;
-			Magnum::Color3 color;
-		};
+
 
 		static constexpr auto type = "MeshGroup";
 
@@ -34,7 +32,7 @@ namespace GDE
 
 		Magnum::Containers::Array<InstanceData>& getInstanceData() { return _instanceData; }
 	protected:
-		Magnum::GL::Buffer _buffer{ NoCreate };
+		Magnum::GL::Buffer _buffer{ Magnum::NoCreate };
 		Magnum::GL::Mesh _mesh;
 		Magnum::Containers::Array<InstanceData> _instanceData;
 	};

@@ -1,6 +1,7 @@
 #pragma once
 #include "std.h"
 #include "Magnum/SceneGraph/Object.h"
+#include <Magnum/SceneGraph/MatrixTransformation3D.h>
 
 namespace YAML {
     class Node;

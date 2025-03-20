@@ -1,5 +1,6 @@
 #pragma once
 #include "Component/Component.h"
+#include "Magnum/Shaders/PhongGL.h"
 #include "Timing.h"
 namespace GDE
 {

@@ -19,7 +19,8 @@ namespace GDE
 	}
 	void ColoredDrawableComponent::resolve()
 	{
-		_object = std::make_unique< Magnum::SceneGraph::Drawable3D>(owner().getComponent<TransformComponent>()->getTransform(),
+		_object = std::make_unique<ColoredDrawable>(
+			owner().getComponent<TransformComponent>()->getTransform(),
 			Scene::findEntity(_meshGroup)->getComponent<MeshGroupComponent>()->getInstanceData(),
 			Magnum::Color3(_color),
 			Magnum::Matrix4::scaling(Magnum::Vector3{ 0.5f }),

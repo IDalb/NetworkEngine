@@ -32,7 +32,7 @@ namespace GDE
         Magnum::SceneGraph::DrawableGroup3D& getDrawable() { return _drawable; }
     private:
         std::unordered_set<DisplayComponent*> _displayComponents;
-        Magnum::Shaders::PhongGL _shader{NoCreate};
+        Magnum::Shaders::PhongGL _shader{Magnum::NoCreate};
         Magnum::SceneGraph::DrawableGroup3D _drawable;
     };
 }
