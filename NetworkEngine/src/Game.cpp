@@ -151,7 +151,7 @@ namespace GDE
         setupScene();
 
         _framerate_ms = static_cast<std::chrono::milliseconds>(static_cast<int>((1 / _fps) * 1000));
-        _old_time = std::chrono::high_resolution_clock::now();
+        _old_time = std::chrono::steady_clock::now();
 
     }
 
@@ -163,13 +163,13 @@ namespace GDE
             _init = false;
         }
 
-        auto current_time = std::chrono::high_resolution_clock::now();
+        auto current_time = std::chrono::steady_clock::now();
         auto dt = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - _old_time);
 
         if (dt < _framerate_ms)
         {
             std::this_thread::sleep_for(_framerate_ms - dt);
-            current_time = std::chrono::high_resolution_clock::now();
+            current_time = std::chrono::steady_clock::now();
             dt = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - _old_time);
         }
         _old_time = current_time;
