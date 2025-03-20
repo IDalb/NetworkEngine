@@ -21,7 +21,6 @@ TPGame::TPGame(const Arguments& arguments): Game(
 ) {}
 
 void TPGame::setupSystem() {
-    addSystem<GDE::EntitySystem>();
     addSystem<GDE::PhysicsSystem>();
     addSystem<GDE::DisplaySystem>();
     addSystem<GDE::GuiSystem>();
