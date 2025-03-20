@@ -1,9 +1,18 @@
 #include "Component/MeshGroupComponent.h"
+
+#include "Entity.h"
+#include "Scene.h"
+
+#include "Component/TransformComponent.h"
+#include "Component/MeshGroupComponent.h"
+
+
 #include <Magnum/MeshTools/Compile.h>
 #include <Magnum/MeshTools/Transform.h>
 #include <Magnum/Primitives/Cube.h>
 #include <Magnum/Primitives/UVSphere.h>
 #include <Magnum/Trade/MeshData.h>
+
 #include <Corrade/Containers/GrowableArray.h>
 
 namespace GDE
@@ -16,9 +25,8 @@ namespace GDE
 		}
 		if (init_value.parameters.at("shape").as<std::string>() == "sphere")
 		{
-			_mesh = Magnum::MeshTools::compile(Magnum::Primitives::cubeSolid());
+			_mesh = Magnum::MeshTools::compile(Magnum::Primitives::uvSphereSolid(16, 32));
 		}
-		////_sphere = MeshTools::compile(Primitives::uvSphereSolid(16, 32));
 		_buffer = Magnum::GL::Buffer{};
 		_mesh.addVertexBufferInstanced(_buffer, 1, 0,
 			Magnum::Shaders::PhongGL::TransformationMatrix{},

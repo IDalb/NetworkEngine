@@ -3,6 +3,11 @@
 #include <Scene.h>
 
 #include "yaml-cpp/yaml.h"
+
+#include <Corrade/Containers/GrowableArray.h>
+#include <Corrade/Containers/Optional.h>
+#include <Corrade/Containers/Pointer.h>
+
 #include <Magnum/Platform/GlfwApplication.h>
 
 #include <Magnum/GL/DefaultFramebuffer.h>

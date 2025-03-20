@@ -47,12 +47,7 @@ namespace GDE {
         return component;
     }
 
-    template<typename T> T* Entity::addComponent(const typename T::init_values& initial_value) {
-        auto result = _components.emplace(T::type, std::unique_ptr<T>(*this));
-        auto iterator = result.first;
-        T* component = dynamic_cast<T*>(iterator->second.get());
-        component->setup(initial_value);
-    }
+
 
     Component* Entity::getComponent(std::string type) const {
         auto component = _components.find(type);
@@ -62,6 +57,4 @@ namespace GDE {
 
         return component->second.get();
     }
-
-    template<typename T> T* Entity::getComponent() const { return dynamic_cast<T*>(getComponent(T::type)); }
 }

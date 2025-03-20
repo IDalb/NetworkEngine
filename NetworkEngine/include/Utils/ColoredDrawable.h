@@ -1,12 +1,13 @@
 #pragma once
+#include "Utils/InstanceData.h"
+#include "TypeDef.h"
+
 #include "Magnum/Math/Color.h"
 #include "Magnum/Math/Matrix4.h"
 #include "Magnum/SceneGraph/Drawable.h"
 #include "Magnum/Math/Vector.h"
 #include <Corrade/Containers/GrowableArray.h>
 
-#include "Utils/InstanceData.h"
-#include "TypeDef.h"
 namespace GDE
 {
     class ColoredDrawable : public Magnum::SceneGraph::Drawable3D

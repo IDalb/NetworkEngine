@@ -1,7 +1,5 @@
-#include "Component\TransformComponent.h"
+#include "Component/TransformComponent.h"
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
-
-#include "Entity.h"
 
 namespace GDE
 {

@@ -8,6 +8,8 @@ namespace GDE
         Magnum::SceneGraph::Camera3D* _camera;
 
     public:
+        static constexpr auto type = "Camera";
+
         CameraComponent(Entity& owner) : Component(owner) {}
         ~CameraComponent();
 

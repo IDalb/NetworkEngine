@@ -1,10 +1,12 @@
 #include "Component/ColoredDrawableComponent.h"
 #include "Entity.h"
+#include "Scene.h"
+
 #include "Component/TransformComponent.h"
 #include "Component/MeshGroupComponent.h"
-#include "Scene.h"
-#include "Magnum/Math/Color.h"
+
 #include "System/DisplaySystem.h"
+
 namespace GDE
 {
 	void ColoredDrawableComponent::setup(const ComponentDescription& init_value)

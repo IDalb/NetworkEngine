@@ -40,8 +40,19 @@ namespace GDE
         void removeChild(Entity& child) { removeChild(child.shared_from_this()); }
 
         Component* addComponent(std::string type, const ComponentDescription& initial_value);
-        template<typename T> T* addComponent(const typename T::init_values& initial_value);
+        template<typename T> 
+        T* addComponent(const typename T::init_values& initial_value)
+        {
+            auto result = _components.emplace(T::type, std::unique_ptr<T>(*this));
+            auto iterator = result.first;
+            T* component = dynamic_cast<T*>(iterator->second.get());
+            component->setup(initial_value);
+        }
         Component* getComponent(std::string type) const;
-        template<typename T> T* getComponent() const;
+        template<typename T> T* getComponent() const
+        {
+            return dynamic_cast<T*>(getComponent(T::type)); 
+        }
+
     };
 }

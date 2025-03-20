@@ -1,7 +1,9 @@
 #include "Component/RigidbodyComponent.h"
 
-#include "BulletDynamics/Dynamics/btRigidBody.h"
 #include "System/PhysicsSystem.h"
+
+#include "Entity.h"
+#include "Component/TransformComponent.h"
 
 GDE::RigidbodyComponent::~RigidbodyComponent() {
     _bWorld->removeRigidBody(_bRigidbody.get());
@@ -21,7 +23,7 @@ void GDE::RigidbodyComponent::resolve()
         _bShape->calculateLocalInertia(_mass, bInertia);
 
     /* Bullet rigidbody setup */
-    auto* motionState = new Magnum::BulletIntegration::MotionState{ *this };
+    auto* motionState = new Magnum::BulletIntegration::MotionState{ owner().getComponent<TransformComponent>()->getTransform() };
     _bRigidbody.emplace(btRigidBody::btRigidBodyConstructionInfo{
         _mass,
         &motionState->btMotionState(),
@@ -33,5 +35,5 @@ void GDE::RigidbodyComponent::resolve()
 }
 
 void GDE::RigidbodyComponent::syncPose() {
-    _bRigidbody->setWorldTransform(btTransform(transformationMatrix()));
+    _bRigidbody->setWorldTransform(btTransform(owner().getComponent<TransformComponent>()->getTransform().transformationMatrix()));
 }
