@@ -1,4 +1,7 @@
 #include "Game.h"
+#include "System/DisplaySystem.h"
+#include "System/GuiSystem.h"
+#include "System/PhysicsSystem.h"
 
 class TPGame final : public GDE::Game
 {
@@ -16,11 +19,14 @@ TPGame::TPGame(const Arguments& arguments): Game(
 ) {}
 
 void TPGame::setupSystem() {
-    // TODO: Implementation
+    addSystem<GDE::EntitySystem>();
+    addSystem<GDE::PhysicsSystem>();
+    addSystem<GDE::DisplaySystem>();
+    addSystem<GDE::GuiSystem>();
 }
 
 void TPGame::registerComponent() const {
-    // TODO: Implementation
+
 }
 
 MAGNUM_APPLICATION_MAIN(TPGame);

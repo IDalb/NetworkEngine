@@ -7,18 +7,21 @@
 
 #include "Component/ShapeComponent.h"
 
-GDE::RigidbodyComponent::~RigidbodyComponent() {
-    _bWorld->removeRigidBody(_bRigidbody.get());
-}
-
-void GDE::RigidbodyComponent::setup(const ComponentDescription &init_value)
+namespace GDE
 {
-    _mass = init_value.parameters.contains("mass") ? init_value.parameters.at("mass").as<float>() : 1.0f;
-}
+    RigidbodyComponent::~RigidbodyComponent() {
+        _bWorld->removeRigidBody(_bRigidbody.get());
+    }
 
-void GDE::RigidbodyComponent::resolve()
-{
-    _bWorld = PhysicsSystem::getInstance().getWorld();
+    void RigidbodyComponent::setup(const ComponentDescription &init_value)
+    {
+        _mass = init_value.parameters.contains("mass") ? init_value.parameters.at("mass").as<float>() : 1.0f;
+    }
+
+    void RigidbodyComponent::resolve()
+    {
+        _transform = owner().getComponent<TransformComponent>();
+        _bWorld = PhysicsSystem::getInstance().getWorld();
 
     auto shape = owner().getComponent<ShapeComponent>();
     switch (shape->_shape)
@@ -31,9 +34,9 @@ void GDE::RigidbodyComponent::resolve()
         break;
     }
 
-    btVector3 bInertia(0.0f, 0.0f, 0.0f);
-    if (!Magnum::Math::TypeTraits<Magnum::Float>::equals(_mass, 0.0f))
-        _bShape->calculateLocalInertia(_mass, bInertia);
+        btVector3 bInertia(0.0f, 0.0f, 0.0f);
+        if (!Magnum::Math::TypeTraits<Magnum::Float>::equals(_mass, 0.0f))
+            _bShape->calculateLocalInertia(_mass, bInertia);
 
     /* Bullet rigidbody setup */
     auto* motionState = new Magnum::BulletIntegration::MotionState{ owner().getComponent<TransformComponent>()->getTransform() };
@@ -47,6 +50,7 @@ void GDE::RigidbodyComponent::resolve()
     _bWorld->addRigidBody(_bRigidbody.get());
 }
 
-void GDE::RigidbodyComponent::syncPose() {
-    _bRigidbody->setWorldTransform(btTransform(owner().getComponent<TransformComponent>()->getTransform().transformationMatrix()));
+    void RigidbodyComponent::syncPose() {
+        _bRigidbody->setWorldTransform(btTransform(owner().getComponent<TransformComponent>()->getTransform().transformationMatrix()));
+    }
 }

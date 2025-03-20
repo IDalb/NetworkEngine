@@ -32,4 +32,10 @@
       ColoredDrawable:
         color: [1,0,0]
         mesh_group: "BoxGroup"
-      
+
+- name: "Camera"
+  description:
+    children:
+    components:
+      Camera:
+        aspect_ratio: 1.0f

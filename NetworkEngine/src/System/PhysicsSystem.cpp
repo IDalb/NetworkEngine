@@ -4,9 +4,9 @@
 #include "BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h"
 #include "BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
 #include "Magnum/BulletIntegration/DebugDraw.h"
+
 namespace GDE
 {
-
     PhysicsSystem::PhysicsSystem()
     {
         // Debug Draw

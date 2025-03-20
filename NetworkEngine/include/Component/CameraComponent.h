@@ -11,10 +11,9 @@ namespace GDE
         static constexpr auto type = "Camera";
 
         CameraComponent(Entity& owner) : Component(owner) {}
-        ~CameraComponent();
+        ~CameraComponent() override = default;
 
         void setup(const ComponentDescription &init_value) override;
-        void resolve() override;
 
         Magnum::SceneGraph::Camera3D* getCamera() { return _camera; };
     };

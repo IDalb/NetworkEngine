@@ -4,6 +4,7 @@
 #include <Magnum/BulletIntegration/MotionState.h>
 
 #include <btBulletDynamicsCommon.h>
+#include "TransformComponent.h"
 #include "Corrade/Containers/Pointer.h"
 #include "Magnum/BulletIntegration/MotionState.h"
 
@@ -14,6 +15,7 @@ namespace GDE
         float _mass;
         std::unique_ptr<btCollisionShape> _bShape;
         btDynamicsWorld* _bWorld;
+        TransformComponent* _transform;
         Magnum::Containers::Pointer<btRigidBody> _bRigidbody;
 
     public:

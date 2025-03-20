@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Component.h"
-#include "TypeDef.h"
+#include "Component/Component.h"
+
 namespace GDE
 {
     class TransformComponent : public Component
