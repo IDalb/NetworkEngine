@@ -35,11 +35,11 @@ namespace GDE
         EntityRef getChild(const std::string& name) const;
         std::span<EntityRef> getChildren() { return _children; }
 
-        void addChild(std::string name, const EntityRef& entity);
+        void addChild(const std::string& name, const EntityRef& entity);
         void removeChild(EntityRef child);
         void removeChild(Entity& child) { removeChild(child.shared_from_this()); }
 
-        Component* addComponent(std::string type, const ComponentDescription& initial_value);
+        Component* addComponent(const std::string& type, const ComponentDescription& initial_value);
         template<typename T> 
         T* addComponent(const typename T::init_values& initial_value)
         {
@@ -48,7 +48,7 @@ namespace GDE
             T* component = dynamic_cast<T*>(iterator->second.get());
             component->setup(initial_value);
         }
-        Component* getComponent(std::string type) const;
+        Component* getComponent(const std::string& type) const;
         template<typename T> T* getComponent() const
         {
             return dynamic_cast<T*>(getComponent(T::type)); 

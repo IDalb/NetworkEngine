@@ -15,6 +15,19 @@
       MeshGroup:
         shape: "box"
       
+- name: "SphereGroup"
+  description:
+    children:
+    components:
+      MeshGroup:
+        shape: "sphere"
+
+- name: "BallShoot"
+  description:
+    children:
+    components:
+      BallShoot:
+
 - name: "Ground"
   description:
     children:

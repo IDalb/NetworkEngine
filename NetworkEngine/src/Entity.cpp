@@ -26,9 +26,22 @@ namespace GDE {
         return child->second.lock();
     }
 
-    void Entity::addChild(std::string name, const EntityRef& entity) {
+    void Entity::addChild(const std::string& name, const EntityRef& entity) {
         _children.push_back(entity);
-        _childrenByName[name] = entity;
+        if (_childrenByName.contains(name))
+        {
+            int nameIndex = 1;
+            while (_childrenByName.contains(name + std::to_string(nameIndex)))
+            {
+                nameIndex++;
+            }
+            _childrenByName[name + std::to_string(nameIndex)] = entity;
+
+        }
+        else
+        {
+            _childrenByName[name] = entity;
+        }
         entity->_parent = weak_from_this();
     }
 
@@ -39,7 +52,7 @@ namespace GDE {
     }
 
 
-    Component* Entity::addComponent(std::string type, const ComponentDescription& initial_value) {
+    Component* Entity::addComponent(const std::string& type, const ComponentDescription& initial_value) {
         auto result = _components.emplace(type, Component::create(type, *this));
         auto iterator = result.first;
         auto* component = dynamic_cast<Component*>(iterator->second.get());
@@ -49,7 +62,7 @@ namespace GDE {
 
 
 
-    Component* Entity::getComponent(std::string type) const {
+    Component* Entity::getComponent(const std::string& type) const {
         auto component = _components.find(type);
 
         if (component == _components.end())
