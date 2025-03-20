@@ -7,6 +7,10 @@
 
 #include <Magnum/GL/Renderer.h>
 #include <Magnum/ImGuiIntegration/Integration.h>
+#include <Magnum/Math/Color.h>
+
+using namespace Magnum::Math::Literals;
+
 namespace GDE
 {
 	DisplaySystem& DisplaySystem::getInstance()
@@ -18,12 +22,16 @@ namespace GDE
 
 	void DisplaySystem::setup()
 	{
+		_shader = Magnum::Shaders::PhongGL{ Magnum::Shaders::PhongGL::Configuration{}
+			   .setFlags(Magnum::Shaders::PhongGL::Flag::VertexColor |
+						 Magnum::Shaders::PhongGL::Flag::InstancedTransformation) };
+		_shader.setAmbientColor(0x111111_rgbf)
+			.setSpecularColor(0x330000_rgbf)
+			.setLightPositions({ {10.0f, 15.0f, 5.0f, 0.0f} });
 	}
 
 	void DisplaySystem::iterate(const Timing& dt)
 	{
-
-
 		for (auto& display_component : _displayComponents)
 		{
 			if (display_component->enabled() && display_component->owner().active())
