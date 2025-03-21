@@ -22,24 +22,12 @@ namespace GDE
 	}
 	void ColoredDrawableComponent::resolve()
 	{
-		//if (auto rigidBody = owner().getComponent<RigidbodyComponent>())
-		//{
-		//	_object = std::make_unique<ColoredDrawable>(
-		//		rigidBody->getRigidBody(),
-		//		Scene::findEntity(_meshGroup)->getComponent<MeshGroupComponent>()->getInstanceData(),
-		//		Magnum::Color3(_color),
-		//		Magnum::Matrix4::scaling(Magnum::Vector3{ 0.5f }),
-		//		DisplaySystem::getInstance().getDrawable());
-		//}
-		//else
+		_object = new ColoredDrawable(
+			owner().getComponent<TransformComponent>()->getTransform(),
+			&Scene::findEntityWithTag(_meshGroup)->getComponent<MeshGroupComponent>()->getInstanceData(),
+			Magnum::Color3(_color),
+			Magnum::Matrix4::scaling(owner().getComponent<ShapeComponent>()->getGlobalSize()),
+			DisplaySystem::getInstance().getDrawable());
 		
-		{
-			_object = new ColoredDrawable(
-				owner().getComponent<TransformComponent>()->getTransform(),
-				Scene::findEntity(_meshGroup)->getComponent<MeshGroupComponent>()->getInstanceData(),
-				Magnum::Color3(_color),
-				Magnum::Matrix4::scaling(owner().getComponent<ShapeComponent>()->getGlobalSize()),
-				DisplaySystem::getInstance().getDrawable());
-		}
 	}
 }

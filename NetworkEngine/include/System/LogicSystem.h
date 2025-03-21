@@ -22,7 +22,10 @@ namespace GDE
             void removeComponent(LogicComponent* logic_component);
 
             static LogicSystem& getInstance();
+            void setEnable(bool enable) { _enable = enable; }
+
         private:
+            bool _enable = true;
             std::unordered_set<LogicComponent*> _logicComponents;
         
     };

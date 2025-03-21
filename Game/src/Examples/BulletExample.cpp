@@ -120,7 +120,10 @@ namespace Magnum
         {
         public:
             explicit ColoredDrawable(Object3D& object, Containers::Array<InstanceData>& instanceData, const Color3& color, const Matrix4& primitiveTransformation, SceneGraph::DrawableGroup3D& drawables) : SceneGraph::Drawable3D{ object, &drawables }, _instanceData(instanceData), _color{ color }, _primitiveTransformation{ primitiveTransformation } {}
-
+            ~ColoredDrawable()
+            {
+                int a = 1;
+            }
         private:
             void draw(const Matrix4& transformation, SceneGraph::Camera3D&) override
             {
@@ -407,4 +410,4 @@ namespace Magnum
 
     }
 }
-//MAGNUM_APPLICATION_MAIN(Magnum::Examples::BulletExample);
+MAGNUM_APPLICATION_MAIN(Magnum::Examples::BulletExample);

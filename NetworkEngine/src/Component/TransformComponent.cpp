@@ -6,6 +6,7 @@ namespace GDE
 {
     TransformComponent::~TransformComponent()
     {
+        delete _transform;
     }
 
     void TransformComponent::setup(const ComponentDescription& init_value)

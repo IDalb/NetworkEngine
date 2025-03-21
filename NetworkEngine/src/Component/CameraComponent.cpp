@@ -15,6 +15,10 @@ namespace GDE
         return init_value.parameters.contains(key) ? init_value.parameters.at(key).as<float>() : default_value;
     }
 
+    void CameraComponent::update(const Timing& timing)
+    {
+    }
+
     void CameraComponent::setup(const ComponentDescription &init_value) {
         _projectionAngle = getValue(init_value, "projection_angle", 45);
         _aspectRatio = getValue(init_value, "aspect_ratio", 1.0);

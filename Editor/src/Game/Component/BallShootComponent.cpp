@@ -1,4 +1,4 @@
-#include "Component/BallShootComponent.h"
+#include "Game/Component/BallShootComponent.h"
 #include <Component/TransformComponent.h>
 #include <Component/RigidbodyComponent.h>
 #include <source_dir.h>

@@ -7,22 +7,21 @@
 #include "Magnum/SceneGraph/Drawable.h"
 #include "Magnum/Math/Vector.h"
 #include <Corrade/Containers/GrowableArray.h>
-
 namespace GDE
 {
     class ColoredDrawable : public Magnum::SceneGraph::Drawable3D
     {
     public:
-        explicit ColoredDrawable(Object3D& object, Magnum::Containers::Array<InstanceData>& instanceData, const Magnum::Color3& color, const Magnum::Matrix4& primitiveTransformation, Magnum::SceneGraph::DrawableGroup3D& drawables) : Magnum::SceneGraph::Drawable3D{ object, &drawables }, _instanceData(instanceData), _color{ color }, _primitiveTransformation{ primitiveTransformation } {}
-
+        ColoredDrawable(Object3D& object, Magnum::Containers::Array<InstanceData>* instanceData, const Magnum::Color3& color, const Magnum::Matrix4& primitiveTransformation, Magnum::SceneGraph::DrawableGroup3D& drawables) : Magnum::SceneGraph::Drawable3D{ object, &drawables }, _instanceData(instanceData), _color{ color }, _primitiveTransformation{ primitiveTransformation } {}
+        ~ColoredDrawable();
     private:
         void draw(const Magnum::Matrix4& transformation, Magnum::SceneGraph::Camera3D&) override
         {
             const Magnum::Matrix4 t = transformation * _primitiveTransformation;
-            arrayAppend(_instanceData, Magnum::InPlaceInit, t, t.normalMatrix(), _color);
+            arrayAppend(*_instanceData, Magnum::InPlaceInit, t, t.normalMatrix(), _color);
         }
 
-        Magnum::Containers::Array<InstanceData>& _instanceData;
+        Magnum::Containers::Array<InstanceData>* _instanceData = nullptr;
         Magnum::Color3 _color;
         Magnum::Matrix4 _primitiveTransformation;
     };

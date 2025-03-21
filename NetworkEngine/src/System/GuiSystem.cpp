@@ -74,6 +74,7 @@ namespace GDE
 				display_component->update(dt);
 			}
 		}
+		
 		_imguiContext.updateApplicationCursor(*_app);
 	}
 

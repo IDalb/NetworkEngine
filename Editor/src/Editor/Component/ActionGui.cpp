@@ -1,5 +1,12 @@
-#include "Component/ActionGui.h"
+#include "Editor/Component/ActionGui.h"
 #include <imgui.h>
+#include <Entity.h>
+#include "Editor/Component/ProjectTreeGuiComponent.h"
+
+#include <System/AlternateLogicSystem.h>
+#include <System/LogicSystem.h>
+#include <System/PhysicsSystem.h>
+
 namespace GDEEditor
 {
 	void ActionGuiComponent::setup(const GDE::ComponentDescription& init_value)
@@ -22,6 +29,22 @@ namespace GDEEditor
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);  // 20px space
 		if (ImGui::Button("Play", ImVec2(screenSize.x * 0.04, screenSize.y * 0.04)))
 		{
+			if (_playing)
+			{
+				_playing = false;
+				GDE::PhysicsSystem::getInstance().setEnable(false);
+				GDE::LogicSystem::getInstance().setEnable(false);
+				GDE::AlternateLogicSystem::getInstance().setEnable(true);
+				owner().getComponent<ProjectTreeGuiComponent>()->resetScene();
+			}
+			else
+			{
+				_playing = true;
+				GDE::PhysicsSystem::getInstance().setEnable(true);
+				GDE::LogicSystem::getInstance().setEnable(true);
+				GDE::AlternateLogicSystem::getInstance().setEnable(false);
+				owner().getComponent<ProjectTreeGuiComponent>()->resetCamera();
+			}
 		}
 		    ImGui::PopStyleVar(); // Restore style var for other buttons
 

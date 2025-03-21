@@ -1,4 +1,4 @@
-#include "Component/PropertiesEditorGui.h"
+#include "Editor/Component/PropertiesEditorGui.h"
 #include <imgui.h>
 #include <Game.h>
 namespace GDEEditor

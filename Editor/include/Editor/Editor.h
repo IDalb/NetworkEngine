@@ -5,9 +5,7 @@
 #include <Magnum/GL/DefaultFramebuffer.h>
 #include <Magnum/GL/Renderer.h>
 
-#ifndef SHIPPING
 #include <Magnum/ImGuiIntegration/Context.hpp>
-#endif
 #include <Game.h>
 
 #include "Magnum/ImGuiIntegration/Context.hpp"
@@ -23,9 +21,6 @@ namespace GDEEditor
         void registerComponent() const override;
         void setupScene() override;
         //void drawEvent() override;
-
-       void viewportEvent(ViewportEvent& event) override;
-
     private:
         ImGuiIntegration::Context _imguiContext{ NoCreate };
         bool _showDemoWindow = true;

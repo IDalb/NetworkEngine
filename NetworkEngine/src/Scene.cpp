@@ -1,6 +1,6 @@
 #include "Scene.h"
 #include "Entity.h"
-
+#include "Utils/MagnumScene.h"
 #include <map>
 
 namespace GDE
@@ -114,8 +114,8 @@ namespace GDE
 
         Scene3D& getMagnumScene()
         {
-            static Scene3D scene;
-            return scene;
+            static MagnumScene scene;
+            return scene.getScene();
         }
 
         Entity* findEntityWithTag(const std::string_view& tag)

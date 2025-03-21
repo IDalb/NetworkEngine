@@ -22,6 +22,9 @@ namespace GDE
 
     void PhysicsSystem::iterate(const Timing& dt)
     {
-        _bWorld->stepSimulation(dt._dt, 5);
+        if (_enable)
+        {
+            _bWorld->stepSimulation(dt._dt, 5);
+        }
     }
 }

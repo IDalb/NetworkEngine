@@ -41,7 +41,9 @@ namespace GDE
         void textInputEvent(Magnum::Platform::GlfwApplication::TextInputEvent& event);
 
         Magnum::ImGuiIntegration::Context& getContext() { return _imguiContext; }
+        void setEnable(bool enable) { _enable = enable; }
     private:
+        bool _enable = true;
         std::unordered_set<GuiComponent*> _guiComponents;
         Magnum::ImGuiIntegration::Context _imguiContext{ Magnum::NoCreate };
         Magnum::Platform::GlfwApplication* _app{};

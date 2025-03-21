@@ -1,4 +1,4 @@
-#include "System/DisplaySystem.h"
+#include "System/DisplaySystemImpl.h"
 #include "System/PhysicsSystem.h"
 #include "Component/DisplayComponent.h"
 #include "Component/MeshGroupComponent.h"
@@ -17,14 +17,7 @@ using namespace Magnum::Math::Literals;
 
 namespace GDE
 {
-	DisplaySystem& DisplaySystem::getInstance()
-	{
-		static DisplaySystem display_system;
-		return display_system;
-	}
-
-
-	void DisplaySystem::setup()
+	void DisplaySystemImpl::setup()
 	{
 		_shader = std::make_unique<Magnum::Shaders::PhongGL>(Magnum::Shaders::PhongGL::Configuration{}
 			   .setFlags(Magnum::Shaders::PhongGL::Flag::VertexColor |
@@ -39,7 +32,7 @@ namespace GDE
 		Magnum::GL::Renderer::setPolygonOffset(2.0f, 0.5f);
 	}
 
-	void DisplaySystem::clean()
+	void DisplaySystemImpl::clean()
 	{
 		_shader.reset();
 		for (auto& component : _displayComponents)
@@ -51,7 +44,34 @@ namespace GDE
 		}
 	}
 
-	void DisplaySystem::iterate(const Timing& dt)
+	void DisplaySystemImpl::iterate(const Timing& dt)
+	{
+		if(_enable)
+		{
+			renderScene(dt);
+		}
+		renderUi();
+	}
+
+	void DisplaySystemImpl::renderUi()
+	{
+		if (GuiSystem::_exist)
+		{
+			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::Blending);
+			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::ScissorTest);
+			Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::FaceCulling);
+			Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::DepthTest);
+
+			GuiSystem::getInstance().getContext().drawFrame();
+
+			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::DepthTest);
+			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::FaceCulling);
+			Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::ScissorTest);
+			Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::Blending);
+		}
+	}
+
+	void DisplaySystemImpl::renderScene(const GDE::Timing& dt)
 	{
 		for (auto& display_component : _displayComponents)
 		{
@@ -61,7 +81,8 @@ namespace GDE
 			}
 		}
 
-		auto camera = Scene::findEntityWithTag("camera")->getComponent<CameraComponent>()->getCamera();
+		auto c = Scene::findEntitiesWithTag("camera");
+		auto camera = Scene::findEntitiesWithTag("camera")->back()->getComponent<CameraComponent>()->getCamera();
 		camera->draw(_drawable);
 		_shader->setProjectionMatrix(camera->projectionMatrix());
 
@@ -71,36 +92,20 @@ namespace GDE
 			{
 				display_component->display(*_shader.get(), dt);
 			}
-		}                 
+		}
 
 		Magnum::GL::Renderer::setDepthFunction(Magnum::GL::Renderer::DepthFunction::LessOrEqual);
 		PhysicsSystem::getInstance().getDebugDraw()->setTransformationProjectionMatrix(
 			camera->projectionMatrix() * camera->cameraMatrix());
 		PhysicsSystem::getInstance().getWorld()->debugDrawWorld();
 		Magnum::GL::Renderer::setDepthFunction(Magnum::GL::Renderer::DepthFunction::Less);
-
-
-		if (GuiSystem::_exist)
-		{
-			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::Blending);
-			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::ScissorTest);
-			Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::FaceCulling);
-			Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::DepthTest);
-			
-			GuiSystem::getInstance().getContext().drawFrame();
-			
-			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::DepthTest);
-			Magnum::GL::Renderer::enable(Magnum::GL::Renderer::Feature::FaceCulling);
-			Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::ScissorTest);
-			Magnum::GL::Renderer::disable(Magnum::GL::Renderer::Feature::Blending);
-			}
 	}
 
-	void DisplaySystem::registerComponent(DisplayComponent* display_component)
+	void DisplaySystemImpl::registerComponent(DisplayComponent* display_component)
 	{
 		_displayComponents.insert(display_component);
 	}
-	void DisplaySystem::removeComponent(DisplayComponent* display_component)
+	void DisplaySystemImpl::removeComponent(DisplayComponent* display_component)
 	{
 		_displayComponents.erase(display_component);
 	}

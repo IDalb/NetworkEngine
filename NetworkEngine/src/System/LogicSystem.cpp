@@ -10,11 +10,14 @@ namespace GDE
 
 	void LogicSystem::iterate(const Timing& dt)
 	{
-		for (auto& logic_component : _logicComponents)
+		if(_enable)
 		{
-			if(logic_component->enabled() && logic_component->owner().active())
+			for (auto& logic_component : _logicComponents)
 			{
-				logic_component->updateLogic(dt);
+				if (logic_component->enabled() && logic_component->owner().active())
+				{
+					logic_component->updateLogic(dt);
+				}
 			}
 		}
 	}

@@ -5,13 +5,14 @@
 
 #include <Magnum/Shaders/PhongGL.h>
 #include <Magnum/SceneGraph/Drawable.h>
-
+#include "System/DisplaySystemImpl.h"
 namespace GDE
 {
     class DisplaySystem :
     public System
     {
     public:
+
         DisplaySystem() = default;
         DisplaySystem(const DisplaySystem&) = default;
         DisplaySystem(DisplaySystem&&) = default;
@@ -20,21 +21,28 @@ namespace GDE
 
         ~DisplaySystem() = default;
 
-        void setup();
-        void clean();
+        void initImpl(std::function<std::unique_ptr<DisplaySystemImpl>()> implFun){ impl_ = implFun(); }
 
-        void iterate(const Timing& dt) override;
+        void setup() { impl_->setup(); }
+        void clean() { impl_->clean(); }
 
-        void registerComponent(DisplayComponent* display_component);
-        void removeComponent(DisplayComponent* display_component);
+        void iterate(const Timing& dt) override { impl_->iterate(dt); }
 
-        static DisplaySystem& getInstance();
+        void registerComponent(DisplayComponent* display_component) { impl_->registerComponent(display_component); }
+        void removeComponent(DisplayComponent* display_component) { impl_->removeComponent(display_component); }
 
-        Magnum::SceneGraph::DrawableGroup3D& getDrawable() { return _drawable; }
+        static DisplaySystem& getInstance()
+        {
+            static DisplaySystem display_system;
+            return display_system;
+        }
+
+        void setEnable(bool enable) { impl_->setEnable(enable); }
+
+        Magnum::SceneGraph::DrawableGroup3D& getDrawable() { return impl_->getDrawable(); }
     private:
-        std::unordered_set<DisplayComponent*> _displayComponents;
-        std::unique_ptr<Magnum::Shaders::PhongGL> _shader;
-        Magnum::SceneGraph::DrawableGroup3D _drawable;
+        bool _enable = true;
+        std::unique_ptr<DisplaySystemImpl> impl_;
     };
 }
 

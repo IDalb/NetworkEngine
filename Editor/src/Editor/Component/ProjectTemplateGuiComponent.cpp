@@ -1,4 +1,4 @@
-#include "Component/ProjectTemplateGuiComponent.h"
+#include "Editor/Component/ProjectTemplateGuiComponent.h"
 #include <Game.h>
 #include <imgui.h>
 namespace GDEEditor

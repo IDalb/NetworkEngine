@@ -7,9 +7,12 @@
 #include <Magnum/SceneGraph/Scene.h>
 #include <Magnum/SceneGraph/Object.h>
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
+#include "Component/AlternateLogicComponent.h"
+#include "Component/LogicComponent.h"
 namespace GDE
 {
-    class CameraComponent : public Component {
+    class CameraComponent : public AlternateLogicComponent, public LogicComponent
+    {
     private:
         Magnum::SceneGraph::Camera3D* _camera;
         float _projectionAngle = 35.f;
@@ -18,11 +21,16 @@ namespace GDE
         float _nearDistance = 100.f;
 
         Magnum::Matrix4 _CameraView;
+
+        void update(const Timing& timing);
     public:
         static constexpr auto type = "Camera";
 
         CameraComponent(Entity& owner) : Component(owner) {}
         ~CameraComponent() = default;
+
+        void updateAlternateLogic(const Timing& timing) override { update(timing); }
+        void updateLogic(const Timing& timing) override { update(timing); }
 
         void setup(const ComponentDescription &init_value) override;
         void resolve() override;

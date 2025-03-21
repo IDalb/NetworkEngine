@@ -1,0 +1,5 @@
+- name: "SceneCleaner"
+  description:
+    children:
+    components:
+      SceneCleaner:

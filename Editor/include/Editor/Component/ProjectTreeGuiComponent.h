@@ -1,7 +1,7 @@
 #pragma once
 #include <Component/GuiComponent.h>
 #include <Component/DisplayComponent.h>
-
+#include <TypeDef.h>
 namespace GDEEditor
 {
 	class ProjectTreeGuiComponent:
@@ -17,11 +17,15 @@ namespace GDEEditor
 		ProjectTreeGuiComponent(ProjectTreeGuiComponent&&) = default;
 		ProjectTreeGuiComponent& operator=(ProjectTreeGuiComponent&&) = default;
 
+		void resetScene();
+		void resetCamera();
+
 		void setup(const GDE::ComponentDescription& init_value) override;
 
 		void update(const GDE::Timing& dt) override;
 
 	private:
-
+		GDE::Description _gameWorld;
+		GDE::Object3D _cameraDefaultTransform;
 	};
 }

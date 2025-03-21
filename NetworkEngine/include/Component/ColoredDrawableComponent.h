@@ -15,6 +15,7 @@ namespace GDE
 		static constexpr auto type = "ColoredDrawable";
 
 		ColoredDrawableComponent(Entity& owner) : Component(owner) {}
+		~ColoredDrawableComponent() {}
 		ColoredDrawableComponent(const ColoredDrawableComponent&) = default;
 		ColoredDrawableComponent& operator=(const ColoredDrawableComponent&) = default;
 		ColoredDrawableComponent(ColoredDrawableComponent&&) = default;
@@ -24,7 +25,7 @@ namespace GDE
 		void resolve();
 
     private:
-		ColoredDrawable* _object;
+		ColoredDrawable* _object = nullptr;
 		std::string _meshGroup = "";
 		Magnum::Vector3 _color;
     };

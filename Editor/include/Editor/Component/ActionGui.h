@@ -22,6 +22,6 @@ namespace GDEEditor
 		void update(const GDE::Timing& dt) override;
 
 	private:
-
+		bool _playing = false;
 	};
 }

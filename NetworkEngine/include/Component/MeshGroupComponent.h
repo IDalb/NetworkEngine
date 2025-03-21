@@ -21,7 +21,7 @@ namespace GDE
 		static constexpr auto type = "MeshGroup";
 
 		MeshGroupComponent(Entity& owner) : Component(owner) {}
-		~MeshGroupComponent() noexcept = default;
+		~MeshGroupComponent() = default;
 		MeshGroupComponent(const MeshGroupComponent&) = default;
 		MeshGroupComponent& operator=(const MeshGroupComponent&) = default;
 		MeshGroupComponent(MeshGroupComponent&&) = default;
