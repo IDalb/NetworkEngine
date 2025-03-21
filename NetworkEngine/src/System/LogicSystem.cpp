@@ -28,8 +28,6 @@ namespace GDE
 
 	void LogicSystem::removeComponent(LogicComponent* logic_component)
 	{
-
 		_logicComponents.erase(logic_component);
-		
 	}
 }

@@ -47,6 +47,18 @@
 - name: "TestBox"
   description:
     children:
+      - name: "TestBoxChild"
+        description:
+          children:
+          components:
+            Transform:
+              position: [0,-5,0]
+            Shape: 
+              shape: "box"
+              size: [1, 1, 1]
+            ColoredDrawable:
+              color: [0,1,0]
+              mesh_group: "BoxGroup"
     components:
       Transform:
         position: [0,0,5]
@@ -55,7 +67,7 @@
         size: [1, 1, 1]
       RigidBody:
       ColoredDrawable:
-        color: [1,0,0]
+        color: [0,0,1]
         mesh_group: "BoxGroup"
 
 - name: "TestBox2"

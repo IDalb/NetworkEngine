@@ -20,7 +20,7 @@ namespace GDE
         ~TransformComponent();
 
         void setup(const ComponentDescription &init_value) override;
-
+        void resolve();
         Object3D& getTransform() { return *_transform; }
     };
 }

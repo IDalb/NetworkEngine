@@ -6,7 +6,7 @@
 #include "BulletCollision/BroadphaseCollision/btDbvtBroadphase.h"
 #include "BulletCollision/CollisionDispatch/btDefaultCollisionConfiguration.h"
 #include "BulletDynamics/ConstraintSolver/btSequentialImpulseConstraintSolver.h"
-
+#include "Component/PhysicsComponent.h"
 #include "System/System.h"
 
 namespace GDE
@@ -15,7 +15,10 @@ namespace GDE
 
 
     private:
-        bool _enable = true;        std::unique_ptr<btDiscreteDynamicsWorld> _bWorld;
+        bool _enable = true;      
+        std::unordered_set<PhysicsComponent*> _physicsComponent;
+
+        std::unique_ptr<btDiscreteDynamicsWorld> _bWorld;
         std::unique_ptr<Magnum::BulletIntegration::DebugDraw> _debugDraw;
 
         // Bullet world initialization
@@ -35,6 +38,9 @@ namespace GDE
 
         Magnum::BulletIntegration::DebugDraw* getDebugDraw() { return _debugDraw.get(); }
         btDiscreteDynamicsWorld* getWorld() const { return _bWorld.get(); };
+
+        void registerComponent(PhysicsComponent* physics_component);
+        void removeComponent(PhysicsComponent* physics_component);
 
         void setEnable(bool enable) { _enable = enable; }
     };

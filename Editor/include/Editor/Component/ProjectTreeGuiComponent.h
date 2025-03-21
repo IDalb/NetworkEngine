@@ -25,6 +25,8 @@ namespace GDEEditor
 		void update(const GDE::Timing& dt) override;
 
 	private:
+		void createScene();
+
 		GDE::Description _gameWorld;
 		GDE::Object3D _cameraDefaultTransform;
 	};

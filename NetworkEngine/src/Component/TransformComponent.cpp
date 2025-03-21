@@ -1,17 +1,19 @@
 #include "Component/TransformComponent.h"
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
 #include "Scene.h"
+#include "Entity.h"
 
 namespace GDE
 {
     TransformComponent::~TransformComponent()
     {
-        delete _transform;
+        if(_transform->parent() == &Scene::getMagnumScene())
+            delete _transform;
     }
 
     void TransformComponent::setup(const ComponentDescription& init_value)
     {
-        _transform = new Object3D(&Scene::getMagnumScene());
+        _transform = new Object3D();
         //_transform.setParent(&Scene::getMagnumScene());
 
         if (init_value.parameters.contains("position"))
@@ -35,6 +37,17 @@ namespace GDE
                  init_value.parameters.at("scale")[1].as<float>(),
                  init_value.parameters.at("scale")[2].as<float>() }
             );
+        }
+    }
+    void TransformComponent::resolve()
+    {
+        if (auto transform = owner().getParent()->getComponent<TransformComponent>())
+        {
+            _transform->setParent(transform->_transform);
+        }
+        else
+        {
+            _transform->setParent(&Scene::getMagnumScene());
         }
     }
 }

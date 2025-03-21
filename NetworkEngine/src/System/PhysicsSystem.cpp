@@ -1,5 +1,5 @@
 #include "System/PhysicsSystem.h"
-
+#include "Entity.h"
 namespace GDE
 {
     PhysicsSystem::PhysicsSystem()
@@ -25,6 +25,23 @@ namespace GDE
         if (_enable)
         {
             _bWorld->stepSimulation(dt._dt, 5);
+            for (auto& phys_component : _physicsComponent)
+            {
+                if (phys_component->enabled() && phys_component->owner().active())
+                {
+                    phys_component->updatePhysics(dt);
+                }
+            }
         }
+    }
+
+    void PhysicsSystem::registerComponent(PhysicsComponent* physics_component)
+    {
+        _physicsComponent.insert(physics_component);
+    }
+
+    void PhysicsSystem::removeComponent(PhysicsComponent* physics_component)
+    {
+        _physicsComponent.erase(physics_component);
     }
 }

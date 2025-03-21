@@ -52,7 +52,12 @@ namespace GDE
         syncPose();
     }
 
+    void RigidbodyComponent::updatePhysics(const Timing& timing)
+    {
+        syncPose();
+    }
+
     void RigidbodyComponent::syncPose() {
-        _bRigidbody->setWorldTransform(btTransform(owner().getComponent<TransformComponent>()->getTransform().transformationMatrix()));
+        _bRigidbody->setWorldTransform(btTransform(owner().getComponent<TransformComponent>()->getTransform().absoluteTransformationMatrix()));
     }
 }

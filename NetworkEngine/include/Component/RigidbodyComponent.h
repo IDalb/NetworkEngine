@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "Component/PhysicsComponent.h"
 #include <Magnum/BulletIntegration/Integration.h>
 #include <Magnum/BulletIntegration/MotionState.h>
 
@@ -10,7 +10,8 @@
 
 namespace GDE
 {
-    class RigidbodyComponent : public Component {
+    class RigidbodyComponent : public PhysicsComponent
+    {
     private:
         float _mass;
         std::unique_ptr<btCollisionShape> _bShape;
@@ -21,15 +22,17 @@ namespace GDE
 
         btVector3 _bInertia;
 
+        void syncPose();
     public:
         static constexpr auto type = "RigidBody";
 
         RigidbodyComponent(Entity& owner) : Component(owner) {}
         ~RigidbodyComponent();
 
+        void updatePhysics(const Timing& timing) override;
+
         void setup(const ComponentDescription &init_value) override;
         void resolve() override;
-        void syncPose();
 
         btRigidBody& getRigidBody() { return *_bRigidbody; }
     };

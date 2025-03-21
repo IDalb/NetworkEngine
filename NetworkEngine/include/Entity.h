@@ -10,6 +10,7 @@ namespace GDE
     private:
         bool _active{true};
         std::string _tag{};
+        std::string _name{};
 
         std::weak_ptr<Entity> _parent;
         std::vector<EntityRef> _children;
@@ -29,7 +30,9 @@ namespace GDE
         }
 
         const std::string& getTag() const { return _tag; }
+        const std::string& getName() const { return _name; }
         void setTag(const std::string& tag) { _tag = tag; }
+        void setName(const std::string& name) { _name = name; }
 
         EntityRef getParent() const { return _parent.lock(); }
         EntityRef getChild(const std::string& name) const;
