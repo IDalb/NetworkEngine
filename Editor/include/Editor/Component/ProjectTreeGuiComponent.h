@@ -23,7 +23,9 @@ namespace GDEEditor
 		void setup(const GDE::ComponentDescription& init_value) override;
 
 		void update(const GDE::Timing& dt) override;
+		void save();
 
+		void createObject(const std::string& templatePate, const Magnum::Vector3& position);
 	private:
 		void createScene();
 

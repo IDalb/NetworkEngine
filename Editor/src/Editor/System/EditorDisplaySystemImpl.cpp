@@ -8,7 +8,7 @@ namespace GDEEditor
 		{
 			Vector2i framebufferSize = GDE::Game::_app->framebufferSize();
 			// Calculate viewport position from the bottom-left
-			Vector2i viewportPos = Vector2i(framebufferSize.x() * 0.15, framebufferSize.y() * 0.2);
+			Vector2i viewportPos = Vector2i(framebufferSize.x() * 0.15, framebufferSize.y() * 0.3);
 
 			// Calculate viewport size
 			Vector2i viewportSize = Vector2i(framebufferSize.x() * 0.85, framebufferSize.y());

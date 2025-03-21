@@ -28,39 +28,46 @@ namespace GDE
 		_imguiContext = Magnum::ImGuiIntegration::Context({ Magnum::NoCreate });
 	}
 
-	void GuiSystem::keyPressEvent(Magnum::Platform::GlfwApplication::KeyEvent& event)
+	bool GuiSystem::keyPressEvent(Magnum::Platform::GlfwApplication::KeyEvent& event)
 	{
-		if (_imguiContext.handleKeyPressEvent(event)) return;
+		if (_imguiContext.handleKeyPressEvent(event)) return true;
+		return false;
 	}
 
-	void GuiSystem::keyReleaseEvent(Magnum::Platform::GlfwApplication::KeyEvent& event)
+	bool GuiSystem::keyReleaseEvent(Magnum::Platform::GlfwApplication::KeyEvent& event)
 	{
-		if (_imguiContext.handleKeyReleaseEvent(event)) return;
+		if (_imguiContext.handleKeyReleaseEvent(event)) return true;
+		return false;
 	}
 
-	void GuiSystem::mousePressEvent(Magnum::Platform::GlfwApplication::MouseEvent& event)
+	bool GuiSystem::mousePressEvent(Magnum::Platform::GlfwApplication::MouseEvent& event)
 	{
-		if (_imguiContext.handleMousePressEvent(event)) return;
+		if (_imguiContext.handleMousePressEvent(event)) return true;
+		return false;
 	}
 
-	void GuiSystem::mouseReleaseEvent(Magnum::Platform::GlfwApplication::MouseEvent& event)
+	bool GuiSystem::mouseReleaseEvent(Magnum::Platform::GlfwApplication::MouseEvent& event)
 	{
-		if (_imguiContext.handleMouseReleaseEvent(event)) return;
+		if (_imguiContext.handleMouseReleaseEvent(event)) return true;
+		return false;
 	}
 
-	void GuiSystem::mouseMoveEvent(Magnum::Platform::GlfwApplication::MouseMoveEvent& event)
+	bool GuiSystem::mouseMoveEvent(Magnum::Platform::GlfwApplication::MouseMoveEvent& event)
 	{
-		if (_imguiContext.handleMouseMoveEvent(event)) return;
+		if (_imguiContext.handleMouseMoveEvent(event)) return true;
+		return false;
 	}
 
-	void GuiSystem::mouseScrollEvent(Magnum::Platform::GlfwApplication::MouseScrollEvent& event)
+	bool GuiSystem::mouseScrollEvent(Magnum::Platform::GlfwApplication::MouseScrollEvent& event)
 	{
-		if (_imguiContext.handleMouseScrollEvent(event)) return;
+		if (_imguiContext.handleMouseScrollEvent(event)) return true;
+		return false;
 	}
 
-	void GuiSystem::textInputEvent(Magnum::Platform::GlfwApplication::TextInputEvent& event)
+	bool GuiSystem::textInputEvent(Magnum::Platform::GlfwApplication::TextInputEvent& event)
 	{
-		if (_imguiContext.handleTextInputEvent(event)) return;
+		if (_imguiContext.handleTextInputEvent(event)) return true;
+		return false;
 	}
 
 

@@ -11,7 +11,7 @@ namespace Game
 	{
 		if (GDE::InputSystem::getInstance().isMouseButtonPressed(GDE::Mouse::LEFT))
 		{
-			GDE::Description descr = GDE::Descr::load(std::string(SOURCE_DIR) + "/Game/data/template/ball.yaml");
+			GDE::Description descr = GDE::Descr::load(std::string(SOURCE_DIR) + "/Editor/data/Game/template/ball.yaml");
 			auto camera_transform = GDE::Scene::findEntityWithTag("camera")->getComponent<GDE::TransformComponent>();
 			Magnum::Vector3 camera_pos = camera_transform->getTransform().transformationMatrix().translation();
 			

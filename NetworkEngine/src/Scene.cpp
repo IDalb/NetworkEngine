@@ -37,7 +37,6 @@ namespace GDE
         EntityRef CreateEntityInternal(const EntityDescription& description, const EntityRef& parent, const std::string_view& name, const std::string& tag)
         {
             EntityRef newEntity = Entity::create();
-            newEntity->setName(std::string(name));
             parent->addChild(std::string(name), newEntity);
             for (const auto& component : description.components)
                 newEntity->addComponent(component.first, component.second);

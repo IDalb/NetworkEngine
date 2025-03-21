@@ -1,85 +1,80 @@
-- name: "Camera"
-  tag: "camera"
+- name: Camera
+  tag: camera
   description:
-    children:
+    children: ~
     components:
       Transform:
-        position: [15,0,15]
+        position: [15, 0, 15]
       Camera:
         aspect_ratio: 1.7777778
-
-- name: "BoxGroup"
-  tag: "BoxGroup"
+- name: BoxGroup
+  tag: BoxGroup
   description:
-    children:
+    children: ~
     components:
       MeshGroup:
-        shape: "box"
-      
-- name: "SphereGroup"
-  tag: "SphereGroup"
+        shape: box
+- name: SphereGroup
+  tag: SphereGroup
   description:
-    children:
+    children: ~
     components:
       MeshGroup:
-        shape: "sphere"
-
-- name: "BallShoot"
+        shape: sphere
+- name: BallShoot
   description:
-    children:
+    children: ~
     components:
-      BallShoot:
-
-- name: "Ground"
+      BallShoot: ~
+- name: Ground
   description:
-    children:
+    children: ~
     components:
       Transform:
-      Shape: 
-        shape: "box"
+        position: [0,0,-1]
+      Shape:
+        shape: box
         size: [8, 8, 0.5]
       RigidBody:
         mass: 0
       ColoredDrawable:
-        color: [1,1,1]
-        mesh_group: "BoxGroup"
-      
-- name: "TestBox"
+        color: [1, 1, 1]
+        mesh_group: BoxGroup
+- name: TestBox
   description:
     children:
-      - name: "TestBoxChild"
+      - name: TestBoxChild
         description:
-          children:
+          children: ~
           components:
             Transform:
-              position: [0,-5,0]
-            Shape: 
-              shape: "box"
+              position: [0, -5, 0]
+            Shape:
+              shape: box
               size: [1, 1, 1]
             ColoredDrawable:
-              color: [0,1,0]
-              mesh_group: "BoxGroup"
+              color: [0, 1, 0]
+              mesh_group: BoxGroup
     components:
       Transform:
-        position: [0,0,5]
-      Shape: 
-        shape: "box"
+        position: [0, 0, 5]
+      Shape:
+        shape: box
         size: [1, 1, 1]
-      RigidBody:
+      RigidBody: ~
       ColoredDrawable:
-        color: [0,0,1]
-        mesh_group: "BoxGroup"
-
-- name: "TestBox2"
+        color: [0, 0, 1]
+        mesh_group: BoxGroup
+- name: TestBox2
   description:
-    children:
+    children: ~
     components:
       Transform:
-        position: [0,5,5]
-      Shape: 
-        shape: "box"
+        position: [0, 5, 5]
+      Shape:
+        shape: box
         size: [1, 1, 1]
-      RigidBody:
+      RigidBody: ~
       ColoredDrawable:
-        color: [1,0,0]
-        mesh_group: "BoxGroup"
+        color: [1, 0, 0]
+        mesh_group: BoxGroup

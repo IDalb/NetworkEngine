@@ -32,13 +32,13 @@ namespace GDE
 
         void remove();
 
-        void keyPressEvent(Magnum::Platform::GlfwApplication::KeyEvent& event);
-        void keyReleaseEvent(Magnum::Platform::GlfwApplication::KeyEvent& event);
-        void mousePressEvent(Magnum::Platform::GlfwApplication::MouseEvent& event);
-        void mouseReleaseEvent(Magnum::Platform::GlfwApplication::MouseEvent& event);
-        void mouseMoveEvent(Magnum::Platform::GlfwApplication::MouseMoveEvent& event);
-        void mouseScrollEvent(Magnum::Platform::GlfwApplication::MouseScrollEvent& event);
-        void textInputEvent(Magnum::Platform::GlfwApplication::TextInputEvent& event);
+        bool keyPressEvent(Magnum::Platform::GlfwApplication::KeyEvent& event);
+        bool keyReleaseEvent(Magnum::Platform::GlfwApplication::KeyEvent& event);
+        bool mousePressEvent(Magnum::Platform::GlfwApplication::MouseEvent& event);
+        bool mouseReleaseEvent(Magnum::Platform::GlfwApplication::MouseEvent& event);
+        bool mouseMoveEvent(Magnum::Platform::GlfwApplication::MouseMoveEvent& event);
+        bool mouseScrollEvent(Magnum::Platform::GlfwApplication::MouseScrollEvent& event);
+        bool textInputEvent(Magnum::Platform::GlfwApplication::TextInputEvent& event);
 
         Magnum::ImGuiIntegration::Context& getContext() { return _imguiContext; }
         void setEnable(bool enable) { _enable = enable; }

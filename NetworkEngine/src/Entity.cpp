@@ -35,11 +35,13 @@ namespace GDE {
             {
                 nameIndex++;
             }
+            entity->setName(name + std::to_string(nameIndex));
             _childrenByName[name + std::to_string(nameIndex)] = entity;
-
         }
         else
         {
+            entity->setName(std::string(name));
+
             _childrenByName[name] = entity;
         }
         entity->_parent = weak_from_this();

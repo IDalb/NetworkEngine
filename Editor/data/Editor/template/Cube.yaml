@@ -1,0 +1,14 @@
+- name: "Cube"
+  description:
+    children:
+    components:
+      Transform:
+        position: [0,0,0]
+      Shape: 
+        shape: "box"
+        size: [1, 1, 1]
+      RigidBody:
+      ColoredDrawable:
+        color: [1,1,1]
+        mesh_group: "BoxGroup"
+      

@@ -1,0 +1,14 @@
+- name: "Sphere"
+  description:
+    children:
+    components:
+      Transform:
+        position: [0,0,0]
+      Shape: 
+        shape: "sphere"
+        radius: 1
+      RigidBody:
+      ColoredDrawable:
+        color: [1,1,1]
+        mesh_group: "SphereGroup"
+      
