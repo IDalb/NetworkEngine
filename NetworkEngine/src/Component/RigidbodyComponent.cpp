@@ -48,6 +48,8 @@ namespace GDE
         });
         _bRigidbody->forceActivationState(DISABLE_DEACTIVATION);
         _bWorld->addRigidBody(_bRigidbody.get());
+        _bRigidbody->setUserPointer(this);
+
 
         syncPose();
     }

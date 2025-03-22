@@ -1,11 +1,12 @@
 #pragma once
 #include <Component/GuiComponent.h>
 #include <Component/DisplayComponent.h>
+#include <Component/AlternateLogicComponent.h>
 
 namespace GDEEditor
 {
 	class PropertiesEditorGuiComponent :
-		public GDE::GuiComponent
+		public GDE::GuiComponent, public GDE::AlternateLogicComponent
 	{
 	public:
 		static constexpr auto type = "PropertiesEditorGui";
@@ -20,6 +21,7 @@ namespace GDEEditor
 		void setup(const GDE::ComponentDescription& init_value) override;
 
 		void update(const GDE::Timing& dt) override;
+		void updateAlternateLogic(const GDE::Timing& timing) override;
 
 	private:
 

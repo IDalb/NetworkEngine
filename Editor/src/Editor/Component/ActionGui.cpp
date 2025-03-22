@@ -9,6 +9,11 @@
 #include <System/LogicSystem.h>
 #include <System/GuiSystem.h>
 #include <System/PhysicsSystem.h>
+#include <System/InputSystem.h>
+
+#include <Magnum/BulletIntegration/Integration.h>
+#include <Magnum/BulletIntegration/MotionState.h>
+#include <btBulletDynamicsCommon.h>
 
 namespace GDEEditor
 {
