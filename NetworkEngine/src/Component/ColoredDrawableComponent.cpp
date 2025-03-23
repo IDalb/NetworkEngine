@@ -41,4 +41,23 @@ namespace GDE
 	{
 		_object->setPrimitiveTransformation(Magnum::Matrix4::scaling(owner().getComponent<ShapeComponent>()->getGlobalSize()));
 	}
+
+	void ColoredDrawableComponent::setValue(std::string_view variable, float value)
+	{
+		switch (FIELD_MAP.at(std::string(variable)))
+		{
+		case GDE::ColoredDrawableComponent::R:
+			_color = { value, _color.g(), _color.b() };
+			break;
+		case GDE::ColoredDrawableComponent::G:
+			_color = { _color.r(), value, _color.b() };
+			break;
+		case GDE::ColoredDrawableComponent::B:
+			_color = { _color.r(), _color.g(), value };
+			break;
+		default:
+			break;
+		}
+		_object->setColor(_color);
+	}
 }

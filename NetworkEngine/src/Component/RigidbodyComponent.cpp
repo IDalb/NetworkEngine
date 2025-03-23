@@ -1,4 +1,5 @@
 #include "Component/RigidbodyComponent.h"
+#include "Component/CameraComponent.h"
 
 #include "System/PhysicsSystem.h"
 

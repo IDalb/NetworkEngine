@@ -93,6 +93,7 @@ namespace GDEEditor
 		descr[0]["description"]["components"]["Transform"]["position"][1] = position.y();
 		descr[0]["description"]["components"]["Transform"]["position"][2] = position.z();
 		auto newObject = GDE::Scene::createEntity(descr[0], owner().getChildren()[0]);
+		descr[0]["name"] = newObject->getName();
 		_gameWorld.push_back(descr[0]);
 	}
 
@@ -137,6 +138,5 @@ namespace GDEEditor
 		{
 			GDE::Scene::createEntity(node, child);
 		}
-
 	}
 }

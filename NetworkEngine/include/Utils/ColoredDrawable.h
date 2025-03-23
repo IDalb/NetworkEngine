@@ -19,6 +19,12 @@ namespace GDE
         {
             _primitiveTransformation = transformation;
         }
+        void setColor(const Magnum::Color3& color)
+        {
+            _color = color;
+        }
+        const Magnum::Color3& getColor() const { return _color; }
+
     private:
         void draw(const Magnum::Matrix4& transformation, Magnum::SceneGraph::Camera3D&) override
         {

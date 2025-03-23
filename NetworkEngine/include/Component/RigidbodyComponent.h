@@ -10,7 +10,7 @@
 
 namespace GDE
 {
-    class RigidbodyComponent : public PhysicsComponent
+    class RigidbodyComponent :public PhysicsComponent
     {
     private:
         float _mass;
@@ -30,7 +30,6 @@ namespace GDE
         ~RigidbodyComponent();
 
         void updatePhysics(const Timing& timing) override;
-
         void setup(const ComponentDescription &init_value) override;
         void resolve() override;
 

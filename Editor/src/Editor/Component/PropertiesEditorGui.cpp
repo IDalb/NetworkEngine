@@ -6,6 +6,7 @@
 #include <Component/CameraComponent.h>
 #include <Component/TransformComponent.h>
 #include <Component/ShapeComponent.h>
+#include <Component/ColoredDrawableComponent.h>
 
 #include "Functions/RayCast.h"
 #include "System/PhysicsSystem.h"
@@ -51,7 +52,7 @@ namespace GDEEditor
 							ImGui::SameLine();                 // Keep next widget on the same line
 							float min = 0;
 							float max = 0;
-							float step = 0.5;
+							float step = 0.1;
 							if (ImGui::DragFloat(("##" + property.first + pair.first).c_str(), &pair.second, step, min, max, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 							{
 								owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, transformComponent, transformComponent->type, property.first, pair.second, index, POS[index]);
@@ -63,41 +64,60 @@ namespace GDEEditor
 				}
 				ImGui::TreePop();
 			}
-			auto shapeComponent = _selectedEntity->getComponent<GDE::ShapeComponent>();
-			if (ImGui::TreeNodeEx(shapeComponent->type, ImGuiTreeNodeFlags_DefaultOpen))
+			if(auto shapeComponent = _selectedEntity->getComponent<GDE::ShapeComponent>())
 			{
-				constexpr std::array<const char*, 3> POS = { "x", "y", "z" };
-				for (auto& property : _shapeValue)
+				if (ImGui::TreeNodeEx(shapeComponent->type, ImGuiTreeNodeFlags_DefaultOpen))
 				{
-					if (ImGui::TreeNodeEx(property.first.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+					constexpr std::array<const char*, 3> POS = { "x", "y", "z" };
+					for (auto& property : _shapeValue)
 					{
-						int index = 0;
-						for (auto& pair : property.second)
+						if (ImGui::TreeNodeEx(property.first.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 						{
-							ImGui::AlignTextToFramePadding();
-							ImGui::Text(pair.first.c_str()); 
-							ImGui::SameLine();
-							float step = 0.05;
-							float min = step;
-							float max = FLT_MAX;
-
-							if (ImGui::DragFloat(("##" + property.first + pair.first).c_str(), &pair.second, step, min, max, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+							int index = 0;
+							for (auto& pair : property.second)
 							{
-								if (_shapeValue.contains("size"))
+								ImGui::AlignTextToFramePadding();
+								ImGui::Text(pair.first.c_str());
+								ImGui::SameLine();
+								float step = 0.05;
+								float min = step;
+								float max = FLT_MAX;
+
+								if (ImGui::DragFloat(("##" + property.first + pair.first).c_str(), &pair.second, step, min, max, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 								{
-									owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, shapeComponent, shapeComponent->type, property.first, pair.second, index, POS[index]);
+									if (_shapeValue.contains("size"))
+									{
+										owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, shapeComponent, shapeComponent->type, property.first, pair.second, index, POS[index]);
+									}
+									else
+									{
+										owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, shapeComponent, shapeComponent->type, property.first, pair.second);
+									}
 								}
-								else
-								{
-									owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, shapeComponent, shapeComponent->type, property.first, pair.second);
-								}
+								index++;
 							}
-							index++;
+							ImGui::TreePop();
 						}
-						ImGui::TreePop();
 					}
+					ImGui::TreePop();
 				}
-				ImGui::TreePop();
+			}
+			if (auto drawableComponent = _selectedEntity->getComponent<GDE::ColoredDrawableComponent>())
+			{
+				if (ImGui::TreeNodeEx(drawableComponent->type, ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::AlignTextToFramePadding();
+					ImGui::Text("color");
+					ImGui::SameLine();
+					if (ImGui::ColorEdit4("##color", (float*)&_objectColor, ImGuiColorEditFlags_NoAlpha))
+					{
+						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, drawableComponent, drawableComponent->type, "color", _objectColor.r() , 0, "r");
+						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, drawableComponent, drawableComponent->type, "color", _objectColor.g(), 0, "g");
+						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, drawableComponent, drawableComponent->type, "color", _objectColor.b(), 0, "b");
+					}
+
+					ImGui::TreePop();
+				}
 			}
 		}
 		ImGui::End();
@@ -205,6 +225,10 @@ namespace GDEEditor
 				_shapeValue["radius"][""] = shape->getData("radius");
 				break;
 			}
+		}
+		if (auto drawable = _selectedEntity->getComponent<GDE::ColoredDrawableComponent>())
+		{
+			_objectColor = drawable->getColor();
 		}
 	}
 }
