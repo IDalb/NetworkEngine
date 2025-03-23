@@ -23,7 +23,7 @@ namespace GDE
 
 		void setup(const ComponentDescription& init_value) override;
 		void resolve();
-
+		void updateSize();
     private:
 		ColoredDrawable* _object = nullptr;
 		std::string _meshGroup = "";

@@ -29,5 +29,6 @@ namespace GDEEditor
 	private:
 		GDE::Entity* _selectedEntity = nullptr;
 		std::unordered_map<std::string, std::unordered_map<std::string, float>> _transformValue;
+		std::unordered_map<std::string, std::unordered_map<std::string, float>> _shapeValue;
 	};
 }

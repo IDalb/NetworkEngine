@@ -5,6 +5,7 @@
 #include <System/InputSystem.h>
 #include <Component/CameraComponent.h>
 #include <Component/TransformComponent.h>
+#include <Component/ShapeComponent.h>
 
 #include "Functions/RayCast.h"
 #include "System/PhysicsSystem.h"
@@ -51,16 +52,45 @@ namespace GDEEditor
 							float min = 0;
 							float max = 0;
 							float step = 0.5;
-							if (property.first == "scale")
-							{
-								step = 0.05;
-								min = step;
-								max = FLT_MAX;
-							}
-
 							if (ImGui::DragFloat(("##" + property.first + pair.first).c_str(), &pair.second, step, min, max, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
 							{
 								owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, transformComponent, transformComponent->type, property.first, pair.second, index, POS[index]);
+							}
+							index++;
+						}
+						ImGui::TreePop();
+					}
+				}
+				ImGui::TreePop();
+			}
+			auto shapeComponent = _selectedEntity->getComponent<GDE::ShapeComponent>();
+			if (ImGui::TreeNodeEx(shapeComponent->type, ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				constexpr std::array<const char*, 3> POS = { "x", "y", "z" };
+				for (auto& property : _shapeValue)
+				{
+					if (ImGui::TreeNodeEx(property.first.c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+					{
+						int index = 0;
+						for (auto& pair : property.second)
+						{
+							ImGui::AlignTextToFramePadding();
+							ImGui::Text(pair.first.c_str()); 
+							ImGui::SameLine();
+							float step = 0.05;
+							float min = step;
+							float max = FLT_MAX;
+
+							if (ImGui::DragFloat(("##" + property.first + pair.first).c_str(), &pair.second, step, min, max, "%.3f", ImGuiInputTextFlags_EnterReturnsTrue))
+							{
+								if (_shapeValue.contains("size"))
+								{
+									owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, shapeComponent, shapeComponent->type, property.first, pair.second, index, POS[index]);
+								}
+								else
+								{
+									owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, shapeComponent, shapeComponent->type, property.first, pair.second);
+								}
 							}
 							index++;
 						}
@@ -161,8 +191,20 @@ namespace GDEEditor
 		_transformValue["rotation"]["y"] = eulerAngles.y;
 		_transformValue["rotation"]["z"] = eulerAngles.z;
 
-		_transformValue["scale"]["x"] = scale.x;
-		_transformValue["scale"]["y"] = scale.y;
-		_transformValue["scale"]["z"] = scale.z;
+		_shapeValue.clear();
+		if (auto shape = _selectedEntity->getComponent<GDE::ShapeComponent>())
+		{
+			switch (shape->_shape)
+			{
+			case GDE::ShapeComponent::BOX:
+				_shapeValue["size"]["x"] = shape->getData("sx");
+				_shapeValue["size"]["y"] = shape->getData("sy");
+				_shapeValue["size"]["z"] = shape->getData("sz");
+				break;
+			case GDE::ShapeComponent::SPHERE:
+				_shapeValue["radius"][""] = shape->getData("radius");
+				break;
+			}
+		}
 	}
 }

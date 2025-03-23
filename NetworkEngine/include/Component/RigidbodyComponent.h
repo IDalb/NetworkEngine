@@ -22,8 +22,8 @@ namespace GDE
 
         btVector3 _bInertia;
 
-        void syncPose();
     public:
+        void syncPose();
         static constexpr auto type = "RigidBody";
 
         RigidbodyComponent(Entity& owner) : Component(owner) {}
@@ -35,5 +35,6 @@ namespace GDE
         void resolve() override;
 
         btRigidBody& getRigidBody() { return *_bRigidbody; }
+        void setShapeToBox(float x, float y, float z);
     };
 }

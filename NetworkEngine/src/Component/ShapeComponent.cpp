@@ -22,4 +22,31 @@ namespace GDE
 			}
 		}
 	}
+	void ShapeComponent::setValue(std::string_view variable, float value)
+	{
+		std::string strVariable(variable);
+		switch (FIELD_MAP.at(strVariable))
+		{
+		case GDE::ShapeComponent::S_x:
+			_data["sx"] = value;
+			_globalSize = Magnum::Vector3(_data["sx"], _data["sy"], _data["sz"]);
+			break;
+		case GDE::ShapeComponent::S_y:
+			_data["sy"] = value;
+			_globalSize = Magnum::Vector3(_data["sx"], _data["sy"], _data["sz"]);
+			break;
+		case GDE::ShapeComponent::S_z:
+			_data["sz"] = value;
+			_globalSize = Magnum::Vector3(_data["sx"], _data["sy"], _data["sz"]);
+			break;
+		case GDE::ShapeComponent::Radius:
+			_data["radius"] = value;
+			_globalSize = Magnum::Vector3(_data["radius"], _data["radius"], _data["radius"]);
+			break;
+		}
+		for (auto& pair : _callbacks)
+		{
+			pair.first(pair.second, strVariable);
+		}
+	}
 }

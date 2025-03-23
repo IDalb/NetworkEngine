@@ -1,4 +1,5 @@
 #include "Component/TransformComponent.h"
+#include "Component/RigidbodyComponent.h"
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
 #include "Scene.h"
 #include "Entity.h"
@@ -147,6 +148,11 @@ namespace GDE
             _transform->scale(Magnum::Vector3(1, 1, value / scale.z()));
         }
             break;
+        }
+
+        if (auto rigidBody = owner().getComponent<GDE::RigidbodyComponent>())
+        {
+            rigidBody->syncPose();
         }
     }
 }

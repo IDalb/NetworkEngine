@@ -29,5 +29,16 @@ namespace GDE
 			Magnum::Matrix4::scaling(owner().getComponent<ShapeComponent>()->getGlobalSize()),
 			DisplaySystem::getInstance().getDrawable());
 		
+		owner().getComponent<ShapeComponent>()->setSizeChangeCallback({ [](GDE::Component* component, const std::string& parameter) 
+			{
+				if (auto coloredDrawable = dynamic_cast<GDE::ColoredDrawableComponent*>(component))
+				{
+					coloredDrawable->updateSize();
+				}
+			}, this });
+	}
+	void ColoredDrawableComponent::updateSize()
+	{
+		_object->setPrimitiveTransformation(Magnum::Matrix4::scaling(owner().getComponent<ShapeComponent>()->getGlobalSize()));
 	}
 }
