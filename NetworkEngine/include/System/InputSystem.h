@@ -64,6 +64,7 @@ namespace GDE
 			updated_mouse_buttons_.clear();
 			
 			mouse_scroll_value_ = 0;
+			_mouseVelocity = {0, 0};
 		}
 
 		bool isKeyPressed(Key::Key key);
@@ -78,6 +79,12 @@ namespace GDE
 		// In main window coords
 		Magnum::Vector2i getScreenMousePosition();
 		Magnum::Vector2 getNormalizedMousePosition();
+
+		Magnum::Vector2 getMouseVelocity();
+		Magnum::Vector2 getNormalizedMouseVelocity();
+
+		// -1 = 'negative' key; 1 = 'positive' key; 0 = both
+		int getAxis(Key::Key negative, Key::Key positive);
 
 		// -1 scroll down, 1 scroll up
 		int getMouseScrollDirection();
@@ -106,6 +113,11 @@ namespace GDE
 			_mousePos = pos;
 		}
 
+		void setMouseVelocity(const Magnum::Vector2& vel)
+		{
+			_mouseVelocity = vel;
+		}
+
 	private:
 		std::unordered_map<Key::Key, State> keys_state_{};
 		std::unordered_map<Mouse::Button, State> mouse_buttons_state_{};
@@ -115,6 +127,7 @@ namespace GDE
 
 		float mouse_scroll_value_{};
 		Magnum::Vector2i _mousePos;
+		Magnum::Vector2 _mouseVelocity;
 	};
 }
 

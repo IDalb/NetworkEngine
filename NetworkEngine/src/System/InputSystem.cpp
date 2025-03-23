@@ -37,14 +37,30 @@ namespace GDE
 		return mouse_buttons_state_[button].state == State::HELD ||mouse_buttons_state_[button].state == State::PRESSED;
 	}
 
+	int InputSystem::getAxis(const Key::Key negative, const Key::Key positive) {
+		return (isKeyHeld(negative) ? -1 : 0) + (isKeyHeld(positive) ? 1 : 0);
+	}
+
+
 	Magnum::Vector2i InputSystem::getScreenMousePosition()
 	{
 		return _mousePos;
 	}
 
+
 	Magnum::Vector2 InputSystem::getNormalizedMousePosition()
 	{
 		return static_cast<Magnum::Vector2>(_mousePos) / std::sqrt(_mousePos.dot());
+	}
+
+	Magnum::Vector2 InputSystem::getMouseVelocity()
+	{
+		return _mouseVelocity;
+	}
+
+	Magnum::Vector2 InputSystem::getNormalizedMouseVelocity()
+	{
+		return _mouseVelocity / std::sqrt(_mouseVelocity.dot());
 	}
 
 	int InputSystem::getMouseScrollDirection()

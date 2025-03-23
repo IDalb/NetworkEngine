@@ -14,11 +14,17 @@ namespace GDE
     class CameraComponent : public AlternateLogicComponent, public LogicComponent
     {
     private:
+        static constexpr float CAMERA_EDITOR_TRANSLATION_SPEED = .2f;
+        static constexpr float CAMERA_EDITOR_ROTATION_SPEED = .002f;
+
         Magnum::SceneGraph::Camera3D* _camera;
         float _projectionAngle = 35.f;
         float _aspectRatio = 1.f;
         float _farDistance = 0.001f;
         float _nearDistance = 100.f;
+
+        Magnum::Rad _xAngle = Magnum::Rad(0.0f);
+        Magnum::Rad _yAngle = Magnum::Rad(0.0f);
 
         Magnum::Matrix4 _CameraView;
 

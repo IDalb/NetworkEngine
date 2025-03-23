@@ -140,7 +140,9 @@ namespace GDE
         if (GuiSystem::_exist)
             if (GuiSystem::getInstance().mouseMoveEvent(event))
                 return;
+
         InputSystem::getInstance().setMousePos(event.position());
+        InputSystem::getInstance().setMouseVelocity(static_cast<Vector2>(event.relativePosition()));
     }
 
     void Game::mouseScrollEvent(MouseScrollEvent& event)
