@@ -14,7 +14,7 @@ namespace GDE
     class CameraComponent : public AlternateLogicComponent, public LogicComponent
     {
     private:
-        static constexpr float CAMERA_EDITOR_TRANSLATION_SPEED = .2f;
+        float cameraEditorTranslationSpeed = .25f;
         static constexpr float CAMERA_EDITOR_ROTATION_SPEED = .002f;
 
         Magnum::SceneGraph::Camera3D* _camera;
@@ -27,6 +27,7 @@ namespace GDE
         Magnum::Rad _yAngle = Magnum::Rad(0.0f);
 
         Magnum::Matrix4 _CameraView;
+        Magnum::Matrix4 _CameraViewBaseRotation;
 
         void update(const Timing& timing);
     public:

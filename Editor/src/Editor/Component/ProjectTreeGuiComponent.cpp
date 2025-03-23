@@ -11,6 +11,7 @@
 #include <TypeDef.h>
 
 #include "Editor/Component/PropertiesEditorGui.h"
+#include "Editor/Component/ActionGui.h"
 namespace GDEEditor
 {
 	void ProjectTreeGuiComponent::recursiveConstructTree(GDE::EntityRef& entity)
@@ -22,7 +23,10 @@ namespace GDEEditor
 				ImGui::Text(("   " + entity->getName()).c_str());
 				if (ImGui::IsItemClicked())
 				{
-					owner().getComponent<PropertiesEditorGuiComponent>()->selectEntity(entity.get());
+					if(!owner().getComponent<ActionGuiComponent>()->_playing)
+					{
+						owner().getComponent<PropertiesEditorGuiComponent>()->selectEntity(entity.get());
+					}
 				}
 			}
 			else
@@ -31,7 +35,10 @@ namespace GDEEditor
 				{
 					if (ImGui::IsItemClicked())
 					{
-						owner().getComponent<PropertiesEditorGuiComponent>()->selectEntity(entity.get());
+						if (!owner().getComponent<ActionGuiComponent>()->_playing)
+						{
+							owner().getComponent<PropertiesEditorGuiComponent>()->selectEntity(entity.get());
+						}
 					}
 					for (auto& child : entity->getChildren())
 					{
