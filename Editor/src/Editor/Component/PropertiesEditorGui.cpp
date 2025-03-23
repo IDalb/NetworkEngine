@@ -112,8 +112,8 @@ namespace GDEEditor
 					if (ImGui::ColorEdit4("##color", (float*)&_objectColor, ImGuiColorEditFlags_NoAlpha))
 					{
 						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, drawableComponent, drawableComponent->type, "color", _objectColor.r() , 0, "r");
-						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, drawableComponent, drawableComponent->type, "color", _objectColor.g(), 0, "g");
-						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, drawableComponent, drawableComponent->type, "color", _objectColor.b(), 0, "b");
+						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, drawableComponent, drawableComponent->type, "color", _objectColor.g(), 1, "g");
+						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, drawableComponent, drawableComponent->type, "color", _objectColor.b(), 2, "b");
 					}
 
 					ImGui::TreePop();

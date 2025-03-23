@@ -57,7 +57,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.27556708, 0, 0]
         mesh_group: BoxGroup
 - name: Cube1
   description:
@@ -177,7 +177,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.28258362, 0, 0]
         mesh_group: BoxGroup
 - name: Cube9
   description:
@@ -837,7 +837,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [1, 1, 1]
         mesh_group: BoxGroup
 - name: Cube53
   description:
