@@ -89,6 +89,19 @@ namespace GDEEditor
 		_gameWorld.push_back(descr[0]);
 	}
 
+	void ProjectTreeGuiComponent::removeEntity(GDE::Entity* entity)
+	{
+		for (size_t i = 0; i < _gameWorld.size(); ++i)
+		{
+			if (_gameWorld[i]["name"].as<std::string>() == entity->getName())
+			{
+				bool result = _gameWorld.remove(i);
+				entity->getParent()->removeChild(entity->shared_from_this());
+				return;
+			}
+		}
+	}
+
 	void ProjectTreeGuiComponent::changeEntityValue(GDE::Entity* entity, GDE::Component* component, const std::string& component_name, const std::string& field_name, float value, int index, std::string index_suffix)
 	{
 		for (auto node : _gameWorld)

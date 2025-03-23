@@ -123,6 +123,14 @@ namespace GDEEditor
 				removeSelection();
 			}
 		}
+		if (GDE::InputSystem::getInstance().isKeyPressed(GDE::Key::DELETE))
+		{
+			if (_selectedEntity)
+			{
+				owner().getComponent<ProjectTreeGuiComponent>()->removeEntity(_selectedEntity);
+				_selectedEntity = nullptr;
+			}
+		}
 	}
 	void PropertiesEditorGuiComponent::selectEntity(GDE::Entity* entity)
 	{
