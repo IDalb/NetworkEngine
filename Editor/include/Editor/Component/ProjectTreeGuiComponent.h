@@ -17,6 +17,7 @@ namespace GDEEditor
 		ProjectTreeGuiComponent(ProjectTreeGuiComponent&&) = default;
 		ProjectTreeGuiComponent& operator=(ProjectTreeGuiComponent&&) = default;
 
+
 		void resetScene();
 		void resetCamera();
 
@@ -26,7 +27,11 @@ namespace GDEEditor
 		void save();
 
 		void createObject(const std::string& templatePate, const Magnum::Vector3& position);
+		
+		// change to set position, ...
+		void changeEntityValue(GDE::Entity* entity, GDE::Component* component, const std::string& component_name, const std::string& field_name, float value, int index = -1, std::string index_suffix = "");
 	private:
+		void recursiveConstructTree(GDE::EntityRef& entity);
 		void createScene();
 
 		GDE::Description _gameWorld;

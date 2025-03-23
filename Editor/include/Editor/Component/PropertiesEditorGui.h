@@ -23,7 +23,11 @@ namespace GDEEditor
 		void update(const GDE::Timing& dt) override;
 		void updateAlternateLogic(const GDE::Timing& timing) override;
 
-	private:
+		void selectEntity(GDE::Entity* entity);
+		void removeSelection() { _selectedEntity = nullptr; }
 
+	private:
+		GDE::Entity* _selectedEntity = nullptr;
+		std::unordered_map<std::string, std::unordered_map<std::string, float>> _transformValue;
 	};
 }

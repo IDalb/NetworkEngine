@@ -30,6 +30,7 @@ namespace GDE {
         virtual void OnEnable() {}
         virtual void OnDisable() {}
 
+
     private:
         void enable() {
             if (!_enabled) {
@@ -56,6 +57,8 @@ namespace GDE {
 
         virtual void setup(const ComponentDescription& init_value) = 0;
         virtual void resolve() {}
+
+        virtual void setValue(std::string_view variable, float value) {};
 
         // Register the type (std::string T::Type), with the corresponding creation function
         // This let the Create function below be able to create a component with only its name

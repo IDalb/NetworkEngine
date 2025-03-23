@@ -31,7 +31,9 @@
     children: ~
     components:
       Transform:
-        position: [0,0,-1]
+        position: [0, 0, -1]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
       Shape:
         shape: box
         size: [8, 8, 0.5]
@@ -49,6 +51,8 @@
           components:
             Transform:
               position: [0, -5, 0]
+              rotation: [0, 0, 0]
+              scale: [1, 1, 1]
             Shape:
               shape: box
               size: [1, 1, 1]
@@ -58,6 +62,8 @@
     components:
       Transform:
         position: [0, 0, 5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
       Shape:
         shape: box
         size: [1, 1, 1]
@@ -71,6 +77,8 @@
     components:
       Transform:
         position: [0, 5, 5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
       Shape:
         shape: box
         size: [1, 1, 1]

@@ -3,7 +3,7 @@
 
 #include "Entity.h"
 #include "GlobalConstants.h"
-
+#include "Game.h"
 namespace GDE
 {
 	GuiSystem& GuiSystem::getInstance()
@@ -74,6 +74,11 @@ namespace GDE
 	void GuiSystem::iterate(const Timing& dt)
 	{
 		_imguiContext.newFrame();
+		if (ImGui::GetIO().WantTextInput && !GDE::Game::_app->isTextInputActive())
+			GDE::Game::_app->startTextInput();
+		else if (!ImGui::GetIO().WantTextInput && GDE::Game::_app->isTextInputActive())
+			GDE::Game::_app->stopTextInput();
+
 		for (auto& display_component : _guiComponents)
 		{
 			if (display_component->enabled() && display_component->owner().active())
@@ -81,8 +86,9 @@ namespace GDE
 				display_component->update(dt);
 			}
 		}
-		
 		_imguiContext.updateApplicationCursor(*_app);
+
+
 	}
 
 	void GuiSystem::registerComponent(GuiComponent* display_component)

@@ -9,34 +9,30 @@
 #include <System/DisplaySystem.h>
 #include <System/GuiSystem.h>
 #include <TypeDef.h>
+
+#include "Editor/Component/PropertiesEditorGui.h"
 namespace GDEEditor
 {
-	void recursiveConstructTree(GDE::EntityRef& entity)
+	void ProjectTreeGuiComponent::recursiveConstructTree(GDE::EntityRef& entity)
 	{
 		if (entity->getComponent<GDE::TransformComponent>())
 		{
 			if (entity->getChildren().size() == 0)
 			{
 				ImGui::Text(("   " + entity->getName()).c_str());
-#ifdef DEBUG
 				if (ImGui::IsItemClicked())
 				{
-					printf(entity->getName().c_str());
-					printf("\n");
+					owner().getComponent<PropertiesEditorGuiComponent>()->selectEntity(entity.get());
 				}
-#endif
 			}
 			else
 			{
-				if (ImGui::TreeNodeEx(entity->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+				if (ImGui::TreeNodeEx(entity->getName().c_str(), ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_OpenOnArrow))
 				{
-#ifdef DEBUG
 					if (ImGui::IsItemClicked())
 					{
-						printf(entity->getName().c_str());
-						printf("\n");
+						owner().getComponent<PropertiesEditorGuiComponent>()->selectEntity(entity.get());
 					}
-#endif
 					for (auto& child : entity->getChildren())
 					{
 						recursiveConstructTree(child);
@@ -91,6 +87,27 @@ namespace GDEEditor
 		descr[0]["description"]["components"]["Transform"]["position"][2] = position.z();
 		auto newObject = GDE::Scene::createEntity(descr[0], owner().getChildren()[0]);
 		_gameWorld.push_back(descr[0]);
+	}
+
+	void ProjectTreeGuiComponent::changeEntityValue(GDE::Entity* entity, GDE::Component* component, const std::string& component_name, const std::string& field_name, float value, int index, std::string index_suffix)
+	{
+		for (auto node : _gameWorld)
+		{
+			if (node["name"].as<std::string>() == entity->getName())
+			{
+				if (index == -1)
+				{
+					node["description"]["components"][component_name][field_name] = value;
+					component->setValue(field_name, value);
+				}
+				else
+				{
+					node["description"]["components"][component_name][field_name][index] = value;
+					component->setValue(field_name + "_" + index_suffix, value);
+				}
+				return;
+			}
+		}
 	}
 
 	void ProjectTreeGuiComponent::createScene()

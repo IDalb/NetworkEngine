@@ -57,7 +57,10 @@ namespace GDEEditor
 				GDE::LogicSystem::getInstance().setEnable(true);
 				GDE::AlternateLogicSystem::getInstance().setEnable(false);
 
-				owner().getComponent<ProjectTreeGuiComponent>()->resetCamera();
+				//owner().getComponent<ProjectTreeGuiComponent>()->resetCamera();
+				owner().getComponent<ProjectTreeGuiComponent>()->resetScene();
+				owner().getComponent<PropertiesEditorGuiComponent>()->removeSelection();
+
 			}
 		}
 		

@@ -2,6 +2,13 @@
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
 #include "Scene.h"
 #include "Entity.h"
+#include <Magnum/Math/Matrix3.h>
+#include <Magnum/GlmIntegration/Integration.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/matrix_decompose.hpp>
 
 namespace GDE
 {
@@ -25,11 +32,10 @@ namespace GDE
         }
         if (init_value.parameters.contains("rotation"))
         {
-            _transform->rotate(Magnum::Deg(init_value.parameters.at("rotation")[0].as<float>())
-            , { init_value.parameters.at("rotation")[1].as<float>(),
-                 init_value.parameters.at("rotation")[2].as<float>(),
-                 init_value.parameters.at("rotation")[3].as<float>() }
-            );
+            _transform->rotateX(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[0].as<float>())));
+            _transform->rotateY(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[1].as<float>())));
+            _transform->rotateZ(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[2].as<float>())));
+
         }
         if (init_value.parameters.contains("scale"))
         {
@@ -48,6 +54,99 @@ namespace GDE
         else
         {
             _transform->setParent(&Scene::getMagnumScene());
+        }
+    }
+    void TransformComponent::setValue(std::string_view variable, float value)
+    {
+        switch (FIELD_MAP.at(std::string(variable)))
+        {
+        case GDE::TransformComponent::P_x:
+            _transform->translate(Magnum::Vector3(-_transform->transformation().translation().x() + value, 0, 0));
+            break;
+        case GDE::TransformComponent::P_y:
+            _transform->translate(Magnum::Vector3(0, -_transform->transformation().translation().y() + value, 0));
+            break;
+        case GDE::TransformComponent::P_z:
+            _transform->translate(Magnum::Vector3(0, 0, -_transform->transformation().translation().z() + value));
+            break;
+        case GDE::TransformComponent::R_x:
+        {
+            Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
+
+            // Convert to GLM
+            glm::mat3 glmRotationScale = glm::mat3(rotationScale);
+
+            // Normalize each column to remove scale
+            glmRotationScale[0] = glm::normalize(glmRotationScale[0]);
+            glmRotationScale[1] = glm::normalize(glmRotationScale[1]);
+            glmRotationScale[2] = glm::normalize(glmRotationScale[2]);
+
+            // Convert to a quaternion
+            glm::quat rotation = glm::quat_cast(glmRotationScale);
+            glm::vec3 eulerAngles = glm::eulerAngles(rotation);
+            
+            _transform->rotateX(Magnum::Rad(-eulerAngles.x));
+            _transform->rotateX(Magnum::Rad(glm::radians(value)));
+        }
+            break;
+        case GDE::TransformComponent::R_y:
+        {
+            Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
+
+            // Convert to GLM
+            glm::mat3 glmRotationScale = glm::mat3(rotationScale);
+
+            // Normalize each column to remove scale
+            glmRotationScale[0] = glm::normalize(glmRotationScale[0]);
+            glmRotationScale[1] = glm::normalize(glmRotationScale[1]);
+            glmRotationScale[2] = glm::normalize(glmRotationScale[2]);
+
+            // Convert to a quaternion
+            glm::quat rotation = glm::quat_cast(glmRotationScale);
+            glm::vec3 eulerAngles = glm::eulerAngles(rotation);
+
+            _transform->rotateY(Magnum::Rad(-eulerAngles.y));
+            _transform->rotateY(Magnum::Rad(glm::radians(value)));
+        }
+            break;
+        case GDE::TransformComponent::R_z:
+        {
+            Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
+
+            // Convert to GLM
+            glm::mat3 glmRotationScale = glm::mat3(rotationScale);
+
+            // Normalize each column to remove scale
+            glmRotationScale[0] = glm::normalize(glmRotationScale[0]);
+            glmRotationScale[1] = glm::normalize(glmRotationScale[1]);
+            glmRotationScale[2] = glm::normalize(glmRotationScale[2]);
+
+            // Convert to a quaternion
+            glm::quat rotation = glm::quat_cast(glmRotationScale);
+            glm::vec3 eulerAngles = glm::eulerAngles(rotation);
+
+            _transform->rotateZ(Magnum::Rad(-eulerAngles.z));
+            _transform->rotateZ(Magnum::Rad(glm::radians(value)));
+        }
+            break;
+        case GDE::TransformComponent::S_x:
+        {
+            Magnum::Vector3 scale = _transform->transformation().scaling();
+            _transform->scale(Magnum::Vector3(value / scale.x(), 1, 1));
+        }
+            break;
+        case GDE::TransformComponent::S_y:
+        {
+            Magnum::Vector3 scale = _transform->transformation().scaling();
+            _transform->scale(Magnum::Vector3(1, value / scale.y(), 1));
+        }
+            break;
+        case GDE::TransformComponent::S_z:
+        {
+            Magnum::Vector3 scale = _transform->transformation().scaling();
+            _transform->scale(Magnum::Vector3(1, 1, value / scale.z()));
+        }
+            break;
         }
     }
 }
