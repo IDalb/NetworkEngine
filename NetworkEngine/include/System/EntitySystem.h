@@ -19,7 +19,7 @@ namespace GDE
         EntitySystem& operator=(EntitySystem&&) = default;
         ~EntitySystem() = default;
 
-        void iterate(const Timing& dt_ms) override { _entitiesToRemove.clear(); }
+        void iterate(const Timing&) override { _entitiesToRemove.clear(); }
 
         static EntitySystem& getInstance();
         static void remove(const EntityRef& entity);

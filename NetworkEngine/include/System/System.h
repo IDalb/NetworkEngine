@@ -12,6 +12,6 @@ namespace GDE {
 
         virtual ~System() = default;
 
-        virtual void iterate(const Timing& dt) {}
+        virtual void iterate(const Timing& /*dt*/) {}
     };
 }
