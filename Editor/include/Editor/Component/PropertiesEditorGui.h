@@ -32,5 +32,6 @@ namespace GDEEditor
 		std::unordered_map<std::string, std::unordered_map<std::string, float>> _transformValue;
 		std::unordered_map<std::string, std::unordered_map<std::string, float>> _shapeValue;
 		Magnum::Color3 _objectColor;
+		float _rigidbodyMass;
 	};
 }

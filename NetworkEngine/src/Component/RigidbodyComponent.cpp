@@ -1,4 +1,7 @@
 #include "Component/RigidbodyComponent.h"
+
+#include <iostream>
+
 #include "Component/CameraComponent.h"
 
 #include "System/PhysicsSystem.h"
@@ -103,5 +106,13 @@ namespace GDE
         });
         _bRigidbody->setUserPointer(this);
         _bWorld->addRigidBody(_bRigidbody.get());
+    }
+
+    void RigidbodyComponent::setValue(std::string_view variable, float value)
+    {
+        if (variable == "mass") {
+            std::cout << "voilà" << std::endl;
+            setMass(value);
+        }
     }
 }

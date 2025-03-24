@@ -102,6 +102,21 @@ namespace GDEEditor
 					ImGui::TreePop();
 				}
 			}
+			if (auto rigidbodyComponent = _selectedEntity->getComponent<GDE::RigidbodyComponent>())
+			{
+				if (ImGui::TreeNodeEx(rigidbodyComponent->type, ImGuiTreeNodeFlags_DefaultOpen))
+				{
+					ImGui::AlignTextToFramePadding();
+					ImGui::Text("mass");
+					ImGui::SameLine();
+					if (ImGui::DragFloat("##mass", &_rigidbodyMass, .01f, 0, FLT_MAX, "%.2f", ImGuiInputTextFlags_EnterReturnsTrue))
+					{
+						owner().getComponent<ProjectTreeGuiComponent>()->changeEntityValue(_selectedEntity, rigidbodyComponent, rigidbodyComponent->type, "mass", _rigidbodyMass);
+					}
+
+					ImGui::TreePop();
+				}
+			}
 			if (auto drawableComponent = _selectedEntity->getComponent<GDE::ColoredDrawableComponent>())
 			{
 				if (ImGui::TreeNodeEx(drawableComponent->type, ImGuiTreeNodeFlags_DefaultOpen))
@@ -226,9 +241,11 @@ namespace GDEEditor
 				break;
 			}
 		}
-		if (auto drawable = _selectedEntity->getComponent<GDE::ColoredDrawableComponent>())
-		{
+		if (auto drawable = _selectedEntity->getComponent<GDE::ColoredDrawableComponent>()) {
 			_objectColor = drawable->getColor();
+		}
+		if (auto rigidbody = _selectedEntity->getComponent<GDE::RigidbodyComponent>()) {
+			_rigidbodyMass = rigidbody->getMass();
 		}
 	}
 }
