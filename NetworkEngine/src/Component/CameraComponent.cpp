@@ -1,8 +1,9 @@
 #include "Component/CameraComponent.h"
 
+#include <iostream>
+
 #include "Entity.h"
 #include <Magnum/Math/Quaternion.h>
-#include "Component/TransformComponent.h"
 #include "Magnum/GL/DefaultFramebuffer.h"
 #include "System/InputSystem.h"
 #include <Magnum/GlmIntegration/Integration.h>
@@ -25,16 +26,16 @@ namespace GDE
         // Rotation
         if (input.isMouseButtonHeld(GDE::Mouse::RIGHT)) {
             const Magnum::Vector2 mouseMvt = input.getMouseVelocity() * CAMERA_EDITOR_ROTATION_SPEED;
-            _xAngle += static_cast<Magnum::Rad>(mouseMvt.x());
-            _yAngle += static_cast<Magnum::Rad>(mouseMvt.y());
+            _xAngle += static_cast<Magnum::Deg>(mouseMvt.x());
+            _yAngle += static_cast<Magnum::Deg>(mouseMvt.y());
 
-           _CameraView[0] = _CameraViewBaseRotation[0];
-           _CameraView[1] = _CameraViewBaseRotation[1];
-           _CameraView[2] = _CameraViewBaseRotation[2];
-         
-          _CameraView = _CameraView
-              * Magnum::Matrix4::rotationX(-_yAngle)
-              * Magnum::Matrix4::rotation(_xAngle, -_CameraView.right());
+            _CameraView[0] = _CameraViewBaseRotation[0];
+            _CameraView[1] = _CameraViewBaseRotation[1];
+            _CameraView[2] = _CameraViewBaseRotation[2];
+
+            _CameraView = _CameraView
+              * Magnum::Matrix4::rotation(-_xAngle, Magnum::Vector3::zAxis())
+              * Magnum::Matrix4::rotationX(-_yAngle);
             _CameraView.lookAt(_CameraView.translation(), _CameraView.translation() - _CameraView.backward(), Magnum::Vector3::zAxis());
 
         }
@@ -86,12 +87,31 @@ namespace GDE
         _camera->setViewport(Magnum::GL::defaultFramebuffer.viewport().size());
 
         // Look at (0,0,0) with (0,0,1) as the up vector
-        //_CameraView = Magnum::Matrix4();
-        //_camera->cameraMatrix() = _CameraView;
-        _CameraView = Magnum::Matrix4::lookAt(Magnum::Vector3{ owner().getComponent<TransformComponent>()->getTransform().absoluteTransformation().translation() }, Magnum::Vector3{ 0.0f, 0.0f, 0.0f }, Magnum::Vector3{ 0.0f, 0.0f, 1.0f });
-        owner().getComponent<TransformComponent>()->getTransform().setTransformation(_CameraView);
+        _CameraView = Magnum::Matrix4();
+        _camera->cameraMatrix() = _CameraView;
+
         _CameraViewBaseRotation[0] = _CameraView[0];
         _CameraViewBaseRotation[1] = _CameraView[1];
         _CameraViewBaseRotation[2] = _CameraView[2];
+
+        _CameraView = ComputeCameraView(*owner().getComponent<TransformComponent>());
+
+        //_CameraView = Magnum::Matrix4::lookAt(Magnum::Vector3{ owner().getComponent<TransformComponent>()->getTransform().absoluteTransformation().translation() }, Magnum::Vector3{ 0.0f, 0.0f, 0.0f }, Magnum::Vector3{ 0.0f, 0.0f, 1.0f });
+        owner().getComponent<TransformComponent>()->getTransform().setTransformation(_CameraView);
+
     }
+
+    Magnum::Matrix4 CameraComponent::ComputeCameraView(TransformComponent& transform) {
+        auto cameraView = Magnum::Matrix4();
+        _xAngle = static_cast<Magnum::Deg>(transform.rotationVector.x());
+        _yAngle = static_cast<Magnum::Deg>(transform.rotationVector.y());
+        cameraView = cameraView
+            * Magnum::Matrix4::translation(transform.getTransform().absoluteTransformation().translation())
+            * Magnum::Matrix4::rotation(static_cast<Magnum::Deg>(-transform.rotationVector.x()), Magnum::Vector3::zAxis())
+            * Magnum::Matrix4::rotationX(static_cast<Magnum::Deg>(90 + transform.rotationVector.y()));
+        ;
+
+        return cameraView;
+    }
+
 }
