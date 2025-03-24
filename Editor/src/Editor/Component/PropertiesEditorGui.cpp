@@ -218,13 +218,13 @@ namespace GDEEditor
 		glm::vec3 eulerAngles = glm::eulerAngles(rotation);
 		eulerAngles = glm::degrees(eulerAngles);  // Convert to degrees if desired
 
-		_transformValue["position"]["x"] = translation.x;
-		_transformValue["position"]["y"] = translation.y;
-		_transformValue["position"]["z"] = translation.z;
-
-		_transformValue["rotation"]["x"] = eulerAngles.x;
-		_transformValue["rotation"]["y"] = eulerAngles.y;
 		_transformValue["rotation"]["z"] = eulerAngles.z;
+		_transformValue["rotation"]["y"] = eulerAngles.y;
+		_transformValue["rotation"]["x"] = eulerAngles.x;
+
+		_transformValue["position"]["z"] = translation.z;
+		_transformValue["position"]["y"] = translation.y;
+		_transformValue["position"]["x"] = translation.x;
 
 		_shapeValue.clear();
 		if (auto shape = _selectedEntity->getComponent<GDE::ShapeComponent>())
@@ -232,9 +232,9 @@ namespace GDEEditor
 			switch (shape->_shape)
 			{
 			case GDE::ShapeComponent::BOX:
-				_shapeValue["size"]["x"] = shape->getData("sx");
-				_shapeValue["size"]["y"] = shape->getData("sy");
 				_shapeValue["size"]["z"] = shape->getData("sz");
+				_shapeValue["size"]["y"] = shape->getData("sy");
+				_shapeValue["size"]["x"] = shape->getData("sx");
 				break;
 			case GDE::ShapeComponent::SPHERE:
 				_shapeValue["radius"][""] = shape->getData("radius");
