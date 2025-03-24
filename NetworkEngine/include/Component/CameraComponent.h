@@ -7,6 +7,8 @@
 #include <Magnum/SceneGraph/Scene.h>
 #include <Magnum/SceneGraph/Object.h>
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
+
+#include "TransformComponent.h"
 #include "Component/AlternateLogicComponent.h"
 #include "Component/LogicComponent.h"
 namespace GDE
@@ -15,7 +17,7 @@ namespace GDE
     {
     private:
         float cameraEditorTranslationSpeed = .25f;
-        static constexpr float CAMERA_EDITOR_ROTATION_SPEED = .002f;
+        static constexpr float CAMERA_EDITOR_ROTATION_SPEED = .115f;
 
         Magnum::SceneGraph::Camera3D* _camera;
         float _projectionAngle = 35.f;
@@ -23,12 +25,13 @@ namespace GDE
         float _farDistance = 0.001f;
         float _nearDistance = 100.f;
 
-        Magnum::Rad _xAngle = Magnum::Rad(0.0f);
-        Magnum::Rad _yAngle = Magnum::Rad(0.0f);
+        Magnum::Deg _xAngle = Magnum::Deg(0.0f);
+        Magnum::Deg _yAngle = Magnum::Deg(0.0f);
 
         Magnum::Matrix4 _CameraView;
         Magnum::Matrix4 _CameraViewBaseRotation;
 
+        Magnum::Matrix4 ComputeCameraView(TransformComponent& transform);
         void update(const Timing& timing);
     public:
         static constexpr auto type = "Camera";

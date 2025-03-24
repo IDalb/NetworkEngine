@@ -11,6 +11,8 @@
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
 
+#include "Component/CameraComponent.h"
+
 namespace GDE
 {
     TransformComponent::~TransformComponent()
@@ -33,9 +35,14 @@ namespace GDE
         }
         if (init_value.parameters.contains("rotation"))
         {
-            _transform->rotateX(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[0].as<float>())));
-            _transform->rotateY(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[1].as<float>())));
-            _transform->rotateZ(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[2].as<float>())));
+            rotationVector.x() = init_value.parameters.at("rotation")[0].as<float>();
+            rotationVector.y() = init_value.parameters.at("rotation")[1].as<float>();
+
+            if (owner().getComponent<CameraComponent>() == nullptr) {
+                _transform->rotateX(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[0].as<float>())));
+                _transform->rotateY(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[1].as<float>())));
+                _transform->rotateZ(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[2].as<float>())));
+            }
 
         }
         if (init_value.parameters.contains("scale"))
@@ -72,6 +79,7 @@ namespace GDE
             break;
         case GDE::TransformComponent::R_x:
         {
+            rotationVector.x() = value;
             Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
 
             // Convert to GLM
@@ -92,6 +100,7 @@ namespace GDE
             break;
         case GDE::TransformComponent::R_y:
         {
+            rotationVector.y() = value;
             Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
 
             // Convert to GLM
