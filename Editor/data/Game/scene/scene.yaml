@@ -4,11 +4,12 @@
     children: ~
     components:
       Transform:
-        position: [15, 0, 15]
-        rotation: [0, 0, 0]
+        position: [12, -35, 28.8]
+        rotation: [-20, -40, 0]
         scale: [1, 1, 1]
       Camera:
         aspect_ratio: 1.7777778
+        far_distance: 1000
 - name: BoxGroup
   tag: BoxGroup
   description:
@@ -57,7 +58,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0.27556708, 0, 0]
+        color: [0.0071220454, 0, 0.27556708]
         mesh_group: BoxGroup
 - name: Cube1
   description:
@@ -72,7 +73,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0.08987621, 0, 0]
+        color: [0.056510143, 0.1998012, 0.011122128]
         mesh_group: BoxGroup
 - name: Cube2
   description:
@@ -87,7 +88,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0.09019608, 0, 0]
+        color: [0.051494915, 0.16003972, 0.0049316343]
         mesh_group: BoxGroup
 - name: Cube3
   description:
@@ -102,7 +103,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0.23124076, 0, 0]
+        color: [0.041834783, 0.23124076, 0]
         mesh_group: BoxGroup
 - name: Cube4
   description:
@@ -117,7 +118,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0.28144288, 0, 0]
+        color: [0, 0.28144288, 0.007833395]
         mesh_group: BoxGroup
 - name: Cube5
   description:
@@ -132,7 +133,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0.19493833, 0, 0]
+        color: [0.012014074, 0.19493833, 0]
         mesh_group: BoxGroup
 - name: Cube6
   description:
@@ -147,7 +148,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0.12016963, 0, 0]
+        color: [0.05426323, 0.23956263, 0.013335486]
         mesh_group: BoxGroup
 - name: Cube7
   description:
@@ -162,7 +163,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.1072947, 0.27932405, 0.061362445]
         mesh_group: BoxGroup
 - name: Cube8
   description:
@@ -177,7 +178,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0.28258362, 0, 0]
+        color: [0.051123448, 0.28258362, 0]
         mesh_group: BoxGroup
 - name: Cube9
   description:
@@ -192,7 +193,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.055158757, 0.23459244, 0.043373942]
         mesh_group: BoxGroup
 - name: Cube10
   description:
@@ -207,7 +208,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.29920477, 0.019629734, 0.019629734]
         mesh_group: BoxGroup
 - name: Cube11
   description:
@@ -357,7 +358,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.21471173, 0.022623697, 0.022623697]
         mesh_group: BoxGroup
 - name: Cube21
   description:
@@ -507,7 +508,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.31908548, 0.039964974, 0.039964974]
         mesh_group: BoxGroup
 - name: Cube31
   description:
@@ -657,7 +658,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.22962224, 0.019629732, 0.019629732]
         mesh_group: BoxGroup
 - name: Cube41
   description:
@@ -807,7 +808,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.28429425, 0.024303481, 0.024303481]
         mesh_group: BoxGroup
 - name: Cube51
   description:
@@ -837,7 +838,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [1, 1, 1]
+        color: [0.8260437, 0.50580806, 0.50580806]
         mesh_group: BoxGroup
 - name: Cube53
   description:
@@ -957,7 +958,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.27932405, 0.0807985, 0.0807985]
         mesh_group: BoxGroup
 - name: Cube61
   description:
@@ -1107,7 +1108,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.1998012, 0.037934422, 0.037934422]
         mesh_group: BoxGroup
 - name: Cube71
   description:
@@ -1257,7 +1258,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.24950296, 0.05357121, 0.05357121]
         mesh_group: BoxGroup
 - name: Cube81
   description:
@@ -1407,7 +1408,7 @@
         size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [0.23956263, 0.037148878, 0.037148878]
         mesh_group: BoxGroup
 - name: Cube91
   description:
