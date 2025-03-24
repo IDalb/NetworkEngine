@@ -94,8 +94,8 @@ namespace GDE
             glm::quat rotation = glm::quat_cast(glmRotationScale);
             glm::vec3 eulerAngles = glm::eulerAngles(rotation);
             
-            _transform->rotateX(Magnum::Rad(-eulerAngles.x));
-            _transform->rotateX(Magnum::Rad(glm::radians(value)));
+            _transform->rotateXLocal(Magnum::Rad(-eulerAngles.x));
+            _transform->rotateXLocal(Magnum::Rad(glm::radians(value)));
         }
             break;
         case GDE::TransformComponent::R_y:
@@ -115,8 +115,8 @@ namespace GDE
             glm::quat rotation = glm::quat_cast(glmRotationScale);
             glm::vec3 eulerAngles = glm::eulerAngles(rotation);
 
-            _transform->rotateY(Magnum::Rad(-eulerAngles.y));
-            _transform->rotateY(Magnum::Rad(glm::radians(value)));
+            _transform->rotateYLocal(Magnum::Rad(-eulerAngles.y));
+            _transform->rotateYLocal(Magnum::Rad(glm::radians(value)));
         }
             break;
         case GDE::TransformComponent::R_z:
@@ -135,8 +135,8 @@ namespace GDE
             glm::quat rotation = glm::quat_cast(glmRotationScale);
             glm::vec3 eulerAngles = glm::eulerAngles(rotation);
 
-            _transform->rotateZ(Magnum::Rad(-eulerAngles.z));
-            _transform->rotateZ(Magnum::Rad(glm::radians(value)));
+            _transform->rotateZLocal(Magnum::Rad(-eulerAngles.z));
+            _transform->rotateZLocal(Magnum::Rad(glm::radians(value)));
         }
             break;
         case GDE::TransformComponent::S_x:
