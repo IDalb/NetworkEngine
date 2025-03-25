@@ -108,6 +108,13 @@ namespace GDE
         _bWorld->addRigidBody(_bRigidbody.get());
     }
 
+    void RigidbodyComponent::setMass(float mass)
+    {
+        _mass = mass;
+        btCollisionShape* shape = _bRigidbody->getCollisionShape();
+        shape->calculateLocalInertia(_mass, _bInertia);
+        _bRigidbody->setMassProps(_mass, _bInertia);
+    }
     void RigidbodyComponent::setValue(std::string_view variable, float value)
     {
         if (variable == "mass") {

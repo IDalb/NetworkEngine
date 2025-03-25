@@ -35,7 +35,7 @@ namespace GDE
 
         btRigidBody& getRigidBody() { return *_bRigidbody; }
         float getMass() { return _mass; }
-        void setMass(float mass) { _mass = mass; _bRigidbody->setMassProps(_mass, _bInertia); }
+        void setMass(float mass);
         void setValue(std::string_view variable, float value) override;
         void setShapeToBox(float x, float y, float z);
     };
