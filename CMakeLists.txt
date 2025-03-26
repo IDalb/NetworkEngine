@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 project(NetworkEngine)
 
-set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 set(MAGNUM_WITH_GLM ON CACHE BOOL "" FORCE)
 set(MAGNUM_WITH_imguiContext ON CACHE BOOL "" FORCE)
@@ -88,7 +87,7 @@ include_directories(${glm_SOURCE_DIR})
 
 
 add_subdirectory(NetworkEngine)
-add_subdirectory(Game)
+#add_subdirectory(Game)
 add_subdirectory(Editor)
 
 target_link_libraries(NetworkEngine PRIVATE
