@@ -108,23 +108,23 @@ target_link_libraries(NetworkEngine PRIVATE
         LinearMath
         Bullet3Common)
 		
-target_link_libraries(Game PRIVATE
-        Magnum::GlfwApplication 
-        Magnum::GL
-        Magnum::Magnum
-        Magnum::MeshTools
-        Magnum::Primitives
-        Magnum::SceneGraph
-        Magnum::Shaders
-        Magnum::Trade
-        MagnumIntegration::Bullet
-        Bullet::Dynamics
-        MagnumIntegration::ImGui
-		MagnumIntegration::Glm
-        BulletDynamics
-        BulletCollision
-        LinearMath
-        Bullet3Common)
+//target_link_libraries(Game PRIVATE
+//        Magnum::GlfwApplication 
+//        Magnum::GL
+//        Magnum::Magnum
+//        Magnum::MeshTools
+//        Magnum::Primitives
+//        Magnum::SceneGraph
+//        Magnum::Shaders
+//        Magnum::Trade
+//        MagnumIntegration::Bullet
+//        Bullet::Dynamics
+//        MagnumIntegration::ImGui
+//		MagnumIntegration::Glm
+//        BulletDynamics
+//        BulletCollision
+//        LinearMath
+//        Bullet3Common)
 		
 target_link_libraries(Editor PRIVATE
         Magnum::GlfwApplication 
