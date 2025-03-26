@@ -232,9 +232,9 @@ namespace GDEEditor
 			switch (shape->_shape)
 			{
 			case GDE::ShapeComponent::BOX:
-				_shapeValue["size"]["z"] = shape->getData("sz");
-				_shapeValue["size"]["y"] = shape->getData("sy");
 				_shapeValue["size"]["x"] = shape->getData("sx");
+				_shapeValue["size"]["y"] = shape->getData("sy");
+				_shapeValue["size"]["z"] = shape->getData("sz");
 				break;
 			case GDE::ShapeComponent::SPHERE:
 				_shapeValue["radius"][""] = shape->getData("radius");

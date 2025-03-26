@@ -90,6 +90,8 @@ namespace GDE
 
     void RigidbodyComponent::syncPose() {
         _bRigidbody->setWorldTransform(btTransform(owner().getComponent<TransformComponent>()->getTransform().absoluteTransformationMatrix()));
+        //_bRigidbody->setCenterOfMassTransform(btTransform(owner().getComponent<TransformComponent>()->getTransform().absoluteTransformationMatrix()));
+        //_bRigidbody->activate();
     }
     void RigidbodyComponent::setShapeToBox(float x, float y, float z)
     {

@@ -26,13 +26,14 @@ namespace GDE
         _transform = new Object3D();
         //_transform.setParent(&Scene::getMagnumScene());
 
-        if (init_value.parameters.contains("position"))
+        if (init_value.parameters.contains("scale"))
         {
-            _transform->translate({ init_value.parameters.at("position")[0].as<float>(),
-                init_value.parameters.at("position")[1].as<float>(),
-                init_value.parameters.at("position")[2].as<float>() }
+            _transform->scale({ init_value.parameters.at("scale")[0].as<float>(),
+                 init_value.parameters.at("scale")[1].as<float>(),
+                 init_value.parameters.at("scale")[2].as<float>() }
             );
         }
+
         if (init_value.parameters.contains("rotation"))
         {
             rotationVector.x() = init_value.parameters.at("rotation")[0].as<float>();
@@ -45,13 +46,16 @@ namespace GDE
             }
 
         }
-        if (init_value.parameters.contains("scale"))
+
+        if (init_value.parameters.contains("position"))
         {
-            _transform->scale({ init_value.parameters.at("scale")[0].as<float>(),
-                 init_value.parameters.at("scale")[1].as<float>(),
-                 init_value.parameters.at("scale")[2].as<float>() }
+            _transform->translate({ init_value.parameters.at("position")[0].as<float>(),
+                init_value.parameters.at("position")[1].as<float>(),
+                init_value.parameters.at("position")[2].as<float>() }
             );
         }
+        
+        
     }
     void TransformComponent::resolve()
     {
