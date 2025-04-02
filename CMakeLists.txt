@@ -27,7 +27,17 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glm)
 
+FetchContent_Declare(
+    enet
+    GIT_REPOSITORY https://github.com/SirLynix/enet6.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(enet)
+
+
+
 link_libraries(glm)
+link_libraries(enet)
 
 set(GLM_INCLUDE_DIR ${glm_SOURCE_DIR}/glm)
 	
@@ -112,7 +122,8 @@ target_link_libraries(NetworkEngine PRIVATE
         BulletDynamics
         BulletCollision
         LinearMath
-        Bullet3Common)
+        Bullet3Common
+)
 		
 #target_link_libraries(Game PRIVATE
 #        Magnum::GlfwApplication 

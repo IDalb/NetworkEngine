@@ -187,6 +187,12 @@ namespace GDE
         }
         registerBasicComponent();
         registerComponent();
+        setupComponentLinkingContext();
+
+        for (auto& pair : componentLinkingContext)
+        {
+            reverseComponentLinkingContext.insert({ pair.second, pair.first });
+        }
 
         setupScene();
 

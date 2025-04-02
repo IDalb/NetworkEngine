@@ -19,5 +19,8 @@ namespace GDE
 
         void load(const Description& description);
         void clear();
+
+        std::string serialize(uint32_t frame);
+        void deserialize();
     }
 }

@@ -8,17 +8,49 @@ namespace GDE
 {
     class Entity : public std::enable_shared_from_this<Entity> {
     private:
-        bool _active{true};
+        bool _active{ true };
         std::string _tag{};
         std::string _name{};
+
+        uint32_t _id{};
 
         std::weak_ptr<Entity> _parent;
         std::vector<EntityRef> _children;
         std::map<std::string, std::weak_ptr<Entity>> _childrenByName;
         std::unordered_map<std::string, std::unique_ptr<Component>> _components;
+
+        static constexpr unsigned int COMPONENT_ID = sizeof(_id);
+        static constexpr unsigned int SIZEOF_SIZE = sizeof(uint16_t);
     public:
         ~Entity() { _components.clear(); _childrenByName.clear(); }
         static EntityRef create() { return std::make_shared<Entity>(); }
+
+        // Network thing to do to send a create request with the path
+        // then send serialized data
+
+        std::string serialize()
+        {
+            std::string data;
+            data.resize(COMPONENT_ID + SIZEOF_SIZE);
+            memcpy(data.data(), &_id, sizeof(_id));
+            for (auto& pair : _components)
+            {
+                data += pair.second->serialize();
+            }
+            return data;
+        }
+        void deserialize(std::span<char> data)
+        {
+            size_t componentDataBegin = COMPONENT_ID + SIZEOF_SIZE;
+            for (auto& pair : _components)
+            {
+                size_t componentDataSize = 0;
+                memcpy(&componentDataSize, data.data() + componentDataBegin + Component::SIZEOF_ID, Component::SIZEOF_SIZE);
+                componentDataBegin += Component::SIZEOF_ID + Component::SIZEOF_SIZE;
+                pair.second->deserialize(std::span<char>(data.data() + componentDataBegin, componentDataSize));
+                componentDataBegin += componentDataSize;
+            }
+        }
 
         void resolve();
         void clear();

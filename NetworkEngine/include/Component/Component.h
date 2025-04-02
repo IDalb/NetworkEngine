@@ -58,6 +58,9 @@ namespace GDE {
         virtual void setup(const ComponentDescription& init_value) = 0;
         virtual void resolve() {}
 
+        virtual std::string serialize() { return ""; }
+        virtual void deserialize(std::span<char> data) {}
+
         virtual void setValue(std::string_view /*variable*/, float /*value*/) {};
 
         // Register the type (std::string T::Type), with the corresponding creation function
@@ -76,5 +79,8 @@ namespace GDE {
             if (enabled) enable();
             else disable();
         }
+
+        static constexpr unsigned int SIZEOF_ID = sizeof(uint16_t);
+        static constexpr unsigned int SIZEOF_SIZE = sizeof(uint16_t);
     };
 }
