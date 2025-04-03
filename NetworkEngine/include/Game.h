@@ -38,6 +38,8 @@ namespace GDE
         bool _init = true;
     public:
         inline static Game* _app = nullptr;
+        inline static std::map<std::string, uint16_t> componentLinkingContext{};
+        inline static std::map<uint16_t, std::string> reverseComponentLinkingContext{};
 
         explicit Game(
             const Arguments& arguments,
@@ -50,6 +52,7 @@ namespace GDE
         virtual void setupSystem() = 0;
         virtual void registerComponent() const = 0;
         virtual void registerBasicComponent() const;
+        virtual void setupComponentLinkingContext() = 0;
 
         virtual void keyPressEvent(KeyEvent& event) override;
         virtual void keyReleaseEvent(KeyEvent& event) override;

@@ -47,7 +47,21 @@
         mesh_group: BoxGroup
 - name: Cube
   description:
-    children: ~
+    children:
+        - name: Cube
+          description:
+            children: ~
+            components:
+              Transform:
+                position: [0, 0, 2]
+                rotation: [0, 0, 0]
+                scale: [1, 1, 1]
+              Shape:
+                shape: box
+                size: [1, 1, 1]
+              ColoredDrawable:
+                color: [0.0071220454, 0, 0.27556708]
+                mesh_group: BoxGroup
     components:
       Transform:
         position: [-9, -9, 1]
@@ -1542,6 +1556,21 @@
       Shape:
         shape: box
         size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 0, 0]
+        mesh_group: BoxGroup
+- name: Cube100
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [0, 0, 7.6]
+        rotation: [13.900001, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [3, 3, 3]
       RigidBody: ~
       ColoredDrawable:
         color: [0, 0, 0]

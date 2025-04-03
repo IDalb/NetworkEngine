@@ -81,6 +81,20 @@ namespace GDE
             tagMap().clear();
         }
 
+        std::string serialize(uint32_t frame)
+        {
+            // penser au dépassement de capacité
+            std::string data;
+            data.resize(sizeof(frame) + 3 * sizeof(uint16_t)); // size of the data, number of actor, number of deleted actor
+            Scene::rootEntity()->getChildren();
+
+            return data;
+        }
+
+        void deserialize()
+        {
+        }
+
         EntityRef FindEntityRecursive(const EntityRef& parent, const std::string_view& name)
         {
             auto found = parent->getChild(name.data());
