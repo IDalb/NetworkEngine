@@ -36,8 +36,8 @@ namespace GDE
 
         if (init_value.parameters.contains("rotation"))
         {
-            rotationVector.x() = init_value.parameters.at("rotation")[0].as<float>();
-            rotationVector.y() = init_value.parameters.at("rotation")[1].as<float>();
+            _rotationVector.x() = init_value.parameters.at("rotation")[0].as<float>();
+            _rotationVector.y() = init_value.parameters.at("rotation")[1].as<float>();
 
             if (owner().getComponent<CameraComponent>() == nullptr) {
                 _transform->rotateX(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[0].as<float>())));
@@ -83,7 +83,7 @@ namespace GDE
             break;
         case GDE::TransformComponent::R_x:
         {
-            rotationVector.x() = value;
+            _rotationVector.x() = value;
             Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
 
             // Convert to GLM
@@ -104,7 +104,7 @@ namespace GDE
             break;
         case GDE::TransformComponent::R_y:
         {
-            rotationVector.y() = value;
+            _rotationVector.y() = value;
             Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
 
             // Convert to GLM

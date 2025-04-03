@@ -32,7 +32,7 @@ namespace GDE
         void resolve();
         Object3D& getTransform() { return *_transform; }
 
-        Magnum::Vector2 rotationVector;
+        Magnum::Vector2 _rotationVector;
 
         void setValue(std::string_view variable, float value) override;
     };

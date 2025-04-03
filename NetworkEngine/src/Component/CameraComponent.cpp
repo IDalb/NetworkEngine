@@ -103,12 +103,12 @@ namespace GDE
 
     Magnum::Matrix4 CameraComponent::ComputeCameraView(TransformComponent& transform) {
         auto cameraView = Magnum::Matrix4();
-        _xAngle = static_cast<Magnum::Deg>(transform.rotationVector.x());
-        _yAngle = static_cast<Magnum::Deg>(transform.rotationVector.y());
+        _xAngle = static_cast<Magnum::Deg>(transform._rotationVector.x());
+        _yAngle = static_cast<Magnum::Deg>(transform._rotationVector.y());
         cameraView = cameraView
             * Magnum::Matrix4::translation(transform.getTransform().absoluteTransformation().translation())
-            * Magnum::Matrix4::rotation(static_cast<Magnum::Deg>(-transform.rotationVector.x()), Magnum::Vector3::zAxis())
-            * Magnum::Matrix4::rotationX(static_cast<Magnum::Deg>(90 + transform.rotationVector.y()));
+            * Magnum::Matrix4::rotation(static_cast<Magnum::Deg>(-transform._rotationVector.x()), Magnum::Vector3::zAxis())
+            * Magnum::Matrix4::rotationX(static_cast<Magnum::Deg>(90 + transform._rotationVector.y()));
         ;
 
         return cameraView;

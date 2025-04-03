@@ -28,7 +28,7 @@ namespace GDEEditor
 		void removeSelection() { _selectedEntity = nullptr; }
 
 	private:
-		GDE::Entity* _selectedEntity = nullptr;
+		GDE::Entity* _selectedEntity = nullptr; 
 		std::unordered_map<std::string, std::unordered_map<std::string, float>> _transformValue;
 		std::unordered_map<std::string, std::unordered_map<std::string, float>> _shapeValue;
 		Magnum::Color3 _objectColor;
