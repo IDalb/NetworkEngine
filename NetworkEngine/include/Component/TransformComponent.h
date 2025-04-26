@@ -35,5 +35,8 @@ namespace GDE
         Magnum::Vector2 _rotationVector;
 
         void setValue(std::string_view variable, float value) override;
+
+        std::string serialize() override;
+        void deserialize(char*& data) override;
     };
 }

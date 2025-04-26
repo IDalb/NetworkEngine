@@ -114,7 +114,7 @@ namespace GDE
     void Game::keyReleaseEvent(KeyEvent& event)
     {
         if (GuiSystem::_exist)
-            if (GuiSystem::getInstance().keyPressEvent(event))
+            if (GuiSystem::getInstance().keyReleaseEvent(event))
                 return;
         InputSystem::getInstance().setKeyState(static_cast<GDE::Key::Key>(event.key()), false);
     }

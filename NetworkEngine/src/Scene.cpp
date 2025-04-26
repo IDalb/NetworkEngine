@@ -1,12 +1,19 @@
 #include "Scene.h"
 #include "Entity.h"
 #include "Utils/MagnumScene.h"
+#include "System/EntitySystem.h"
 #include <map>
 
 namespace GDE
 {
     namespace Scene
     {
+        inline constexpr int SIZE_BEGIN = sizeof(uint32_t);
+        inline constexpr int NB_REMOVED_ENTITY_BEGIN = SIZE_BEGIN + sizeof(uint16_t);
+        inline constexpr int  NB_ENTITY_BEGIN = NB_REMOVED_ENTITY_BEGIN + sizeof(uint16_t);
+        inline constexpr int DATA_BEGIN = NB_ENTITY_BEGIN + sizeof(uint16_t);
+        inline constexpr int ENTITY_ID_SIZE = sizeof(uint32_t);
+
         struct EntityDescription
         {
             std::map<std::string, Description> children;
@@ -32,6 +39,12 @@ namespace GDE
         {
             static std::map<std::string, std::vector<Entity*>> tagMap;
             return tagMap;
+        }
+
+        std::map<uint32_t, Entity*>& idMap()
+        {
+            static std::map<uint32_t, Entity*> idMap;
+            return idMap;
         }
 
         EntityRef CreateEntityInternal(const EntityDescription& description, const EntityRef& parent, const std::string_view& name, const std::string& tag)
@@ -81,18 +94,85 @@ namespace GDE
             tagMap().clear();
         }
 
+        uint16_t recursiveEntitySerialization(EntityRef entity, std::string& data)
+        {
+            uint16_t entityCount = 0;
+            auto children = entity->getChildren();
+            if (children.size() > 0)
+            {
+                for (auto& child : children)
+                {
+                    entityCount += recursiveEntitySerialization(child, data);
+                }
+            }
+            std::string v = entity->serialize();
+            if (v != "")
+            {
+                data += v;
+                entityCount++;
+            }
+            return entityCount;
+        }
+
         std::string serialize(uint32_t frame)
         {
-            // penser au dépassement de capacité
+            // penser au dépassement de capacitE
             std::string data;
-            data.resize(sizeof(frame) + 3 * sizeof(uint16_t)); // size of the data, number of actor, number of deleted actor
-            Scene::rootEntity()->getChildren();
+            const std::vector<EntityRef>& removedEntity = EntitySystem::getInstance().getEntityToRemove();
+            std::span<EntityRef> allEntity = Scene::rootEntity()->getChildren();
+            uint16_t removedEntityCount = std::size(removedEntity);
+            
+            data.resize(sizeof(frame) + 3 * sizeof(uint16_t) + std::size(removedEntity) * sizeof(uint32_t)); // size of the data, number of actor, number of deleted actor
+            memcpy(data.data(), &frame, sizeof(frame));
+            memcpy(data.data() + sizeof(frame) + sizeof(uint16_t), &removedEntityCount, sizeof(frame));
+
+
+            for (size_t i = 0; i < std::size(removedEntity); i++)
+            {
+                uint32_t id = removedEntity[i]->getId();
+                memcpy(data.data() + i * sizeof(id), &id, sizeof(id));
+            }
+
+            uint16_t entityCount = 0;
+            for (auto& entity : allEntity)
+            {
+                entityCount += recursiveEntitySerialization(entity, data);
+            }
+            memcpy(data.data() + sizeof(frame) + sizeof(uint16_t) + sizeof(removedEntityCount), &entityCount, sizeof(entityCount));
+
+            uint16_t dataSize = data.length() - sizeof(frame);
+            memcpy(data.data() + SIZE_BEGIN, &dataSize, sizeof(dataSize));
 
             return data;
         }
 
-        void deserialize()
+        void deserialize(char*& data)
         {
+            // recover frame index
+            uint16_t dataSize;
+            memcpy(&dataSize, data + SIZE_BEGIN, sizeof(uint16_t));
+
+            uint16_t removedEntityCount;
+            memcpy(&removedEntityCount, data + NB_REMOVED_ENTITY_BEGIN, sizeof(uint16_t));
+            uint16_t entityCount;
+            memcpy(&entityCount, data + NB_ENTITY_BEGIN, sizeof(uint16_t));
+            data = data + DATA_BEGIN;
+            for (size_t i = 0; i < removedEntityCount; i++)
+            {
+                uint32_t entityId;
+                memcpy(&entityId, data, sizeof(uint32_t));
+
+                EntitySystem::getInstance().remove(Scene::getEntityFromId(entityId)->shared_from_this());
+                data += sizeof(uint32_t);
+            }
+            uint16_t deserializedEntity = 0;
+            while (deserializedEntity < entityCount)
+            {
+                uint32_t entityId;
+                memcpy(&entityId, data, sizeof(ENTITY_ID_SIZE));
+                Scene::getEntityFromId(entityId)->deserialize(data);
+                deserializedEntity++;
+            }
         }
 
         EntityRef FindEntityRecursive(const EntityRef& parent, const std::string_view& name)
@@ -124,6 +204,21 @@ namespace GDE
 
             if (tagVector.empty())
                 map.erase(tag);
+        }
+
+        void removeEntityId(uint32_t id)
+        {
+            idMap().erase(id);
+        }
+
+        void addEntityId(uint32_t id, Entity* entity)
+        {
+            idMap().insert({ id, entity });
+        }
+
+        Entity* getEntityFromId(uint32_t id)
+        {
+            return idMap().contains(id) ? idMap().at(id) : nullptr;
         }
 
         Scene3D& getMagnumScene()

@@ -36,12 +36,17 @@ namespace GDEEditor
 	}
 	void ProjectTemplateGuiComponent::updateAlternateLogic(const GDE::Timing& timing)
 	{	
-		//if (_placeCube && GDE::InputSystem::getInstance().isMouseButtonReleased(GDE::Mouse::LEFT))
-		//{
-		//}
-		//if (_placeCube && GDE::InputSystem::getInstance().isMouseButtonHeld(GDE::Mouse::LEFT) == false)
-		//{
-		//	//_placeCube = false;
-		//}
+		static std::string serialization = "";
+		if (GDE::InputSystem::getInstance().isKeyPressed(GDE::Key::NUMPAD_1))
+		{
+			serialization = GDE::Scene::serialize(0);
+		}
+		if (GDE::InputSystem::getInstance().isKeyPressed(GDE::Key::NUMPAD_3))
+		{
+			// Read the file into the buffer
+			char* data = serialization.data();
+			GDE::Scene::deserialize(data);
+
+		}
 	}
 }

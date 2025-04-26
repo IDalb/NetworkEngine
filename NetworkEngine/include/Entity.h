@@ -17,12 +17,13 @@ namespace GDE
         std::weak_ptr<Entity> _parent;
         std::vector<EntityRef> _children;
         std::map<std::string, std::weak_ptr<Entity>> _childrenByName;
-        std::unordered_map<std::string, std::unique_ptr<Component>> _components;
+        std::map<std::string, std::unique_ptr<Component>> _components;
 
         static constexpr unsigned int COMPONENT_ID = sizeof(_id);
         static constexpr unsigned int SIZEOF_SIZE = sizeof(uint16_t);
     public:
-        ~Entity() { _components.clear(); _childrenByName.clear(); }
+        Entity();
+        ~Entity();
         static EntityRef create() { return std::make_shared<Entity>(); }
 
         // Network thing to do to send a create request with the path
@@ -31,24 +32,38 @@ namespace GDE
         std::string serialize()
         {
             std::string data;
-            data.resize(COMPONENT_ID + SIZEOF_SIZE);
+            data.resize(COMPONENT_ID + 1);
             memcpy(data.data(), &_id, sizeof(_id));
+            uint8_t serializedComponentCount = 0;
             for (auto& pair : _components)
             {
-                data += pair.second->serialize();
+                const std::string serializedComponent = pair.second->serialize();
+                data += serializedComponent;
+                if (serializedComponent != "")
+                {
+                    serializedComponentCount++;
+                }
+            }        
+            memcpy(data.data() + COMPONENT_ID, &serializedComponentCount, sizeof(serializedComponentCount));
+            if (serializedComponentCount == 0)
+            {
+                return "";
             }
             return data;
         }
-        void deserialize(std::span<char> data)
+        void deserialize(char*& data)
         {
-            size_t componentDataBegin = COMPONENT_ID + SIZEOF_SIZE;
-            for (auto& pair : _components)
+            uint8_t serializedComponentCount;
+            uint8_t deserializedComponentCount = 0;
+            memcpy(&serializedComponentCount, data + COMPONENT_ID, sizeof(serializedComponentCount));
+
+            data += (sizeof(COMPONENT_ID) + 1);
+            while (serializedComponentCount != deserializedComponentCount)
             {
-                size_t componentDataSize = 0;
-                memcpy(&componentDataSize, data.data() + componentDataBegin + Component::SIZEOF_ID, Component::SIZEOF_SIZE);
-                componentDataBegin += Component::SIZEOF_ID + Component::SIZEOF_SIZE;
-                pair.second->deserialize(std::span<char>(data.data() + componentDataBegin, componentDataSize));
-                componentDataBegin += componentDataSize;
+                uint32_t componentId;
+                memcpy(&componentId, data, sizeof(componentId));
+                _components.at(Component::getComponentName(componentId))->deserialize(data);
+                deserializedComponentCount++;
             }
         }
 
@@ -63,8 +78,11 @@ namespace GDE
 
         const std::string& getTag() const { return _tag; }
         const std::string& getName() const { return _name; }
+        uint32_t getId() const { return _id; }
+
         void setTag(const std::string& tag) { _tag = tag; }
         void setName(const std::string& name) { _name = name; }
+        void setId(uint32_t id) { _id = id; }
 
         EntityRef getParent() const { return _parent.lock(); }
         EntityRef getChild(const std::string& name) const;

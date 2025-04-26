@@ -1,8 +1,22 @@
 #include "Entity.h"
 
 #include "System/EntitySystem.h"
-
+#include "Scene.h"
 namespace GDE {
+    static uint32_t id = 0;
+    Entity::Entity()
+    {
+        _id = id++;
+        Scene::addEntityId(_id, this);
+    }
+
+    Entity::~Entity()
+    {
+        Scene::removeEntityId(_id);
+        _components.clear();
+        _childrenByName.clear();
+    }
+
     void Entity::resolve() {
         for (auto& component : _components)
             component.second->resolve();

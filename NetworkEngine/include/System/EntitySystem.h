@@ -19,6 +19,8 @@ namespace GDE
         EntitySystem& operator=(EntitySystem&&) = default;
         ~EntitySystem() = default;
 
+        const  std::vector<EntityRef>& getEntityToRemove() const { return _entitiesToRemove; }
+
         void iterate(const Timing&) override { _entitiesToRemove.clear(); }
 
         static EntitySystem& getInstance();

@@ -15,12 +15,16 @@ namespace GDE
         std::vector<Entity*>* findEntitiesWithTag(const std::string_view& tag);
         void removeTagFromEntity(const EntityRef& entity, const std::string& tag);
 
+        void removeEntityId(uint32_t id);
+        void addEntityId(uint32_t id, Entity* entity);
+        Entity* getEntityFromId(uint32_t id);
+
         Scene3D& getMagnumScene();
 
         void load(const Description& description);
         void clear();
 
         std::string serialize(uint32_t frame);
-        void deserialize();
+        void deserialize(char*& data);
     }
 }

@@ -1,9 +1,11 @@
 #include "Component/Component.h"
+#include "Functions/crc32.h"
 
 namespace GDE
 {
     void Component::Register(std::string_view type, const CreateFunctionType &create_function) {
         _registry.emplace(type, create_function);
+        componentIdToName[Crc32::crc32(type.data())] = type;
     }
 
     std::unique_ptr<Component> Component::create(const std::string_view type, Entity &parent) {

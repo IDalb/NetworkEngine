@@ -60,7 +60,11 @@ namespace GDE
 
 	bool GuiSystem::mouseScrollEvent(Magnum::Platform::GlfwApplication::MouseScrollEvent& event)
 	{
-		if (_imguiContext.handleMouseScrollEvent(event)) return true;
+		if (_imguiContext.handleMouseScrollEvent(event))
+		{
+			event.setAccepted();
+			return true;
+		}
 		return false;
 	}
 
@@ -87,8 +91,6 @@ namespace GDE
 			}
 		}
 		_imguiContext.updateApplicationCursor(*_app);
-
-
 	}
 
 	void GuiSystem::registerComponent(GuiComponent* display_component)

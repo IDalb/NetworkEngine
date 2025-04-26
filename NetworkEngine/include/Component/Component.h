@@ -21,6 +21,8 @@ namespace GDE {
         using CreateFunctionType = std::function<std::unique_ptr<Component>(Entity&)>;
 
     protected:
+        inline static std::map<uint32_t, std::string> componentIdToName;
+
         bool _enabled{true};
         Entity& _parent;
 
@@ -59,9 +61,9 @@ namespace GDE {
         virtual void resolve() {}
 
         virtual std::string serialize() { return ""; }
-        virtual void deserialize(std::span<char> data) {}
+        virtual void deserialize(char*& data) {}
 
-        virtual void setValue(std::string_view /*variable*/, float /*value*/) {};
+        virtual void setValue(std::string_view variable, float value) {};
 
         // Register the type (std::string T::Type), with the corresponding creation function
         // This let the Create function below be able to create a component with only its name
@@ -79,8 +81,9 @@ namespace GDE {
             if (enabled) enable();
             else disable();
         }
+        static const std::string getComponentName(uint32_t netId) { return componentIdToName.contains(netId) ? componentIdToName.at(netId) : ""; }
+
 
         static constexpr unsigned int SIZEOF_ID = sizeof(uint16_t);
-        static constexpr unsigned int SIZEOF_SIZE = sizeof(uint16_t);
     };
 }
