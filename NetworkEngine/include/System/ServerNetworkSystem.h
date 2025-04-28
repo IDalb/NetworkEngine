@@ -18,8 +18,7 @@ namespace GDE
 
             void iterate(const Timing& dt) override;
 
-            //void registerComponent(LogicComponent* logic_component);
-            //void removeComponent(LogicComponent* logic_component);
+            static void receiveThread();
 
             static ServerNetworkSystem& getInstance();
 

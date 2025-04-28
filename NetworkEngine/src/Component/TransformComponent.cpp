@@ -3,10 +3,7 @@
 #include <Magnum/SceneGraph/MatrixTransformation3D.h>
 #include "Scene.h"
 #include "Entity.h"
-#include <Magnum/Math/Matrix3.h>
-#include <Magnum/GlmIntegration/Integration.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
+
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
@@ -14,7 +11,6 @@
 #include "Component/CameraComponent.h"
 #include "Functions/Crc32.h"
 #include "Functions/Serialization.h"
-#include <Magnum/Math/Matrix3.h>
 
 namespace GDE
 {
@@ -57,7 +53,19 @@ namespace GDE
                 init_value.parameters.at("position")[2].as<float>() }
             );
         }
-        
+        _oldPosition = _transform->transformation().translation();
+
+        Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
+        // Convert to GLM
+        glm::mat3 glmRotationScale = glm::mat3(rotationScale);
+
+        // Normalize each column to remove scale
+        glmRotationScale[0] = glm::normalize(glmRotationScale[0]);
+        glmRotationScale[1] = glm::normalize(glmRotationScale[1]);
+        glmRotationScale[2] = glm::normalize(glmRotationScale[2]);
+
+        // Convert to a quaternion
+        _oldRotation = glm::quat_cast(glmRotationScale);
         
     }
     void TransformComponent::resolve()
@@ -179,9 +187,7 @@ namespace GDE
 
         outData.resize(sizeof(netIdCpy) + ((Serialization::BIT_PER_FLOAT * 3 / 32) + 1) * 4 /*byte for position*/ + sizeof(Serialization::serialized_quaternion));
         memcpy(outData.data(), &netIdCpy, sizeof(netIdCpy));
-        const Magnum::Vector3& position = _transform->transformation().translation();
-        Serialization::serialized_float xy = Serialization::combineFloat(Serialization::serializeFloat(position.x()), Serialization::serializeFloat(position.y()));
-        Serialization::serialized_float z = Serialization::serializeFloat(position.z());
+        const Magnum::Vector3& position = _transform->transformation().translation();        
 
         Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
         // Convert to GLM
@@ -195,12 +201,22 @@ namespace GDE
         // Convert to a quaternion
         glm::quat rotation = glm::quat_cast(glmRotationScale);
 
-        Serialization::serialized_quaternion quatValue = Serialization::serializeQuaternion(rotation);
-        memcpy(outData.data() + sizeof(netIdCpy), &xy, sizeof(xy));
-        memcpy(outData.data() + sizeof(netIdCpy) + sizeof(xy), &z, sizeof(z));
-        memcpy(outData.data() + sizeof(netIdCpy) + sizeof(xy) + sizeof(z), &quatValue, sizeof(quatValue));
+        if (position != _oldPosition || rotation != _oldRotation)
+        {
+            _oldPosition = position;
+            _oldRotation = rotation;
 
-        return outData;
+            Serialization::serialized_float xy = Serialization::combineFloat(Serialization::serializeFloat(position.x()), Serialization::serializeFloat(position.y()));
+            Serialization::serialized_float z = Serialization::serializeFloat(position.z());
+
+            Serialization::serialized_quaternion quatValue = Serialization::serializeQuaternion(rotation);
+            memcpy(outData.data() + sizeof(netIdCpy), &xy, sizeof(xy));
+            memcpy(outData.data() + sizeof(netIdCpy) + sizeof(xy), &z, sizeof(z));
+            memcpy(outData.data() + sizeof(netIdCpy) + sizeof(xy) + sizeof(z), &quatValue, sizeof(quatValue));
+
+            return outData;
+        }
+        return "";
     }
     void TransformComponent::deserialize(char*& data)
     {
@@ -231,5 +247,7 @@ namespace GDE
         Magnum::Matrix4 newRotationWithScale = Magnum::Matrix4::from(Magnum::Quaternion({ quat.x, quat.y, quat.z }, quat.w).toMatrix(), Magnum::Vector3(Serialization::deserializeFloat(x), Serialization::deserializeFloat(y), Serialization::deserializeFloat(z))) * Magnum::Matrix4::scaling(Magnum::Vector3(scale.x, scale.y, scale.z));
 
         _transform->setTransformation(newRotationWithScale);
+
+        //TODO interpolation
     }
 }

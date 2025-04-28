@@ -40,6 +40,7 @@ link_libraries(glm)
 link_libraries(enet)
 
 set(GLM_INCLUDE_DIR ${glm_SOURCE_DIR}/glm)
+set(ENET_INCLUDE_DIR ${enet_SOURCE_DIR}/include)
 	
 add_subdirectory(externals)
 find_package(Magnum REQUIRED
@@ -100,6 +101,7 @@ file(WRITE "${CMAKE_BINARY_DIR}/generated/source_dir.h" "#pragma once\n constexp
 include_directories("${CMAKE_BINARY_DIR}/generated")
 
 include_directories(${glm_SOURCE_DIR})
+include_directories(${enet_SOURCE_DIR}/include)
 
 
 add_subdirectory(NetworkEngine)

@@ -1,14 +1,18 @@
 #pragma once
 
 #include "Component/Component.h"
-
+#include <Magnum/Math/Matrix3.h>
+#include <Magnum/GlmIntegration/Integration.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 namespace GDE
 {
     class TransformComponent : public Component
     {
     private:
         Object3D* _transform;
-
+        glm::quat _oldRotation{};
+        Magnum::Vector3 _oldPosition{};
         enum Field
         {
             P_x, P_y, P_z, R_x, R_y, R_z, S_x, S_y, S_z

@@ -1,7 +1,7 @@
 #pragma once
 #include "System/System.h"
 #include "Component/LogicComponent.h"
-
+#include <enet6/enet.h>
 namespace GDE
 {
     class ClientNetworkSystem :
@@ -18,13 +18,13 @@ namespace GDE
 
             void iterate(const Timing& dt) override;
 
-            //void registerComponent(LogicComponent* logic_component);
-            //void removeComponent(LogicComponent* logic_component);
+            void connect();
+
+            static void receiveThread();
 
             static ClientNetworkSystem& getInstance();
 
         private:
-        
     };
 }
 
