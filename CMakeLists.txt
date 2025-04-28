@@ -33,6 +33,12 @@ FetchContent_Declare(
     GIT_TAG main
 )
 FetchContent_MakeAvailable(enet)
+FetchContent_Declare(
+    cpr
+    GIT_REPOSITORY https://github.com/libcpr/cpr.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(cpr)
 
 
 
@@ -102,6 +108,7 @@ include_directories("${CMAKE_BINARY_DIR}/generated")
 
 include_directories(${glm_SOURCE_DIR})
 include_directories(${enet_SOURCE_DIR}/include)
+include_directories(${cpr_SOURCE_DIR}/include)
 
 
 add_subdirectory(NetworkEngine)
