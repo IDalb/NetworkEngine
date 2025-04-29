@@ -28,8 +28,10 @@ namespace GDE
         private:
             NetworkAddress _address;
             NetworkHost* _host = nullptr;;
-
+            std::thread _receiveThread;
             uint32_t _lastFrame = 0;
+
+            std::atomic_bool _loop = true;
     };
 }
 

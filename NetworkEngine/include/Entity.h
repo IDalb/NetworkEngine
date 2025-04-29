@@ -51,7 +51,7 @@ namespace GDE
             }
             return data;
         }
-        void deserialize(char*& data)
+        void deserialize(char*& data, uint32_t frameIndex)
         {
             uint8_t serializedComponentCount;
             uint8_t deserializedComponentCount = 0;
@@ -62,7 +62,7 @@ namespace GDE
             {
                 uint32_t componentId;
                 memcpy(&componentId, data, sizeof(componentId));
-                _components.at(Component::getComponentName(componentId))->deserialize(data);
+                _components.at(Component::getComponentName(componentId))->deserialize(data, frameIndex);
                 deserializedComponentCount++;
             }
         }

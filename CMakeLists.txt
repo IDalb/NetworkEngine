@@ -114,6 +114,8 @@ include_directories(${cpr_SOURCE_DIR}/include)
 add_subdirectory(NetworkEngine)
 #add_subdirectory(Game)
 add_subdirectory(Editor)
+add_subdirectory(Client)
+add_subdirectory(Server)
 
 target_link_libraries(NetworkEngine PRIVATE
         Magnum::GlfwApplication 
@@ -153,6 +155,43 @@ target_link_libraries(NetworkEngine PRIVATE
 #        Bullet3Common)
 		
 target_link_libraries(Editor PRIVATE
+        Magnum::GlfwApplication 
+        Magnum::GL
+        Magnum::Magnum
+        Magnum::MeshTools
+        Magnum::Primitives
+        Magnum::SceneGraph
+        Magnum::Shaders
+        Magnum::Trade
+        MagnumIntegration::Bullet
+        Bullet::Dynamics
+        MagnumIntegration::ImGui
+        MagnumIntegration::Glm
+        BulletDynamics
+        BulletCollision
+        LinearMath
+        Bullet3Common)
+
+target_link_libraries(Client PRIVATE
+        Magnum::GlfwApplication 
+        Magnum::GL
+        Magnum::Magnum
+        Magnum::MeshTools
+        Magnum::Primitives
+        Magnum::SceneGraph
+        Magnum::Shaders
+        Magnum::Trade
+        MagnumIntegration::Bullet
+        Bullet::Dynamics
+        MagnumIntegration::ImGui
+        MagnumIntegration::Glm
+        BulletDynamics
+        BulletCollision
+        LinearMath
+        Bullet3Common)
+
+
+target_link_libraries(Server PRIVATE
         Magnum::GlfwApplication 
         Magnum::GL
         Magnum::Magnum

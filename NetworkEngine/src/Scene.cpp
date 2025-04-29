@@ -148,6 +148,9 @@ namespace GDE
 
         void deserialize(char*& data)
         {
+
+            uint32_t frameIndex;
+            memcpy(&frameIndex, data, sizeof(frameIndex));
             // recover frame index
             uint16_t dataSize;
             memcpy(&dataSize, data + SIZE_BEGIN, sizeof(uint16_t));
@@ -170,7 +173,7 @@ namespace GDE
             {
                 uint32_t entityId;
                 memcpy(&entityId, data, sizeof(ENTITY_ID_SIZE));
-                Scene::getEntityFromId(entityId)->deserialize(data);
+                Scene::getEntityFromId(entityId)->deserialize(data, frameIndex);
                 deserializedEntity++;
             }
         }

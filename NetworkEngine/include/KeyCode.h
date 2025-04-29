@@ -65,7 +65,7 @@ namespace GDE
 			TAB = 258,
 			BACKSPACE = 259,
 			INSERT = 260,
-			DELETE = 261,
+			DEL = 261,
 			RIGHT = 262,
 			LEFT = 263,
 			DOWN = 264,

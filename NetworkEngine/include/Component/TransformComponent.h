@@ -13,6 +13,8 @@ namespace GDE
         Object3D* _transform;
         glm::quat _oldRotation{};
         Magnum::Vector3 _oldPosition{};
+
+        uint32_t lastSnapshotIndex = 0;
         enum Field
         {
             P_x, P_y, P_z, R_x, R_y, R_z, S_x, S_y, S_z
@@ -41,6 +43,6 @@ namespace GDE
         void setValue(std::string_view variable, float value) override;
 
         std::string serialize() override;
-        void deserialize(char*& data) override;
+        void deserialize(char*& data, uint32_t frameIndex) override;
     };
 }

@@ -188,7 +188,7 @@ namespace GDEEditor
 				removeSelection();
 			}
 		}
-		if (GDE::InputSystem::getInstance().isKeyPressed(GDE::Key::DELETE))
+		if (GDE::InputSystem::getInstance().isKeyPressed(GDE::Key::DEL))
 		{
 			if (_selectedEntity)
 			{

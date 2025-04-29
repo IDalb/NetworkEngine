@@ -201,7 +201,7 @@ namespace GDE
         // Convert to a quaternion
         glm::quat rotation = glm::quat_cast(glmRotationScale);
 
-        if (position != _oldPosition || rotation != _oldRotation)
+        //if (position != _oldPosition || rotation != _oldRotation)
         {
             _oldPosition = position;
             _oldRotation = rotation;
@@ -218,36 +218,47 @@ namespace GDE
         }
         return "";
     }
-    void TransformComponent::deserialize(char*& data)
+    void TransformComponent::deserialize(char*& data, uint32_t frameIndex)
     {
         constexpr int POSITION_BEGIN_BYTE = sizeof(uint32_t);
         constexpr int ROTATION_BEGIN_BYTE = POSITION_BEGIN_BYTE + 2 * sizeof(uint32_t);
         Serialization::serialized_float xy;
         Serialization::serialized_float z;
         Serialization::serialized_quaternion rotation;
+        if(frameIndex > lastSnapshotIndex || frameIndex == 0)
+        {
+            lastSnapshotIndex = frameIndex;
 
-        data += POSITION_BEGIN_BYTE;
-        memcpy(&xy, data, sizeof(xy));
-        data += sizeof(xy);
-        memcpy(&z, data, sizeof(z));
-        data += sizeof(z);
-        memcpy(&rotation, data, sizeof(rotation));
-        data += sizeof(rotation);
+            data += POSITION_BEGIN_BYTE;
+            memcpy(&xy, data, sizeof(xy));
+            data += sizeof(xy);
+            memcpy(&z, data, sizeof(z));
+            data += sizeof(z);
+            memcpy(&rotation, data, sizeof(rotation));
+            data += sizeof(rotation);
 
-        auto [x, y] = Serialization::separateFloat(xy);
-        glm::quat quat = Serialization::deserializeQuaternion(rotation);
-        
-        glm::mat3 glmRotationScale = glm::mat3(_transform->transformation().rotationScaling());
-        glm::vec3 scale;
-        scale.x = glm::length(glm::vec3(glmRotationScale[0]));
-        scale.y = glm::length(glm::vec3(glmRotationScale[1]));
-        scale.z = glm::length(glm::vec3(glmRotationScale[2]));
+            auto [x, y] = Serialization::separateFloat(xy);
+            glm::quat quat = Serialization::deserializeQuaternion(rotation);
 
-        // Create a scaled rotation matrix from the quaternion
-        Magnum::Matrix4 newRotationWithScale = Magnum::Matrix4::from(Magnum::Quaternion({ quat.x, quat.y, quat.z }, quat.w).toMatrix(), Magnum::Vector3(Serialization::deserializeFloat(x), Serialization::deserializeFloat(y), Serialization::deserializeFloat(z))) * Magnum::Matrix4::scaling(Magnum::Vector3(scale.x, scale.y, scale.z));
+            glm::mat3 glmRotationScale = glm::mat3(_transform->transformation().rotationScaling());
+            glm::vec3 scale;
+            scale.x = glm::length(glm::vec3(glmRotationScale[0]));
+            scale.y = glm::length(glm::vec3(glmRotationScale[1]));
+            scale.z = glm::length(glm::vec3(glmRotationScale[2]));
 
-        _transform->setTransformation(newRotationWithScale);
+            // Create a scaled rotation matrix from the quaternion
+            Magnum::Matrix4 newRotationWithScale = Magnum::Matrix4::from(Magnum::Quaternion({ quat.x, quat.y, quat.z }, quat.w).toMatrix(), Magnum::Vector3(Serialization::deserializeFloat(x), Serialization::deserializeFloat(y), Serialization::deserializeFloat(z))) * Magnum::Matrix4::scaling(Magnum::Vector3(scale.x, scale.y, scale.z));
 
-        //TODO interpolation
+            _transform->setTransformation(newRotationWithScale);
+
+            //TODO interpolation
+        }
+        else
+        {
+            data += POSITION_BEGIN_BYTE;
+            data += sizeof(xy);
+            data += sizeof(z);
+            data += sizeof(rotation);
+        }
     }
 }

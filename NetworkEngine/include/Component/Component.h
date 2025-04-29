@@ -61,7 +61,7 @@ namespace GDE {
         virtual void resolve() {}
 
         virtual std::string serialize() { return ""; }
-        virtual void deserialize(char*& data) {}
+        virtual void deserialize(char*& data, uint32_t frameIndex) {}
 
         virtual void setValue(std::string_view variable, float value) {};
 

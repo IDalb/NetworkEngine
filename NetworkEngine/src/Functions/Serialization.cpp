@@ -2,18 +2,19 @@
 #include <glm/gtc/quaternion.hpp>
 #include <Magnum/Math/Vector4.h>
 #include <cmath>
+#include <iostream>
 namespace GDE
 {
 	namespace Serialization
 	{		
 		serialized_float serializeFloat(float value, int factor)
 		{
-			return static_cast<serialized_float>(value * factor) & FLOAT_BIT_MASK;
+			return static_cast<serialized_float>(value * factor + 32767) & FLOAT_BIT_MASK;
 		}
 
 		serialized_float serializeFloatQuaternion(float value, int factor)
 		{
-			const serialized_float out = static_cast<serialized_float>(value * factor + 707/*minimal value*/);
+			const serialized_float out = static_cast<serialized_float>(value * factor/*minimal value*/);
 			if (out > QUATERNION_BIT_MASK)
 			{
 				return QUATERNION_BIT_MASK;
@@ -23,12 +24,12 @@ namespace GDE
 
 		float deserializeFloat(serialized_float value, int factor)
 		{
-			return static_cast<float>(value) / factor;
+			return (static_cast<float>(value) - 32767) / factor;
 		}
 
 		float deserializeFloatQuaternion(serialized_float value, int factor)
 		{
-			return (static_cast<float>(value) - 707 /*minimal value*/) / factor;
+			return (static_cast<float>(value) /*minimal value*/) / factor;
 		}
 
 		serialized_quaternion serializeQuaternion(const glm::quat& quat)
@@ -51,6 +52,14 @@ namespace GDE
 					serializedValue++;
 				}
 			}
+			glm::quat test = deserializeQuaternion(out);
+			Magnum::Vector4 xyzw2 = { test.x, test.y , test.z , test.w };
+
+			std::cout << "max index: " << max<<std::endl;
+			std::cout << "ref x :"<< xyzw.x() <<" y :"<< xyzw.y() <<" z :"<< xyzw.z() <<" w :"<< xyzw.w() <<std::endl;
+			std::cout << "new x :"<< xyzw2.x() <<" y :"<< xyzw2.y() <<" z :"<< xyzw2.z() <<" w :"<< xyzw2.w() <<std::endl;
+
+
 			return out;
 		}
 		glm::quat deserializeQuaternion(serialized_quaternion quat)

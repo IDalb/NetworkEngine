@@ -219,7 +219,7 @@ namespace GDE
             dt = std::chrono::duration_cast<std::chrono::milliseconds>(current_time - _old_time);
         }
         _old_time = current_time;
-
+        _frame++;
         GL::defaultFramebuffer.clear(GL::FramebufferClear::Color | GL::FramebufferClear::Depth);
         for (auto& system : _systems)
         {
