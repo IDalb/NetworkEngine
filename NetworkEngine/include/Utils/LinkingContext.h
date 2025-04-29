@@ -9,7 +9,7 @@ namespace GDE
 		static LinkingContext& getInstance()
 		{
 			static LinkingContext linkingContext;
-			return linkingContext
+			return linkingContext;
 		}
 
 		void addTemplate(std::string_view templateName)

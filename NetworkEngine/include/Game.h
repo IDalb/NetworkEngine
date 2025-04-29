@@ -52,7 +52,7 @@ namespace GDE
         virtual void setupSystem() = 0;
         virtual void registerComponent() const = 0;
         virtual void registerBasicComponent() const;
-        virtual void setupComponentLinkingContext() {};
+        virtual void setupLinkingContext() {};
 
         virtual void keyPressEvent(KeyEvent& event) override;
         virtual void keyReleaseEvent(KeyEvent& event) override;

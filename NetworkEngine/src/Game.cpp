@@ -187,7 +187,7 @@ namespace GDE
         }
         registerBasicComponent();
         registerComponent();
-        setupComponentLinkingContext();
+        setupLinkingContext();
 
         for (auto& pair : componentLinkingContext)
         {

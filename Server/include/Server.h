@@ -16,6 +16,7 @@ namespace Server
         void setupSystem() override;
         void registerComponent() const override;
         void setupScene() override;
+        void setupLinkingContext() override;
     };
 
     Server::Server(const Arguments& arguments) : Game(
@@ -48,5 +49,8 @@ namespace Server
     void Server::setupScene()
     {
         GDE::Scene::load(GDE::Descr::load(std::string(SOURCE_DIR) + "/Server/data/scene/scene.yaml"));
+    }
+    void Server::setupLinkingContext()
+    {
     }
 }

@@ -15,6 +15,7 @@ namespace Client
         void setupSystem() override;
         void registerComponent() const override;
         void setupScene() override;
+        void setupLinkingContext() override;
     };
 
     Client::Client(const Arguments& arguments) : Game(
@@ -41,6 +42,12 @@ namespace Client
         this_thread::sleep_for(100ms);
         GDE::ClientNetworkSystem::getInstance().connect("127.0.0.1", 1234, GDE::NetworkAddressType::NETWORK_ADDRESS_TYPE_ANY);
     }
+
+    void Client::setupLinkingContext()
+    {
+
+    }
+
 
     void Client::registerComponent() const
     {
