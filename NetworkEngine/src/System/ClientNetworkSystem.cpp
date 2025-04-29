@@ -132,7 +132,7 @@ namespace GDE
                             uint32_t sum = 0;
                             for (size_t i = 0; i < LATENCY_BUFFER_SIZE; i++)
                             {
-                                sum += clientSystem._latencyBuffer[i];
+                                sum += (clientSystem._latencyBuffer[i] / 2.f);
                             }
                             std::lock_guard<std::mutex> lock(clientSystem._latencyLock);
                             clientSystem._latency = static_cast<float>(sum) / LATENCY_BUFFER_SIZE;

@@ -9,8 +9,8 @@ set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/modules/" ${CMAKE_MODULE_PATH})
 set(MAGNUM_WITH_GLM ON CACHE BOOL "" FORCE)
 set(MAGNUM_WITH_imguiContext ON CACHE BOOL "" FORCE)
 
-#set(BULLET_BUILD_BULLETROBOTICS OFF CACHE BOOL "Disable Bullet Robotics module" FORCE)
-#set(BULLET_BUILD_BULLETPHYSICS OFF CACHE BOOL "Disable Bullet Robotics GUI" FORCE)
+set(BULLET_BUILD_BULLETROBOTICS OFF CACHE BOOL "Disable Bullet Robotics module" FORCE)
+set(BULLET_BUILD_BULLETPHYSICS OFF CACHE BOOL "Disable Bullet Robotics GUI" FORCE)
 #
 ## Disable Bullet extras if not needed
 #set(BUILD_BULLET2_DEMOS OFF)
@@ -43,6 +43,7 @@ FetchContent_MakeAvailable(enet)
 include(FetchContent)
 FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
                          GIT_TAG master) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
+set(CURL_ZLIB OFF)
 FetchContent_MakeAvailable(cpr)
 #FetchContent_Declare(
 #    cpr

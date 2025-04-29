@@ -14,16 +14,16 @@ namespace GDE
 
 		void addTemplate(std::string_view templateName)
 		{
-			_templateToIdMap.insert({ templateName, _nextAvailableId });
-			_idToTemplateMap.insert({ _nextAvailableId,  templateName });
+			_templateToIdMap.insert({ std::string(templateName), _nextAvailableId });
+			_idToTemplateMap.insert({ _nextAvailableId,  std::string(templateName) });
 			_nextAvailableId++;
 		}
 		void removeTemplate(std::string_view templateName)
 		{
-			if(_templateToIdMap.contains(templateName))
+			if(_templateToIdMap.contains(std::string(templateName)))
 			{
-				_idToTemplateMap.erase(_templateToIdMap.at(templateName));
-				_templateToIdMap.erase(templateName);
+				_idToTemplateMap.erase(_templateToIdMap.at(std::string(templateName)));
+				_templateToIdMap.erase(std::string(templateName));
 			}
 		}
 

@@ -1,0 +1,16 @@
+- name: Ground
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [0, 0, -1]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [15, 15, 0.5]
+      RigidBody:
+        mass: 0
+      ColoredDrawable:
+        color: [1, 1, 1]
+        mesh_group: BoxGroup

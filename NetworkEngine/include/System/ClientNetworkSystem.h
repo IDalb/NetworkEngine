@@ -2,7 +2,6 @@
 #include "System/System.h"
 #include "TypeDef.h"
 #include "Component/LogicComponent.h"
-#include "Utils/LinkingContext.h"
 #include <enet6/enet.h>
 namespace GDE
 {

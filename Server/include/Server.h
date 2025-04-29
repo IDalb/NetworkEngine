@@ -6,6 +6,8 @@
 #include <System/PhysicsSystem.h>
 #include <System/ServerNetworkSystem.h>
 #include <TypeDef.h>
+#include <Utils/LinkingContext.h>
+
 namespace Server
 {
     class Server final : public GDE::Game
@@ -40,7 +42,17 @@ namespace Server
 
         GDE::ServerNetworkSystem::getInstance().createServer(4, 1234, GDE::NetworkAddressType::NETWORK_ADDRESS_TYPE_IPV6);
     }
+    void Server::setupLinkingContext()
+    {
+        auto& linkingContext = GDE::LinkingContext<uint8_t>::getInstance();
+        const std::string TEMPALTE_DIR = std::string(SOURCE_DIR) + "/Server/data/template/";
 
+        linkingContext.addTemplate(TEMPALTE_DIR + "Cube.yaml");
+        linkingContext.addTemplate(TEMPALTE_DIR + "Ground.yaml");
+        linkingContext.addTemplate(TEMPALTE_DIR + "Player.yaml");
+        linkingContext.addTemplate(TEMPALTE_DIR + "Ball.yaml");
+
+    }
     void Server::registerComponent() const
     {
         //GDE::Component::Register<>();
@@ -50,7 +62,5 @@ namespace Server
     {
         GDE::Scene::load(GDE::Descr::load(std::string(SOURCE_DIR) + "/Server/data/scene/scene.yaml"));
     }
-    void Server::setupLinkingContext()
-    {
-    }
+    
 }

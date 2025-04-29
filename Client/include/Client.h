@@ -5,6 +5,8 @@
 #include <System/LogicSystem.h>
 #include <System/PhysicsSystem.h>
 #include <System/ClientNetworkSystem.h>
+
+#include <Utils/LinkingContext.h>
 namespace Client
 {
     class Client final : public GDE::Game
@@ -45,6 +47,13 @@ namespace Client
 
     void Client::setupLinkingContext()
     {
+        auto& linkingContext = GDE::LinkingContext<uint8_t>::getInstance();
+        const std::string TEMPALTE_DIR = std::string(SOURCE_DIR) + "/Client/data/template/";
+
+        linkingContext.addTemplate(TEMPALTE_DIR + "Cube.yaml");
+        linkingContext.addTemplate(TEMPALTE_DIR + "Ground.yaml");
+        linkingContext.addTemplate(TEMPALTE_DIR + "Player.yaml");
+        linkingContext.addTemplate(TEMPALTE_DIR + "Ball.yaml");
 
     }
 

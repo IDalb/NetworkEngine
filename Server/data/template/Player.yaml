@@ -1,0 +1,15 @@
+- name: "Player"
+  description:
+    children:
+    components:
+      Transform:
+        position: [12, -35, 28.8]
+        rotation: [-20, -40, 0]
+#      Shape: 
+#        shape: "sphere"
+#        radius: 1
+#      RigidBody:
+#      ColoredDrawable:
+#        color: [1,1,1]
+#        mesh_group: "SphereGroup"
+      
