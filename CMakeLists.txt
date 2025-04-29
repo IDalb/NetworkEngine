@@ -38,6 +38,16 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/libcpr/cpr.git
     GIT_TAG master
 )
+set(CMAKE_USE_OPENSSL OFF)
+set(CMAKE_USE_LIBSSH2 OFF)
+set(CURL_USE_STATIC_LIBS ON)
+
+# Force CURL to fetch zlib itself
+set(BUILD_ZLIB ON)
+set(ZLIB_USE_STATIC_LIBS ON)
+
+set(CPR_FORCE_USE_SYSTEM_CURL OFF)
+
 FetchContent_MakeAvailable(cpr)
 
 
