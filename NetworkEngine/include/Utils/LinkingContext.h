@@ -8,8 +8,14 @@ namespace GDE
 	public:
 		static LinkingContext& getInstance();
 
-		void addTemplate(std::string_view templateName);
+		void addTemplate(std::string_view templateName)
+		{
 
+		}
+		void removeTemplate(std::string_view templateName);
+		{
+
+		}
 		const std::string& getTemplateFromId(T id)
 		{
 
@@ -20,7 +26,7 @@ namespace GDE
 
 		}
 	private:
-
+		T _nextAvailableId = 0;
 		std::map<std::string, T> _templateToIdMap;
 		std::map<T, std::string> _itToTemplateMap;
 	};
