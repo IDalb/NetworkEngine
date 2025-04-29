@@ -10,11 +10,13 @@ namespace GDE
 
 		void addTemplate(std::string_view templateName)
 		{
-
+			_templateToIdMap.insert({ templateName, _nextAvailableId });
+			_nextAvailableId++;
 		}
 		void removeTemplate(std::string_view templateName);
 		{
-
+			//_templateToIdMap.insert({ _nextAvailableId, templateName });
+			_nextAvailableId++;
 		}
 		const std::string& getTemplateFromId(T id)
 		{

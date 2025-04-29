@@ -33,29 +33,33 @@ FetchContent_Declare(
     GIT_TAG main
 )
 FetchContent_MakeAvailable(enet)
-FetchContent_Declare(
-    cpr
-    GIT_REPOSITORY https://github.com/libcpr/cpr.git
-    GIT_TAG master
-)
-set(BUILD_SHARED_LIBS OFF)       # Avoid building shared versions of dependencies
-set(BUILD_ZLIB ON)               # Force building zlib from source
-set(ZLIB_USE_STATIC_LIBS ON)
 
-# Ensure zlib is built with -fPIC
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-
-# For CPR/CURL
-set(CPR_USE_SYSTEM_CURL OFF)
-set(CURL_ZLIB ON)
-set(CMAKE_USE_SYSTEM_ZLIB OFF)
-
+include(FetchContent)
+FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
+                         GIT_TAG dd967cb48ea6bcbad9f1da5ada0db8ac0d532c06) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
 FetchContent_MakeAvailable(cpr)
+#FetchContent_Declare(
+#    cpr
+#    GIT_REPOSITORY https://github.com/libcpr/cpr.git
+#    GIT_TAG master
+#)
+#set(CMAKE_USE_OPENSSL OFF)
+#set(CMAKE_USE_LIBSSH2 OFF)
+#set(CURL_USE_STATIC_LIBS ON)
+#
+## Force CURL to fetch zlib itself
+#set(BUILD_ZLIB ON)
+#set(ZLIB_USE_STATIC_LIBS ON)
+#
+#set(CPR_FORCE_USE_SYSTEM_CURL OFF)
+#
+#FetchContent_MakeAvailable(cpr)
 
 
 
 link_libraries(glm)
 link_libraries(enet)
+link_libraries(cpr::cpr)
 
 set(GLM_INCLUDE_DIR ${glm_SOURCE_DIR}/glm)
 set(ENET_INCLUDE_DIR ${enet_SOURCE_DIR}/include)
