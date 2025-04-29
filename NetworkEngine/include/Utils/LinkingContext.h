@@ -6,30 +6,52 @@ namespace GDE
 	class LinkingContext
 	{
 	public:
-		static LinkingContext& getInstance();
+		static LinkingContext& getInstance()
+		{
+			static LinkingContext linkingContext;
+			return linkingContext
+		}
 
 		void addTemplate(std::string_view templateName)
 		{
 			_templateToIdMap.insert({ templateName, _nextAvailableId });
+			_idToTemplateMap.insert({ _nextAvailableId,  templateName });
 			_nextAvailableId++;
 		}
-		void removeTemplate(std::string_view templateName);
+		void removeTemplate(std::string_view templateName)
 		{
-			//_templateToIdMap.insert({ _nextAvailableId, templateName });
-			_nextAvailableId++;
+			if(_templateToIdMap.contains(templateName))
+			{
+				_idToTemplateMap.erase(_templateToIdMap.at(templateName));
+				_templateToIdMap.erase(templateName);
+			}
 		}
+
 		const std::string& getTemplateFromId(T id)
 		{
-
+			if (_idToTemplateMap.contains(id))
+			{
+				return _idToTemplateMap.at(id);
+			}
+			return _idToTemplateMap.at(0);
 		}
 
-		const std::string& getIdFromTemplate(T id)
+		T getIdFromTemplate(const std::string& templateName)
 		{
-
+			if (_templateToIdMap.contains(templateName))
+			{
+				return _templateToIdMap.at(templateName);
+			}
+			return _templateToIdMap.at("error");
 		}
 	private:
+		LinkingContext()
+		{
+			addTemplate("error");
+		}
+
 		T _nextAvailableId = 0;
 		std::map<std::string, T> _templateToIdMap;
-		std::map<T, std::string> _itToTemplateMap;
+		std::map<T, std::string> _idToTemplateMap;
 	};
 }

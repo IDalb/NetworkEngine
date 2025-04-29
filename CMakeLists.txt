@@ -11,6 +11,12 @@ set(MAGNUM_WITH_imguiContext ON CACHE BOOL "" FORCE)
 
 set(BULLET_BUILD_BULLETROBOTICS OFF CACHE BOOL "Disable Bullet Robotics module" FORCE)
 set(BULLET_BUILD_BULLETPHYSICS OFF CACHE BOOL "Disable Bullet Robotics GUI" FORCE)
+
+# Disable Bullet extras if not needed
+set(BUILD_BULLET2_DEMOS OFF)
+set(BUILD_EXTRAS OFF)                # <-- This disables BulletRoboticsGUI and others
+set(BUILD_UNIT_TESTS OFF)
+
 include(FetchContent)
 
 # YAML-CPP
