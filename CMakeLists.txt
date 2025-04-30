@@ -40,10 +40,52 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(enet)
 
-include(FetchContent)
-FetchContent_Declare(cpr GIT_REPOSITORY https://github.com/libcpr/cpr.git
-                         GIT_TAG master) # Replace with your desired git commit from: https://github.com/libcpr/cpr/releases
-set(CURL_ZLIB OFF)
+
+# Disable install/export for libcurl and CPR
+set(CMAKE_INSTALL_PREFIX "" CACHE PATH "" FORCE)  # Prevent installation
+
+# Disable shared libraries for both curl and CPR
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build static libraries" FORCE)
+set(CURL_BUILD_SHARED_LIBS OFF CACHE BOOL "Build static curl" FORCE)
+set(CURL_DISABLE_INSTALL ON CACHE BOOL "Disable curl installation" FORCE)
+set(CURL_ENABLE_STATIC_LIBS ON CACHE BOOL "Force static curl" FORCE)
+set(CURL_ENABLE_MANUAL_CURL_BUILD OFF CACHE BOOL "Prevent manual build" FORCE)
+
+# Prevent building and exporting targets
+set(CURL_ENABLE_EXPORT ON CACHE BOOL "Disable curl export" FORCE)
+
+# Disable tests
+set(BUILD_TESTING OFF CACHE BOOL "Disable tests" FORCE)
+set(CPR_BUILD_TESTS OFF CACHE BOOL "Don't build CPR tests" FORCE)
+
+# Disable export behavior for CPR
+set(CMAKE_INSTALL_EXPORT_NAME "" CACHE STRING "" FORCE)
+
+# Declare zlib (if you need it for curl)
+FetchContent_Declare(
+  zlib
+  URL https://zlib.net/zlib-1.3.1.tar.gz
+)
+FetchContent_MakeAvailable(zlib)
+
+# Declare nghttp2 (if needed for HTTP/2 support)
+FetchContent_Declare(
+  nghttp2
+  GIT_REPOSITORY https://github.com/nghttp2/nghttp2.git
+  GIT_TAG v1.59.0
+)
+FetchContent_MakeAvailable(nghttp2)
+
+# Declare CPR
+FetchContent_Declare(
+  cpr
+  GIT_REPOSITORY https://github.com/libcpr/cpr.git
+  GIT_TAG 1.10.4
+)
+set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR}")
+set(ZLIB_LIBRARY zlib)
+set(NGHTTP2_INCLUDE_DIR ${nghttp2_SOURCE_DIR}/lib/includes)
+set(NGHTTP2_LIBRARY nghttp2)
 FetchContent_MakeAvailable(cpr)
 #FetchContent_Declare(
 #    cpr

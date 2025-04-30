@@ -1,7 +1,7 @@
 #pragma once
 #include <Component/LogicComponent.h>
 
-namespace Game
+namespace Server
 {
 	class BallShootComponent : public GDE::LogicComponent
 	{

@@ -5,7 +5,7 @@
 #include <Scene.h>
 #include <Entity.h>
 #include <System/InputSystem.h>
-namespace Game
+namespace Client
 {
 	void BallShootComponent::updateLogic(const GDE::Timing& timing)
 	{

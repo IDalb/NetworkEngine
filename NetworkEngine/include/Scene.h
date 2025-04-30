@@ -7,7 +7,8 @@ namespace GDE
 {
     namespace Scene
     {
-        EntityRef createEntity(const Description& description, const EntityRef& parent);
+        EntityRef createEntity(const Description& description, const EntityRef& parent, uint32_t id = 0);
+        EntityRef createEntity(const std::string& templateName, const EntityRef& parent, uint32_t id = 0);
         EntityRef addEntityToRoot(const Description& description);
         EntityRef findEntity(const std::string& name);
 

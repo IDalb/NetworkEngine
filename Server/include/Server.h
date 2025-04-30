@@ -7,6 +7,7 @@
 #include <System/ServerNetworkSystem.h>
 #include <TypeDef.h>
 #include <Utils/LinkingContext.h>
+#include "Component/BallShootComponent.h"
 
 namespace Server
 {
@@ -19,6 +20,7 @@ namespace Server
         void registerComponent() const override;
         void setupScene() override;
         void setupLinkingContext() override;
+        virtual std::string getTemplatePath() const override { return std::string(SOURCE_DIR) + "/Server/data/template/"; }
     };
 
     Server::Server(const Arguments& arguments) : Game(
@@ -44,18 +46,17 @@ namespace Server
     }
     void Server::setupLinkingContext()
     {
-        auto& linkingContext = GDE::LinkingContext<uint8_t>::getInstance();
-        const std::string TEMPALTE_DIR = std::string(SOURCE_DIR) + "/Server/data/template/";
+        auto& linkingContext = GDE::LinkingContext<GDE::NetworkTemplateSize>::getInstance();
 
-        linkingContext.addTemplate(TEMPALTE_DIR + "Cube.yaml");
-        linkingContext.addTemplate(TEMPALTE_DIR + "Ground.yaml");
-        linkingContext.addTemplate(TEMPALTE_DIR + "Player.yaml");
-        linkingContext.addTemplate(TEMPALTE_DIR + "Ball.yaml");
+        linkingContext.addTemplate("Cube.yaml");
+        linkingContext.addTemplate("Ground.yaml");
+        linkingContext.addTemplate("Player.yaml");
+        linkingContext.addTemplate("Ball.yaml");
 
     }
     void Server::registerComponent() const
     {
-        //GDE::Component::Register<>();
+        GDE::Component::Register<BallShootComponent>();
     }
 
     void Server::setupScene()

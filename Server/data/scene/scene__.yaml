@@ -1,0 +1,62 @@
+- name: Camera
+  tag: camera
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [12, -35, 28.8]
+        rotation: [-20, -40, 0]
+        scale: [1, 1, 1]
+      Camera:
+        aspect_ratio: 1.7777778
+        far_distance: 1000
+- name: BoxGroup
+  tag: BoxGroup
+  description:
+    children: ~
+    components:
+      MeshGroup:
+        shape: box
+- name: SphereGroup
+  tag: SphereGroup
+  description:
+    children: ~
+    components:
+      MeshGroup:
+        shape: sphere
+#- name: BallShoot
+#  description:
+#    children: ~
+#    components:
+#      BallShoot: ~
+- name: Ground
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [0, 0, -1]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [15, 15, 0.5]
+      RigidBody:
+        mass: 0
+      ColoredDrawable:
+        color: [1, 1, 1]
+        mesh_group: BoxGroup
+- name: Cube1
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [0, 0, 10]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0.056510143, 0.1998012, 0.011122128]
+        mesh_group: BoxGroup

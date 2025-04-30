@@ -49,6 +49,7 @@ namespace GDE
         );
         virtual ~Game();
 
+        virtual std::string getTemplatePath() const { return ""; }
         virtual void setupSystem() = 0;
         virtual void registerComponent() const = 0;
         virtual void registerBasicComponent() const;

@@ -3,6 +3,7 @@
 
 #include "TypeDef.h"
 #include "Component/Component.h"
+#include "Utils/LinkingContext.h"
 
 namespace GDE
 {
@@ -11,6 +12,8 @@ namespace GDE
         bool _active{ true };
         std::string _tag{};
         std::string _name{};
+        std::string _templateName = "";
+        bool _templateNameSent = false;
 
         uint32_t _id{};
 
@@ -32,7 +35,12 @@ namespace GDE
         std::string serialize()
         {
             std::string data;
-            data.resize(COMPONENT_ID + 1);
+            int templateNameSize = 0;
+            if (_templateName != "" && !_templateNameSent)
+            {
+                templateNameSize = sizeof(NetworkTemplateSize);
+            }
+            data.resize(COMPONENT_ID + 1 + templateNameSize);
             memcpy(data.data(), &_id, sizeof(_id));
             uint8_t serializedComponentCount = 0;
             for (auto& pair : _components)
@@ -43,8 +51,15 @@ namespace GDE
                 {
                     serializedComponentCount++;
                 }
-            }        
-            memcpy(data.data() + COMPONENT_ID, &serializedComponentCount, sizeof(serializedComponentCount));
+            }   
+
+            if (templateNameSize != 0)
+            {
+                NetworkTemplateSize templateNetId = LinkingContext<NetworkTemplateSize>::getInstance().getIdFromTemplate(_templateName);
+                memcpy(data.data() + COMPONENT_ID, &templateNetId, sizeof(NetworkTemplateSize));
+            }
+
+            memcpy(data.data() + COMPONENT_ID + templateNameSize, &serializedComponentCount, sizeof(serializedComponentCount));
             if (serializedComponentCount == 0)
             {
                 return "";
@@ -55,9 +70,9 @@ namespace GDE
         {
             uint8_t serializedComponentCount;
             uint8_t deserializedComponentCount = 0;
-            memcpy(&serializedComponentCount, data + COMPONENT_ID, sizeof(serializedComponentCount));
+            memcpy(&serializedComponentCount, data, sizeof(serializedComponentCount));
 
-            data += (sizeof(COMPONENT_ID) + 1);
+            data += 1;
             while (serializedComponentCount != deserializedComponentCount)
             {
                 uint32_t componentId;
@@ -83,6 +98,7 @@ namespace GDE
         void setTag(const std::string& tag) { _tag = tag; }
         void setName(const std::string& name) { _name = name; }
         void setId(uint32_t id) { _id = id; }
+        void setTemplateName(const std::string& templateName) { _templateName = templateName; }
 
         EntityRef getParent() const { return _parent.lock(); }
         EntityRef getChild(const std::string& name) const;

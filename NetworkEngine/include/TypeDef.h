@@ -46,4 +46,6 @@ namespace GDE {
     } NetworkEventType;
 
     typedef ENetEvent NetworkEvent;
+
+    typedef uint8_t NetworkTemplateSize;
 }

@@ -3,7 +3,8 @@
 #include "Utils/MagnumScene.h"
 #include "System/EntitySystem.h"
 #include <map>
-
+#include "Utils/LinkingContext.h"
+#include "Game.h"
 namespace GDE
 {
     namespace Scene
@@ -47,9 +48,19 @@ namespace GDE
             return idMap;
         }
 
-        EntityRef CreateEntityInternal(const EntityDescription& description, const EntityRef& parent, const std::string_view& name, const std::string& tag)
+        EntityRef CreateEntityInternal(const EntityDescription& description, const EntityRef& parent, const std::string_view& name, const std::string& tag, uint32_t id)
         {
             EntityRef newEntity = Entity::create();
+            if (id == 0)
+            {
+                static uint32_t entityIds = 1;
+                newEntity->setId(entityIds);
+                entityIds++;
+            }
+            else
+            {
+                newEntity->setId(id);
+            }
             parent->addChild(std::string(name), newEntity);
             for (const auto& component : description.components)
                 newEntity->addComponent(component.first, component.second);
@@ -67,14 +78,21 @@ namespace GDE
             return newEntity;
         }
 
-        EntityRef createEntity(const Description& description, const EntityRef& parent)
+        EntityRef createEntity(const Description& description, const EntityRef& parent, uint32_t id)
         {
             std::string tag;
             if (description["tag"])
             {
                 tag = description["tag"].as<std::string>();
             }
-            return CreateEntityInternal(EntityDescription(description["description"]), parent, description["name"].as<std::string>(), tag);
+            return CreateEntityInternal(EntityDescription(description["description"]), parent, description["name"].as<std::string>(), tag, id);
+        }
+
+        EntityRef createEntity(const std::string& templateName, const EntityRef& parent, uint32_t id)
+        {
+            EntityRef newEntity = createEntity(Descr::load(Game::_app->getTemplatePath() + templateName), parent, id);
+            newEntity->setTemplateName(templateName);
+            return newEntity;
         }
 
         EntityRef addEntityToRoot(const Description& description)
@@ -172,8 +190,22 @@ namespace GDE
             while (deserializedEntity < entityCount)
             {
                 uint32_t entityId;
-                memcpy(&entityId, data, sizeof(ENTITY_ID_SIZE));
-                Scene::getEntityFromId(entityId)->deserialize(data, frameIndex);
+                memcpy(&entityId, data, ENTITY_ID_SIZE);
+                if (Scene::getEntityFromId(entityId) != nullptr)
+                {
+                    data += ENTITY_ID_SIZE;
+                    Scene::getEntityFromId(entityId)->deserialize(data, frameIndex);
+                }
+                else
+                {
+                    NetworkTemplateSize templateId;
+                    memcpy(&templateId, data + ENTITY_ID_SIZE, sizeof(NetworkTemplateSize));
+
+                    EntityRef newEntity = Scene::createEntity(LinkingContext<NetworkTemplateSize>::getInstance().getTemplateFromId(templateId), Scene::rootEntity(), entityId);
+                    data+= (ENTITY_ID_SIZE + sizeof(NetworkTemplateSize));
+                    newEntity->deserialize(data, frameIndex);
+
+                }
                 deserializedEntity++;
             }
         }
