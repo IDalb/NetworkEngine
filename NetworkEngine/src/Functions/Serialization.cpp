@@ -54,13 +54,6 @@ namespace GDE
 					serializedValue++;
 				}
 			}
-			glm::quat test = deserializeQuaternion(out);
-			Magnum::Vector4 xyzw2 = { test.x, test.y , test.z , test.w };
-
-			std::cout << "max index: " << max<<std::endl;
-			std::cout << "ref x :"<< xyzw.x() <<" y :"<< xyzw.y() <<" z :"<< xyzw.z() <<" w :"<< xyzw.w() <<std::endl;
-			std::cout << "new x :"<< xyzw2.x() <<" y :"<< xyzw2.y() <<" z :"<< xyzw2.z() <<" w :"<< xyzw2.w() <<std::endl;
-
 			return out;
 		}
 		glm::quat deserializeQuaternion(serialized_quaternion quat)
