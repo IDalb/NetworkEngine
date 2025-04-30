@@ -223,5 +223,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+
+### Web API ###
+WebAPI/bin
+WebAPI/obj
+
 # End of https://www.toptal.com/developers/gitignore/api/cmake,clion+all,linux,macos,windows,c++
 

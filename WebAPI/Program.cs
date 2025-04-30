@@ -9,9 +9,8 @@ using System.Security.Claims;
 string SECRET_KEY = "secretkey01234***secretkey5678***";
 
 string DbPath;
-var folder = Environment.SpecialFolder.LocalApplicationData;
-var path = Environment.GetFolderPath(folder);
-DbPath = Path.Join(path, "cube_game.db");
+var folderPath = Environment.CurrentDirectory;
+DbPath = Path.Join(folderPath, "cube_game.db");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,7 +58,7 @@ if (app.Environment.IsDevelopment()) {
 var users = app.MapGroup("/users");
 var stats = app.MapGroup("/stats");
 var achievements = app.MapGroup("/achievements");
-var match = app.MapGroup("/match");
+var match = app.MapGroup("/matchs");
 
 app.MapGet("/", () => "Hello World!");
 app.MapPost("/login", RequestLogin);
@@ -72,7 +71,7 @@ users.MapDelete("/{id}", DeleteUser);
 
 stats.MapGet("/", GetAllStatistics);
 stats.MapGet("/{id}", GetStatistic);
-stats.MapGet("/user#{playerId}", GetUserStatistics);
+stats.MapGet("/user/{playerId}", GetUserStatistics);
 stats.MapPut("/{playerId}", UpdateUserStatistic);
 
 achievements.MapGet("/", GetAllAchievements);
@@ -206,6 +205,9 @@ static async Task<IResult> GetStatistic(int id, GameDb db) {
 }
 
 static async Task<IResult> GetUserStatistics(int playerId, GameDb db) {
+    if (await db.Users.Where(x => x.Id == playerId).FirstOrDefaultAsync() == null)
+        return Results.NotFound();
+    
     return TypedResults.Ok(await db.Statistics.Where(x => x.PlayerId == playerId).ToListAsync());
 }
 
@@ -227,7 +229,9 @@ static async Task<IResult> GetAllAchievements(GameDb db) {
 }
 
 static async Task<IResult> GetAchievement(int id, GameDb db) {
-    return TypedResults.Ok(await db.Achievements.Where(x => x.Id == id).ToListAsync());
+    var stat = await db.Achievements.Where(x => x.Id == id).FirstOrDefaultAsync();
+    if (stat == null) return Results.NotFound();
+    return TypedResults.Ok(stat);
 }
 
 static async Task<IResult> GetAllMatches(GameDb db) {
@@ -235,7 +239,9 @@ static async Task<IResult> GetAllMatches(GameDb db) {
 }
 
 static async Task<IResult> GetMatch(int id, GameDb db) {
-    return TypedResults.Ok(await db.Servers.Where(x => x.Id == id).ToListAsync());
+    return await db.Servers.Where(x => x.Id == id).FirstOrDefaultAsync() is MatchServer server
+        ? TypedResults.Ok(server)
+        : Results.NotFound();
 }
 
 static async Task<IResult> UpdateMatch(int id, MatchServerDTO matchDto, GameDb db) {
@@ -244,8 +250,8 @@ static async Task<IResult> UpdateMatch(int id, MatchServerDTO matchDto, GameDb d
 
     if (matchDto.Ip != string.Empty) server.Ip = matchDto.Ip;
     if (matchDto.Port != default) server.Port = matchDto.Port;
-    if (matchDto.CurrentPlayerNumber != default) server.CurrentPlayerNumber = matchDto.CurrentPlayerNumber;
-    if (matchDto.ServerState != default) server.ServerState = matchDto.ServerState;
+    if (matchDto.CurrentPlayers != default) server.CurrentPlayers = matchDto.CurrentPlayers;
+    if (matchDto.ServerState != default) server.ServerState = (ServerState)matchDto.ServerState;
 
     await db.SaveChangesAsync();
     return Results.NoContent();
@@ -255,7 +261,7 @@ static async Task<IResult> FindMatch(GameDb db) {
     var servers = await db.Servers.Select(x => x).ToListAsync();
     foreach (var server in servers) {
         if (server.ServerState != ServerState.WAITING) continue;
-        if (server.CurrentPlayerNumber >= 4) continue;
+        if (server.CurrentPlayers.Count >= 4) continue;
 
         return TypedResults.Ok(server);
     }
@@ -264,28 +270,38 @@ static async Task<IResult> FindMatch(GameDb db) {
 } 
 
 static async Task<IResult> ConnectServer(MatchServerDTO matchDTO, GameDb db) {
-    /// TODO
     var server = new MatchServer {
         Ip = matchDTO.Ip,
         Port = matchDTO.Port,
-        CurrentPlayerNumber = matchDTO.CurrentPlayerNumber != default ? matchDTO.CurrentPlayerNumber : 0,
-        ServerState = matchDTO.ServerState != default ? matchDTO.ServerState : ServerState.WAITING
+        CurrentPlayers = [],
+        ServerState = ServerState.WAITING
     };
     
     db.Servers.Add(server);
     await db.SaveChangesAsync();
+
+    matchDTO = new MatchServerDTO(server);
     
-    return Results.Created($"/servers/{server.Id}", server);
+    return Results.Created($"/servers/{server.Id}", matchDTO);
 }
 
-static async Task<IResult> ConnectToServer(int id, GameDb db) {
-    if (await db.Servers.FindAsync(id) is not MatchServer server)
+static async Task<IResult> ConnectToServer(int id, int playerId, GameDb db) {
+    if (await db.Users.FindAsync(playerId) is not User user ||
+        await db.Servers.FindAsync(id) is not MatchServer server
+        )
         return Results.NotFound();
 
-    if (server.CurrentPlayerNumber >= 4 || server.ServerState != ServerState.WAITING)
+    if (server.CurrentPlayers.Count >= 4 ||
+        server.ServerState != ServerState.WAITING ||
+        await db.Servers.Where(x =>x.CurrentPlayers.Contains(playerId))
+            .FirstOrDefaultAsync() is not null
+        )
         return Results.Forbid();
 
-    server.CurrentPlayerNumber += 1;
+    server.CurrentPlayers.Add(playerId);
+    if (server.CurrentPlayers.Count >= 4 && server.ServerState == ServerState.WAITING)
+        server.ServerState = ServerState.INGAME;
+    
     await db.SaveChangesAsync();
 
     return Results.Ok();
