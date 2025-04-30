@@ -88,7 +88,7 @@ namespace GDE
             return CreateEntityInternal(EntityDescription(description["description"]), parent, description["name"].as<std::string>(), tag, id);
         }
 
-        EntityRef GDE::Scene::createEntity(const Description& description, const EntityRef& parent, std::string_view templateName, uint32_t id)
+        EntityRef createEntity(const Description& description, const EntityRef& parent, std::string_view templateName, uint32_t id)
         {
             EntityRef newEntity = createEntity(description, parent, id);
             newEntity->setTemplateName(std::string(templateName));
