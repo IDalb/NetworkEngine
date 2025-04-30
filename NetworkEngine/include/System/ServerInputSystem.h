@@ -58,77 +58,7 @@ namespace GDE
 
 		void iterate(const Timing& dt) override
 		{
-			std::sort(_inputKey.begin(), _inputKey.end(), [](const auto& a, const auto& b) {
-				return a.first < b.first;
-				});
-			std::sort(_inputMouseButton.begin(), _inputMouseButton.end(), [](const auto& a, const auto& b) {
-				return a.first < b.first;
-				});
-			std::sort(_inputMousePos.begin(), _inputMousePos.end(), [](const auto& a, const auto& b) {
-				return a.first < b.first;
-				});
-			std::sort(_inputMouseVelocity.begin(), _inputMouseVelocity.end(), [](const auto& a, const auto& b) {
-				return a.first < b.first;
-				});
-
-			for (auto& pair : _inputKey)
-			{
-				int i = -1;
-				if (pair.first >= dt._frame)
-				{
-					i++;
-					setKeyState(pair.second.key, State::Value(pair.second.pressed), pair.second.playerID);
-				}
-				if(i > -1)
-				{
-					_inputKey.erase(_inputKey.begin(), _inputKey.begin() + i);
-				}
-			}
-
-			for (auto& pair : _inputMouseButton)
-			{
-				int i = -1;
-				if (pair.first >= dt._frame)
-				{
-					i++;
-					setMouseButtonState(pair.second.Button, State::Value(pair.second.pressed), pair.second.playerID);
-				}
-				if (i > -1)
-				{
-					_inputMouseButton.erase(_inputMouseButton.begin(), _inputMouseButton.begin() + i);
-				}
-			}
-
-			for (auto& pair : _inputMousePos)
-			{
-				int i = -1;
-				if (pair.first >= dt._frame)
-				{
-					i++;
-					setMousePos(pair.second.position, pair.second.playerID);
-				}
-				if (i > -1)
-				{
-					_inputMousePos.erase(_inputMousePos.begin(), _inputMousePos.begin() + i);
-				}
-			}
-
-			for (auto& pair : _inputMouseVelocity)
-			{
-				int i = -1;
-				if (pair.first >= dt._frame)
-				{
-					i++;
-					setMouseVelocity(pair.second.velocity, pair.second.playerID);
-				}
-				if (i > -1)
-				{
-					_inputMouseVelocity.erase(_inputMouseVelocity.begin(), _inputMouseVelocity.begin() + i);
-				}
-			}
-
-			
-			for(auto& pair : updated_keys_)
+			for (auto& pair : updated_keys_)
 			{
 				for (auto& key : pair.second)
 				{
@@ -161,9 +91,83 @@ namespace GDE
 				}
 				updated_mouse_buttons_[pair.first].clear();
 			}
-			
-			//mouse_scroll_value_ = 0;
-			//_mouseVelocity = {0, 0};
+
+			std::sort(_inputKey.begin(), _inputKey.end(), [](const auto& a, const auto& b) {
+				return a.first < b.first;
+				});
+			std::sort(_inputMouseButton.begin(), _inputMouseButton.end(), [](const auto& a, const auto& b) {
+				return a.first < b.first;
+				});
+			std::sort(_inputMousePos.begin(), _inputMousePos.end(), [](const auto& a, const auto& b) {
+				return a.first < b.first;
+				});
+			std::sort(_inputMouseVelocity.begin(), _inputMouseVelocity.end(), [](const auto& a, const auto& b) {
+				return a.first < b.first;
+				});
+
+			for (auto& pair : _inputKey)
+			{
+				int i = 0;
+				i++;
+				bool eraseInput = false;
+				if (pair.first >= dt._frame)
+				{
+					eraseInput = true;
+					setKeyState(pair.second.key, State::Value(pair.second.pressed), pair.second.playerID);
+				}
+				if(eraseInput)
+				{
+					_inputKey.erase(_inputKey.begin(), _inputKey.begin() + i);
+				}
+			}
+
+			for (auto& pair : _inputMouseButton)
+			{
+				int i = 0;
+				i++;
+				bool eraseInput = false;
+				if (pair.first == dt._frame)
+				{
+					eraseInput = true;
+					setMouseButtonState(pair.second.Button, State::Value(pair.second.pressed), pair.second.playerID);
+				}
+				if (eraseInput)
+				{
+					_inputMouseButton.erase(_inputMouseButton.begin(), _inputMouseButton.begin() + i);
+				}
+			}
+
+			for (auto& pair : _inputMousePos)
+			{
+				int i = -1;
+				i++;
+				bool eraseInput = false;
+				if (pair.first == dt._frame)
+				{
+					eraseInput = true;
+					setMousePos(pair.second.position, pair.second.playerID);
+				}
+				if (eraseInput)
+				{
+					_inputMousePos.erase(_inputMousePos.begin(), _inputMousePos.begin() + i);
+				}
+			}
+
+			for (auto& pair : _inputMouseVelocity)
+			{
+				int i = -1;
+				i++;
+				bool eraseInput = false;
+				if (pair.first == dt._frame)
+				{
+					eraseInput = true;
+					setMouseVelocity(pair.second.velocity, pair.second.playerID);
+				}
+				if (eraseInput)
+				{
+					_inputMouseVelocity.erase(_inputMouseVelocity.begin(), _inputMouseVelocity.begin() + i);
+				}
+			}
 		}
 
 		bool isKeyPressed(Key::Key key, uint32_t id);

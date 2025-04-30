@@ -37,8 +37,8 @@ namespace Server
         addSystem<GDE::LogicSystem>();
         addSystem<GDE::PhysicsSystem>();
         addSystem<GDE::DisplaySystem>();
-        addSystem<GDE::ServerNetworkSystem>();
         addSystem<GDE::ServerInputSystem>();
+        addSystem<GDE::ServerNetworkSystem>();
 
         GDE::DisplaySystem::getInstance().initImpl([]{ return std::make_unique<GDE::DisplaySystemImpl>(); });
 

@@ -37,7 +37,7 @@ namespace GDE
         uint32_t inputFrame;
         {
             std::lock_guard<std::mutex> lock(_latencyLock);
-            inputFrame = _ServerLastFrame + uint32_t(_latency / _serverFpsMs) + 3;
+            inputFrame = _ServerLastFrame + uint32_t(_latency / _serverFpsMs) + 10;
         }
         memcpy(msg.data() + sizeof(NetworkMessage::NetworkMessage)+ sizeof(_id), &inputFrame, sizeof(inputFrame));
 
@@ -70,11 +70,11 @@ namespace GDE
         {
             if (mouseState.second.state == InputSystem::State::PRESSED || mouseState.second.state == InputSystem::State::RELEASED)
             {
-                keyCount++;
+                buttonCount++;
                 uint8_t button = static_cast<uint16_t>(mouseState.first);
                 if (mouseState.second.state == InputSystem::State::PRESSED)
                 {
-                    button &= (1 << 7);
+                    button |= (1 << 7);
                 }
                 std::string mouseData;
                 mouseData.resize(sizeof(uint16_t));
@@ -141,6 +141,15 @@ namespace GDE
         while (std::size(_serverData[dataIndex]) > 0)
         {
             char* data = _serverData[dataIndex].back().data() + 1;
+            uint32_t serverFrame;
+            memcpy(&serverFrame, data, sizeof(serverFrame));
+            {
+                std::lock_guard<std::mutex> lock(_latencyLock);
+                if (_ServerLastFrame < serverFrame || serverFrame < _ServerLastFrame - 5000)
+                {
+                    _ServerLastFrame = serverFrame;
+                }
+            }
             Scene::deserialize(data);
             _serverData[dataIndex].pop_back();
         }
@@ -198,6 +207,8 @@ namespace GDE
                     {
                         uint32_t serverLastFrame;
                         memcpy(&serverLastFrame, data.data() + sizeof(NetworkMessage::NetworkMessage), sizeof(uint32_t));
+                        
+                        
                         clientSystem._ServerLastFrame = serverLastFrame;
                     }
                     break;

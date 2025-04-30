@@ -28,7 +28,6 @@
   description:
     children: ~
     components:
-      BallShoot: ~
 - name: Ground
   description:
     children: ~

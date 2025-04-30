@@ -79,7 +79,7 @@ namespace GDE
             }
 
             memcpy(&mouseButtonCount, inputData, sizeof(mouseButtonCount));
-            mouseButtonCount += sizeof(mouseButtonCount);
+            inputData += sizeof(mouseButtonCount);
             for (uint8_t i = 0; i < mouseButtonCount; i++)
             {
                 uint8_t button;
@@ -97,11 +97,11 @@ namespace GDE
             memcpy(&mousePos, inputData, sizeof(mousePos));
             memcpy(&mouseVel, inputData + sizeof(mousePos), sizeof(mouseVel));
 
-            auto [x, y] = Serialization::separateInt(mousePos);
-            input.setMousePos({x,y}, playerId, inputFrame);
+            auto [px, py] = Serialization::separateInt(mousePos);
+            input.setMousePos(Magnum::Vector2i(px,py), playerId, inputFrame);
             
-            auto [x, y] = Serialization::separateFloat(mouseVel);
-            input.setMouseVelocity({ Serialization::deserializeFloat(x),Serialization::deserializeFloat(y) }, playerId, inputFrame);
+            auto [vx, vy] = Serialization::separateFloat(mouseVel);
+            input.setMouseVelocity(Magnum::Vector2(Serialization::deserializeFloat(vx),Serialization::deserializeFloat(vy)), playerId, inputFrame);
 
 
             _clientInput[dataIndex].pop_back();

@@ -4,13 +4,13 @@
 #include <source_dir.h>
 #include <Scene.h>
 #include <Entity.h>
-#include <System/InputSystem.h>
+#include <System/ServerInputSystem.h>
 
 namespace Server
 {
 	void BallShootComponent::updateLogic(const GDE::Timing& timing)
 	{
-		if (GDE::InputSystem::getInstance().isMouseButtonPressed(GDE::Mouse::Button::LEFT))
+		if (GDE::ServerInputSystem::getInstance().isMouseButtonPressed(GDE::Mouse::Button::LEFT, 0))
 		{
 			GDE::Description descr = GDE::Descr::load(std::string(SOURCE_DIR) + "/Game/data/template/Ball.yaml");
 			auto camera_transform = GDE::Scene::findEntityWithTag("camera")->getComponent<GDE::TransformComponent>();
