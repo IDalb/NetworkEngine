@@ -5,6 +5,7 @@
 #include <System/LogicSystem.h>
 #include <System/PhysicsSystem.h>
 #include <System/ClientNetworkSystem.h>
+#include <System/InterpolationSystem.h>
 
 #include <Utils/LinkingContext.h>
 #include "Component/BallShootComponent.h"
@@ -37,6 +38,7 @@ namespace Client
         addSystem<GDE::LogicSystem>();
         addSystem<GDE::PhysicsSystem>();
         addSystem<GDE::DisplaySystem>();
+        addSystem<GDE::InterpolationSystem>();
         addSystem<GDE::ClientNetworkSystem>();
         addSystem<GDE::InputSystem>();
 

@@ -7,6 +7,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/matrix_decompose.hpp>
+#include <glm/gtx/quaternion.hpp>
+
 
 #include "Component/CameraComponent.h"
 #include "Functions/Crc32.h"
@@ -18,6 +20,50 @@ namespace GDE
     {
         if(_transform->parent() == &Scene::getMagnumScene())
             delete _transform;
+    }
+
+    void TransformComponent::interpolate(const Timing& timing)
+    {
+        if (_updateInterpolation)
+        {
+            if(_interpolationPositionsRef[0].second != 0 && _interpolationPositionsRef[1].second != 0)
+            {
+                _updateInterpolation = false;
+                _dPos = _interpolationPositionsRef[1].first - _interpolationPositionsRef[0].first;
+                _dPos /= (_interpolationPositionsRef[1].second - _interpolationPositionsRef[0].second);
+
+                const glm::vec3 currentEuler = glm::eulerAngles(glm::normalize(_interpolationRotationRef[1].first));
+                const glm::vec3 oldEuler = glm::eulerAngles(glm::normalize(_interpolationRotationRef[0].first));
+
+                _dRot = currentEuler - oldEuler;
+                _dRot /= (_interpolationRotationRef[1].second - _interpolationRotationRef[0].second);
+            }
+        }
+
+        Magnum::Vector3 currentPosition = _transform->transformation().translation();
+
+        const Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
+        // Convert to GLM
+        glm::mat3 glmRotationScale = glm::mat3(rotationScale);
+
+        // Normalize each column to remove scale
+        glmRotationScale[0] = glm::normalize(glmRotationScale[0]);
+        glmRotationScale[1] = glm::normalize(glmRotationScale[1]);
+        glmRotationScale[2] = glm::normalize(glmRotationScale[2]);
+
+        // Convert to a quaternion
+        glm::quat currentRotation = glm::quat_cast(glmRotationScale);
+
+        float dt = timing._dt / _lastFrameDuration;
+
+        const glm::vec3 currentEuler = glm::eulerAngles(glm::normalize(currentRotation));
+        //const glm::vec3 oldEuler = glm::eulerAngles(glm::normalize(_interpolationOldRotations[0]));
+
+        glm::quat rot(currentEuler +_dRot);
+
+        setTransformation(rot, currentPosition + _dPos);
+
+        _lastFrameDuration = timing._dt;
     }
 
     void TransformComponent::setup(const ComponentDescription& init_value)
@@ -38,7 +84,8 @@ namespace GDE
             _rotationVector.x() = init_value.parameters.at("rotation")[0].as<float>();
             _rotationVector.y() = init_value.parameters.at("rotation")[1].as<float>();
 
-            if (owner().getComponent<CameraComponent>() == nullptr) {
+            //if (owner().getComponent<CameraComponent>() == nullptr) 
+            {
                 _transform->rotateX(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[0].as<float>())));
                 _transform->rotateY(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[1].as<float>())));
                 _transform->rotateZ(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[2].as<float>())));
@@ -53,7 +100,7 @@ namespace GDE
                 init_value.parameters.at("position")[2].as<float>() }
             );
         }
-        _oldPosition = _transform->transformation().translation();
+        _serializationOldPosition = _transform->transformation().translation();
 
         Magnum::Matrix3 rotationScale = _transform->transformation().rotationScaling();
         // Convert to GLM
@@ -65,8 +112,10 @@ namespace GDE
         glmRotationScale[2] = glm::normalize(glmRotationScale[2]);
 
         // Convert to a quaternion
-        _oldRotation = glm::quat_cast(glmRotationScale);
-        
+        _serializationOldRotation = glm::quat_cast(glmRotationScale);     
+
+        _interpolationPositionsRef[0] = { Magnum::Vector3(), 0 };
+        _interpolationPositionsRef[1] = { Magnum::Vector3(), 0 };
     }
     void TransformComponent::resolve()
     {
@@ -201,10 +250,10 @@ namespace GDE
         // Convert to a quaternion
         glm::quat rotation = glm::normalize(glm::quat_cast(glmRotationScale));
 
-        //if (position != _oldPosition || rotation != _oldRotation)
+        if (position != _serializationOldPosition || rotation != _serializationOldRotation)
         {
-            _oldPosition = position;
-            _oldRotation = rotation;
+            _serializationOldPosition = position;
+            _serializationOldRotation = rotation;
 
             Serialization::serialized_float xy = Serialization::combineFloat(Serialization::serializeFloat(position.x()), Serialization::serializeFloat(position.y()));
             Serialization::serialized_float z = Serialization::serializeFloat(position.z());
@@ -240,18 +289,22 @@ namespace GDE
             auto [x, y] = Serialization::separateFloat(xy);
             glm::quat quat = Serialization::deserializeQuaternion(rotation);
 
-            glm::mat3 glmRotationScale = glm::mat3(_transform->transformation().rotationScaling());
-            glm::vec3 scale;
-            scale.x = glm::length(glm::vec3(glmRotationScale[0]));
-            scale.y = glm::length(glm::vec3(glmRotationScale[1]));
-            scale.z = glm::length(glm::vec3(glmRotationScale[2]));
+            Magnum::Vector3 pos(Serialization::deserializeFloat(x), Serialization::deserializeFloat(y), Serialization::deserializeFloat(z));
 
-            // Create a scaled rotation matrix from the quaternion
-            Magnum::Matrix4 newRotationWithScale = Magnum::Matrix4::from(Magnum::Quaternion({ quat.x, quat.y, quat.z }, quat.w).toMatrix(), Magnum::Vector3(Serialization::deserializeFloat(x), Serialization::deserializeFloat(y), Serialization::deserializeFloat(z))) * Magnum::Matrix4::scaling(Magnum::Vector3(scale.x, scale.y, scale.z));
+            setTransformation(quat, pos);
+            //_interpolationOldPositions[0] = _interpolationOldPositions[1];
+            //_interpolationOldPositions[1] = pos;
+            //_interpolationOldRotations[0] = _interpolationOldRotations[1];
+            //_interpolationOldRotations[1] = quat;
 
-            _transform->setTransformation(newRotationWithScale);
+            _interpolationPositionsRef[0] = _interpolationPositionsRef[1];
+            _interpolationPositionsRef[1] = { pos, frameIndex };
+            
+            _interpolationRotationRef[0] = _interpolationRotationRef[1];
+            _interpolationRotationRef[1] = { quat, frameIndex };
 
-            //TODO interpolation
+
+            _updateInterpolation = true;
         }
         else
         {
@@ -260,5 +313,18 @@ namespace GDE
             data += sizeof(z);
             data += sizeof(rotation);
         }
+    }
+    void GDE::TransformComponent::setTransformation(const glm::quat& quat, const Magnum::Vector3& pos)
+    {
+        glm::mat3 glmRotationScale = glm::mat3(_transform->transformation().rotationScaling());
+        glm::vec3 scale;
+        scale.x = glm::length(glm::vec3(glmRotationScale[0]));
+        scale.y = glm::length(glm::vec3(glmRotationScale[1]));
+        scale.z = glm::length(glm::vec3(glmRotationScale[2]));
+
+        // Create a scaled rotation matrix from the quaternion
+        Magnum::Matrix4 newRotationWithScale = Magnum::Matrix4::from(Magnum::Quaternion({ quat.x, quat.y, quat.z }, quat.w).toMatrix(), pos) * Magnum::Matrix4::scaling(Magnum::Vector3(scale.x, scale.y, scale.z));
+
+        _transform->setTransformation(newRotationWithScale);
     }
 }
