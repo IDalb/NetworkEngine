@@ -39,8 +39,13 @@ namespace GDE
         memcpy(data.data(), &msgType, sizeof(msgType));
         data += GDE::Scene::serialize(static_cast<uint32_t>(dt._frame));
         
-        Network::broadcast(data, _host, true);
-
+        static int test = 0;
+        //if(test == 20)
+        {
+            Network::broadcast(data, _host, true);
+            test = 0;
+        }
+        test++;
         int dataIndex = 1;
         {
             std::lock_guard<std::mutex> lock(_inputLock);
