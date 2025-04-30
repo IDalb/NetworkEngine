@@ -35,11 +35,10 @@ namespace GDE
         std::string serialize()
         {
             std::string data;
-            int templateNameSize = 0;
-            if (_templateName != "" && !_templateNameSent)
-            {
-                templateNameSize = sizeof(NetworkTemplateSize);
-            }
+
+             int templateNameSize = sizeof(NetworkTemplateSize);
+            _templateNameSent = true;
+
             data.resize(COMPONENT_ID + 1 + templateNameSize);
             memcpy(data.data(), &_id, sizeof(_id));
             uint8_t serializedComponentCount = 0;
@@ -53,7 +52,7 @@ namespace GDE
                 }
             }   
 
-            if (templateNameSize != 0)
+            if (_templateName != "")
             {
                 NetworkTemplateSize templateNetId = LinkingContext<NetworkTemplateSize>::getInstance().getIdFromTemplate(_templateName);
                 memcpy(data.data() + COMPONENT_ID, &templateNetId, sizeof(NetworkTemplateSize));

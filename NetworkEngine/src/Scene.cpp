@@ -88,10 +88,10 @@ namespace GDE
             return CreateEntityInternal(EntityDescription(description["description"]), parent, description["name"].as<std::string>(), tag, id);
         }
 
-        EntityRef createEntity(const std::string& templateName, const EntityRef& parent, uint32_t id)
+        EntityRef GDE::Scene::createEntity(const Description& description, const EntityRef& parent, std::string_view templateName, uint32_t id)
         {
-            EntityRef newEntity = createEntity(Descr::load(Game::_app->getTemplatePath() + templateName), parent, id);
-            newEntity->setTemplateName(templateName);
+            EntityRef newEntity = createEntity(description, parent, id);
+            newEntity->setTemplateName(std::string(templateName));
             return newEntity;
         }
 
@@ -193,7 +193,7 @@ namespace GDE
                 memcpy(&entityId, data, ENTITY_ID_SIZE);
                 if (Scene::getEntityFromId(entityId) != nullptr)
                 {
-                    data += ENTITY_ID_SIZE;
+                    data += (ENTITY_ID_SIZE + sizeof(NetworkTemplateSize));
                     Scene::getEntityFromId(entityId)->deserialize(data, frameIndex);
                 }
                 else
@@ -201,7 +201,7 @@ namespace GDE
                     NetworkTemplateSize templateId;
                     memcpy(&templateId, data + ENTITY_ID_SIZE, sizeof(NetworkTemplateSize));
 
-                    EntityRef newEntity = Scene::createEntity(LinkingContext<NetworkTemplateSize>::getInstance().getTemplateFromId(templateId), Scene::rootEntity(), entityId);
+                    EntityRef newEntity = Scene::createEntity(Descr::load(Game::_app->getTemplatePath() + LinkingContext<NetworkTemplateSize>::getInstance().getTemplateFromId(templateId))[0], Scene::rootEntity(), LinkingContext<NetworkTemplateSize>::getInstance().getTemplateFromId(templateId), entityId);
                     data+= (ENTITY_ID_SIZE + sizeof(NetworkTemplateSize));
                     newEntity->deserialize(data, frameIndex);
 
