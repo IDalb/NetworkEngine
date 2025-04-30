@@ -28,9 +28,14 @@ namespace GDE
         private:
             NetworkAddress _address;
             NetworkHost* _host = nullptr;;
-            std::thread _receiveThread;
-            uint32_t _lastFrame = 0;
 
+            std::array<std::vector<std::string>, 2> _clientInput;
+            bool _writeToFirstArray = true;
+            std::mutex _inputLock;
+
+            std::thread _receiveThread;
+
+            std::atomic_uint32_t _lastFrame = 0;
             std::atomic_bool _loop = true;
     };
 }

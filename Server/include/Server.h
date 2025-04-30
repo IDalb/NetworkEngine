@@ -1,7 +1,7 @@
 #include "Game.h"
 #include <System/DisplaySystem.h>
 #include <System/GuiSystem.h>
-#include <System/InputSystem.h>
+#include <System/ServerInputSystem.h>
 #include <System/LogicSystem.h>
 #include <System/PhysicsSystem.h>
 #include <System/ServerNetworkSystem.h>
@@ -37,8 +37,8 @@ namespace Server
         addSystem<GDE::LogicSystem>();
         addSystem<GDE::PhysicsSystem>();
         addSystem<GDE::DisplaySystem>();
-        addSystem<GDE::InputSystem>();
         addSystem<GDE::ServerNetworkSystem>();
+        addSystem<GDE::ServerInputSystem>();
 
         GDE::DisplaySystem::getInstance().initImpl([]{ return std::make_unique<GDE::DisplaySystemImpl>(); });
 

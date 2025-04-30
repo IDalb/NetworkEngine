@@ -5,7 +5,7 @@ namespace GDE
 	// Base on glfw key code
 	namespace Key
 	{
-		enum Key
+		enum class Key : uint16_t
 		{
 			/* Printable keys */
 			SPACE = 32,
@@ -135,7 +135,7 @@ namespace GDE
 
 	namespace Mouse
 	{
-		enum Button
+		enum class Button : uint8_t
 		{
 			BUTTON_1 = 0,
 			BUTTON_2 = 1,

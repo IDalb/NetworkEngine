@@ -9,6 +9,7 @@ namespace GDE
 	class InputSystem
 		: public System
 	{
+		friend class ClientNetworkSystem;
 	public:
 		struct State
 		{

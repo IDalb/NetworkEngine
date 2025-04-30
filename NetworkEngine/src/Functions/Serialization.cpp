@@ -85,9 +85,17 @@ namespace GDE
 		}
 		serialized_float combineFloat(serialized_float left, serialized_float right)
 		{	
+			return combineInt(left, right);
+		}
+		serialized_float combineInt(uint32_t left, uint32_t right)
+		{
 			return left << BIT_PER_FLOAT | right;
 		}
 		std::tuple<serialized_float, serialized_float> separateFloat(serialized_float value)
+		{
+			return separateInt(value);
+		}
+		std::tuple<uint32_t, uint32_t> separateInt(uint32_t value)
 		{
 			constexpr uint32_t MASK = createBitMask<16>();
 			serialized_float right = value & MASK;

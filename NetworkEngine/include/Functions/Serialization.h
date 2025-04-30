@@ -32,7 +32,9 @@ namespace GDE
         serialized_quaternion serializeQuaternion(const glm::quat& quat);
         glm::quat deserializeQuaternion(serialized_quaternion quat);
         serialized_float combineFloat(serialized_float left, serialized_float right);
+        serialized_float combineInt(uint32_t left, uint32_t right);
         std::tuple<serialized_float, serialized_float> separateFloat(serialized_float value);
+        std::tuple<uint32_t, uint32_t> separateInt(uint32_t value);
 
     }
 }

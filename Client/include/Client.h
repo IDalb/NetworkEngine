@@ -37,8 +37,8 @@ namespace Client
         addSystem<GDE::LogicSystem>();
         addSystem<GDE::PhysicsSystem>();
         addSystem<GDE::DisplaySystem>();
-        addSystem<GDE::InputSystem>();
         addSystem<GDE::ClientNetworkSystem>();
+        addSystem<GDE::InputSystem>();
 
 
         GDE::PhysicsSystem::getInstance().setEnable(false);

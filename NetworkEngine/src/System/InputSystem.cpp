@@ -34,7 +34,7 @@ namespace GDE
 
 	bool InputSystem::isMouseButtonHeld(Mouse::Button button)
 	{
-		return mouse_buttons_state_[button].state == State::HELD ||mouse_buttons_state_[button].state == State::PRESSED;
+		return mouse_buttons_state_[button].state == State::HELD || mouse_buttons_state_[button].state == State::PRESSED;
 	}
 
 	int InputSystem::getAxis(const Key::Key negative, const Key::Key positive) {

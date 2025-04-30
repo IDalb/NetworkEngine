@@ -4,6 +4,8 @@
 #include "Enums/NetworkMessage.h"
 #include "Scene.h"
 #include <iostream>
+#include "Functions/Serialization.h"
+#include "System/InputSystem.h"
 namespace GDE
 {
 	ClientNetworkSystem& ClientNetworkSystem::getInstance()
@@ -25,6 +27,81 @@ namespace GDE
         Network::send(msg, _server);
     }
 
+    void ClientNetworkSystem::SendInput()
+    {
+        std::string msg;
+        NetworkMessage::NetworkMessage messageType = NetworkMessage::INPUT;
+        msg.resize(sizeof(NetworkMessage::NetworkMessage) + sizeof(_id) + sizeof(uint32_t));
+        memcpy(msg.data(), &messageType, sizeof(NetworkMessage::NetworkMessage));
+        memcpy(msg.data() + sizeof(NetworkMessage::NetworkMessage), &_id, sizeof(_id));
+        uint32_t inputFrame;
+        {
+            std::lock_guard<std::mutex> lock(_latencyLock);
+            inputFrame = _ServerLastFrame + uint32_t(_latency / _serverFpsMs) + 3;
+        }
+        memcpy(msg.data() + sizeof(NetworkMessage::NetworkMessage)+ sizeof(_id), &inputFrame, sizeof(inputFrame));
+
+        std::string inputKeys;
+        inputKeys.resize(1);
+        uint8_t keyCount = 0;
+        for (auto& keyState : InputSystem::getInstance().keys_state_)
+        {
+            if (keyState.second.state == InputSystem::State::PRESSED || keyState.second.state == InputSystem::State::RELEASED)
+            {
+                keyCount++;
+                uint16_t key = static_cast<uint16_t>(keyState.first);
+                if (keyState.second.state == InputSystem::State::PRESSED)
+                {
+                    key |= (1 << 15);
+                }
+                std::string keyData;
+                keyData.resize(sizeof(uint16_t));
+                memcpy(keyData.data(), &key, sizeof(key));
+                inputKeys += keyData;
+            }
+        }
+        memcpy(inputKeys.data(), &keyCount, sizeof(keyCount));
+        msg += inputKeys;
+
+        std::string mouseButtons;
+        mouseButtons.resize(1);
+        uint8_t buttonCount = 0;
+        for (auto& mouseState : InputSystem::getInstance().mouse_buttons_state_)
+        {
+            if (mouseState.second.state == InputSystem::State::PRESSED || mouseState.second.state == InputSystem::State::RELEASED)
+            {
+                keyCount++;
+                uint8_t button = static_cast<uint16_t>(mouseState.first);
+                if (mouseState.second.state == InputSystem::State::PRESSED)
+                {
+                    button &= (1 << 7);
+                }
+                std::string mouseData;
+                mouseData.resize(sizeof(uint16_t));
+                memcpy(mouseData.data(), &button, sizeof(button));
+                mouseButtons += mouseData;
+            }
+        }
+        memcpy(mouseButtons.data(), &buttonCount, sizeof(buttonCount));
+        msg += mouseButtons;
+
+        Magnum::Vector2i mousePos = InputSystem::getInstance().getScreenMousePosition();
+        Magnum::Vector2 mouseVel= InputSystem::getInstance().getMouseVelocity();
+
+        uint32_t netMousePos = Serialization::combineInt(mousePos.x(), mousePos.y());
+        uint32_t netMouseVel = Serialization::combineFloat(Serialization::serializeFloat(mouseVel.x()), Serialization::serializeFloat(mouseVel.y()));
+    
+        std::string mouseData;
+        mouseData.resize(2 * sizeof(uint32_t));
+
+        memcpy(mouseData.data(), &netMousePos, sizeof(uint32_t));
+        memcpy(mouseData.data() + sizeof(uint32_t), &netMouseVel, sizeof(uint32_t));
+
+        msg += mouseData;
+
+        Network::send(msg, _server);
+    }
+
     ClientNetworkSystem::ClientNetworkSystem()
     {
         Network::initialize();
@@ -41,6 +118,15 @@ namespace GDE
 
     void ClientNetworkSystem::iterate(const Timing& dt)
 	{
+        _currentFrameMs += dt._dt;
+        if (_currentFrameMs > _serverFpsMs)
+        {
+            _currentFrameMs -= _serverFpsMs;
+            _ServerLastFrame++;
+        }
+
+
+
         int dataIndex = 1;
         {
             std::lock_guard<std::mutex> lock(_dataLock);
@@ -51,7 +137,6 @@ namespace GDE
             _writeToFirstArray = !_writeToFirstArray;
         }
             
-        ping();
 
         while (std::size(_serverData[dataIndex]) > 0)
         {
@@ -59,8 +144,9 @@ namespace GDE
             Scene::deserialize(data);
             _serverData[dataIndex].pop_back();
         }
-        std::lock_guard<std::mutex> lock(_latencyLock);
-        std::cout << "latency : " << _latency << std::endl;
+
+        ping();
+        SendInput();
 	}
 
 	void ClientNetworkSystem::connect(const std::string& ip, uint16_t port, NetworkAddressType addressType)
@@ -108,6 +194,13 @@ namespace GDE
 
                     switch (msgType) 
                     {
+                    case NetworkMessage::CONNECTION:
+                    {
+                        uint32_t serverLastFrame;
+                        memcpy(&serverLastFrame, data.data() + sizeof(NetworkMessage::NetworkMessage), sizeof(uint32_t));
+                        clientSystem._ServerLastFrame = serverLastFrame;
+                    }
+                    break;
                     case NetworkMessage::SNAPSHOT:
                     {
                         std::lock_guard<std::mutex> lock(clientSystem._dataLock);

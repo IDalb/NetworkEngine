@@ -3,6 +3,8 @@
 #include "Functions/Network.h"
 #include "Scene.h"
 #include "Enums/NetworkMessage.h"
+#include "System/ServerInputSystem.h"
+#include "Functions/Serialization.h"
 namespace GDE
 {
     ServerNetworkSystem& ServerNetworkSystem::getInstance()
@@ -28,6 +30,7 @@ namespace GDE
 
     void ServerNetworkSystem::iterate(const Timing& dt)
     {
+        _lastFrame = dt._frame;
         std::string data;
 
         data.resize(1);
@@ -37,6 +40,72 @@ namespace GDE
         data += GDE::Scene::serialize(static_cast<uint32_t>(dt._frame));
         
         Network::broadcast(data, _host, true);
+
+        int dataIndex = 1;
+        {
+            std::lock_guard<std::mutex> lock(_inputLock);
+            if (_writeToFirstArray)
+            {
+                dataIndex = 0;
+            }
+            _writeToFirstArray = !_writeToFirstArray;
+        }
+
+
+        auto& input = ServerInputSystem::getInstance();
+        while (std::size(_clientInput[dataIndex]) > 0)
+        {
+            char* inputData = _clientInput[dataIndex].back().data();
+           
+            uint32_t playerId, inputFrame;
+            memcpy(&playerId, inputData + sizeof(NetworkMessage::NetworkMessage), sizeof(playerId));
+            memcpy(&inputFrame, inputData + sizeof(NetworkMessage::NetworkMessage) + sizeof(uint32_t), sizeof(inputFrame));
+            
+            inputData += sizeof(NetworkMessage::NetworkMessage) + 2 * sizeof(uint32_t);
+            uint8_t keyCount, mouseButtonCount;
+            memcpy(&keyCount, inputData, sizeof(keyCount));
+            inputData += sizeof(keyCount);
+            for (uint8_t i = 0; i < keyCount; i++)
+            {
+                uint16_t key;
+                memcpy(&key, inputData, sizeof(key));
+                inputData += sizeof(key);
+
+                bool value = (key >> 15);
+                // clear msb
+                key &= ~(1 << 15);
+
+                input.setKeyState(Key::Key(key), value, playerId, inputFrame);
+            }
+
+            memcpy(&mouseButtonCount, inputData, sizeof(mouseButtonCount));
+            mouseButtonCount += sizeof(mouseButtonCount);
+            for (uint8_t i = 0; i < mouseButtonCount; i++)
+            {
+                uint8_t button;
+                memcpy(&button, inputData, sizeof(button));
+                inputData += sizeof(button);
+
+                bool value = (button >> 7);
+                // clear msb
+                button &= ~(1 << 7);
+
+                input.setMouseButtonState(Mouse::Button(button), value, playerId, inputFrame);
+            }
+
+            uint32_t mousePos, mouseVel;
+            memcpy(&mousePos, inputData, sizeof(mousePos));
+            memcpy(&mouseVel, inputData + sizeof(mousePos), sizeof(mouseVel));
+
+            auto [x, y] = Serialization::separateInt(mousePos);
+            input.setMousePos({x,y}, playerId, inputFrame);
+            
+            auto [x, y] = Serialization::separateFloat(mouseVel);
+            input.setMouseVelocity({ Serialization::deserializeFloat(x),Serialization::deserializeFloat(y) }, playerId, inputFrame);
+
+
+            _clientInput[dataIndex].pop_back();
+        }
     }
 
     void ServerNetworkSystem::createServer(size_t maxClient, uint16_t port, NetworkAddressType addressType)
@@ -72,9 +141,14 @@ namespace GDE
                 {
                 case NETWORK_EVENT_TYPE_CONNECT:
                 {
-                    //enet_address_get_host_ip(&event.peer->address, addressBuffer, ENET_ADDRESS_MAX_LENGTH);
-                    //printf("(Server) We got a new connection from %s\n", addressBuffer);
-                    printf("connection\n");
+                    std::string data;
+                    data.resize(sizeof(NetworkMessage::NetworkMessage) + sizeof(uint32_t));
+                    uint32_t lastFrame = serverSystem._lastFrame;
+                    NetworkMessage::NetworkMessage connection = NetworkMessage::CONNECTION;
+
+                    memcpy(data.data(), &connection, sizeof(connection));
+                    memcpy(data.data() + sizeof(NetworkMessage::NetworkMessage), &lastFrame, sizeof(lastFrame));
+                    Network::send(data, event.peer);
                     break;
                 }
 
@@ -93,7 +167,16 @@ namespace GDE
                         Network::send(data, event.peer);
                     }
                     break;
-                    case NetworkMessage::PONG:
+                    case NetworkMessage::INPUT:
+                    {
+                        std::lock_guard<std::mutex> lock(serverSystem._inputLock);
+                        int dataIndex = 1;
+                        if (serverSystem._writeToFirstArray)
+                        {
+                            dataIndex = 0;
+                        }
+                        serverSystem._clientInput[dataIndex].push_back(data);
+                    }
                         break;
                     default:
                         break;

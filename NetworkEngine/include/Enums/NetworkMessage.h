@@ -6,7 +6,7 @@ namespace GDE
 	{
 		enum NetworkMessage : uint8_t
 		{
-			SNAPSHOT, PING, PONG, INPUT
+			SNAPSHOT, PING, PONG, INPUT, CONNECTION
 		};
 	}
 }

@@ -26,6 +26,7 @@ namespace GDE
 
             static ClientNetworkSystem& getInstance();
 
+            std::atomic_uint32_t _id = 0;
         private:
             NetworkAddress _address;
             NetworkConnection* _server;
@@ -35,9 +36,11 @@ namespace GDE
             bool _writeToFirstArray = true;
             std::mutex _dataLock;
             std::atomic_bool _loop = true;
-            uint32_t _lastFrame = 0;
             std::thread _receiveThread;
 
+            std::atomic_uint32_t _ServerLastFrame = 0;
+            const float _serverFpsMs = ((1 / 60.f) * 1000);
+            float _currentFrameMs = 0;
 
             static constexpr int LATENCY_BUFFER_SIZE = 60;
             std::array<uint32_t, LATENCY_BUFFER_SIZE> _latencyBuffer;
@@ -46,7 +49,7 @@ namespace GDE
             float _latency = 0;
 
             void ping();
-
+            void SendInput();
     };
 }
 

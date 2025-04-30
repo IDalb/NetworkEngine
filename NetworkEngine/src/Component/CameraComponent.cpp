@@ -24,7 +24,7 @@ namespace GDE
         auto input = InputSystem::getInstance();
         _CameraView = owner().getComponent<TransformComponent>()->getTransform().transformation();
         // Rotation
-        if (input.isMouseButtonHeld(GDE::Mouse::RIGHT)) {
+        if (input.isMouseButtonHeld(GDE::Mouse::Button::RIGHT)) {
             const Magnum::Vector2 mouseMvt = input.getMouseVelocity() * CAMERA_EDITOR_ROTATION_SPEED;
             _xAngle += static_cast<Magnum::Deg>(mouseMvt.x());
             _yAngle += static_cast<Magnum::Deg>(mouseMvt.y());
@@ -41,9 +41,9 @@ namespace GDE
         }
 
         // Translation
-        const int xAxis = input.getAxis(Key::A, Key::D);
-        int yAxis = input.getAxis(Key::S, Key::W);
-        const int zAxis = input.getAxis(Key::Q, Key::E);
+        const int xAxis = input.getAxis(Key::Key::A, Key::Key::D);
+        int yAxis = input.getAxis(Key::Key::S, Key::Key::W);
+        const int zAxis = input.getAxis(Key::Key::Q, Key::Key::E);
 
         if (float value = input.getMouseScrollValue())
         {
