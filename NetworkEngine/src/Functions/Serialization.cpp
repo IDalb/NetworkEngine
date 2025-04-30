@@ -14,7 +14,8 @@ namespace GDE
 
 		serialized_float serializeFloatQuaternion(float value, int factor)
 		{
-			const serialized_float out = static_cast<serialized_float>(value * factor/*minimal value*/);
+			const serialized_float out = static_cast<serialized_float>(value * factor + 707/*minimal value*/);
+			return static_cast<serialized_float>(std::round((value + 1.0f) * 511.5f));
 			if (out > QUATERNION_BIT_MASK)
 			{
 				return QUATERNION_BIT_MASK;
@@ -29,7 +30,8 @@ namespace GDE
 
 		float deserializeFloatQuaternion(serialized_float value, int factor)
 		{
-			return (static_cast<float>(value) /*minimal value*/) / factor;
+			return (static_cast<float>(value) / 511.5f) - 1.f;
+			return (static_cast<float>(value) - 707 /*minimal value*/) / factor;
 		}
 
 		serialized_quaternion serializeQuaternion(const glm::quat& quat)
@@ -58,7 +60,6 @@ namespace GDE
 			std::cout << "max index: " << max<<std::endl;
 			std::cout << "ref x :"<< xyzw.x() <<" y :"<< xyzw.y() <<" z :"<< xyzw.z() <<" w :"<< xyzw.w() <<std::endl;
 			std::cout << "new x :"<< xyzw2.x() <<" y :"<< xyzw2.y() <<" z :"<< xyzw2.z() <<" w :"<< xyzw2.w() <<std::endl;
-
 
 			return out;
 		}

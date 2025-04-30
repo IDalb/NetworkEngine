@@ -199,7 +199,7 @@ namespace GDE
         glmRotationScale[2] = glm::normalize(glmRotationScale[2]);
 
         // Convert to a quaternion
-        glm::quat rotation = glm::quat_cast(glmRotationScale);
+        glm::quat rotation = glm::normalize(glm::quat_cast(glmRotationScale));
 
         //if (position != _oldPosition || rotation != _oldRotation)
         {
