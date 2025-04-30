@@ -67,6 +67,7 @@ FetchContent_Declare(
   URL https://zlib.net/zlib-1.3.1.tar.gz
 )
 FetchContent_MakeAvailable(zlib)
+include_directories(${zlib_BINARY_DIR})
 
 # Declare nghttp2 (if needed for HTTP/2 support)
 FetchContent_Declare(
@@ -75,6 +76,7 @@ FetchContent_Declare(
   GIT_TAG v1.59.0
 )
 FetchContent_MakeAvailable(nghttp2)
+include_directories(${nghttp2_SOURCE_DIR}/lib)
 
 # Declare CPR
 FetchContent_Declare(
@@ -83,7 +85,6 @@ FetchContent_Declare(
   GIT_TAG 1.10.4
 )
 set(ZLIB_INCLUDE_DIR "${zlib_SOURCE_DIR}")
-set(ZLIB_LIBRARY zlib)
 set(NGHTTP2_INCLUDE_DIR ${nghttp2_SOURCE_DIR}/lib/includes)
 set(NGHTTP2_LIBRARY nghttp2)
 FetchContent_MakeAvailable(cpr)
@@ -108,7 +109,6 @@ FetchContent_MakeAvailable(cpr)
 
 link_libraries(glm)
 link_libraries(enet)
-link_libraries(cpr::cpr)
 
 set(GLM_INCLUDE_DIR ${glm_SOURCE_DIR}/glm)
 set(ENET_INCLUDE_DIR ${enet_SOURCE_DIR}/include)
@@ -199,6 +199,9 @@ target_link_libraries(NetworkEngine PRIVATE
         BulletCollision
         LinearMath
         Bullet3Common
+		cpr::cpr
+		zlib
+		nghttp2
 )
 		
 #target_link_libraries(Game PRIVATE
@@ -235,7 +238,10 @@ target_link_libraries(Editor PRIVATE
         BulletDynamics
         BulletCollision
         LinearMath
-        Bullet3Common)
+        Bullet3Common
+		cpr::cpr
+		zlib
+		nghttp2)
 
 target_link_libraries(Client PRIVATE
         Magnum::GlfwApplication 
@@ -253,7 +259,10 @@ target_link_libraries(Client PRIVATE
         BulletDynamics
         BulletCollision
         LinearMath
-        Bullet3Common)
+        Bullet3Common
+		cpr::cpr
+		zlib
+		nghttp2)
 
 
 target_link_libraries(Server PRIVATE
@@ -272,4 +281,7 @@ target_link_libraries(Server PRIVATE
         BulletDynamics
         BulletCollision
         LinearMath
-        Bullet3Common)
+        Bullet3Common
+		cpr::cpr
+		zlib
+		nghttp2)
