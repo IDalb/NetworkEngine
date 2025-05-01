@@ -105,68 +105,81 @@ namespace GDE
 				return a.first < b.first;
 				});
 
+			int i = 0;
+			bool eraseInput = false;
 			for (auto& pair : _inputKey)
 			{
-				int i = 0;
-				i++;
-				bool eraseInput = false;
-				if (pair.first >= dt._frame)
+
+				if(eraseInput == false)
+				{
+					i++;
+				}
+				if (pair.first == dt._frame)
 				{
 					eraseInput = true;
 					setKeyState(pair.second.key, State::Value(pair.second.pressed), pair.second.playerID);
-				}
-				if(eraseInput)
-				{
-					_inputKey.erase(_inputKey.begin(), _inputKey.begin() + i);
-				}
+				}	
+			}
+			if (eraseInput)
+			{
+				_inputKey.erase(_inputKey.begin(), _inputKey.begin() + i);
 			}
 
+			i = 0;
+			eraseInput = false;
 			for (auto& pair : _inputMouseButton)
 			{
-				int i = 0;
-				i++;
-				bool eraseInput = false;
+				if (eraseInput == false)
+				{
+					i++;
+				}
 				if (pair.first == dt._frame)
 				{
 					eraseInput = true;
 					setMouseButtonState(pair.second.Button, State::Value(pair.second.pressed), pair.second.playerID);
 				}
-				if (eraseInput)
-				{
-					_inputMouseButton.erase(_inputMouseButton.begin(), _inputMouseButton.begin() + i);
-				}
+			}
+			if (eraseInput)
+			{
+				_inputMouseButton.erase(_inputMouseButton.begin(), _inputMouseButton.begin() + i);
 			}
 
+			i = 0;
+			eraseInput = false;
 			for (auto& pair : _inputMousePos)
 			{
-				int i = -1;
-				i++;
-				bool eraseInput = false;
+				if (eraseInput == false)
+				{
+					i++;
+				}
 				if (pair.first == dt._frame)
 				{
 					eraseInput = true;
 					setMousePos(pair.second.position, pair.second.playerID);
 				}
-				if (eraseInput)
-				{
-					_inputMousePos.erase(_inputMousePos.begin(), _inputMousePos.begin() + i);
-				}
+			}
+			if (eraseInput)
+			{
+				_inputMousePos.erase(_inputMousePos.begin(), _inputMousePos.begin() + i);
 			}
 
+			i = 0;
+			eraseInput = false;
 			for (auto& pair : _inputMouseVelocity)
 			{
-				int i = -1;
-				i++;
-				bool eraseInput = false;
+				if (eraseInput == false)
+				{
+					i++;
+				}
 				if (pair.first == dt._frame)
 				{
 					eraseInput = true;
 					setMouseVelocity(pair.second.velocity, pair.second.playerID);
 				}
-				if (eraseInput)
-				{
-					_inputMouseVelocity.erase(_inputMouseVelocity.begin(), _inputMouseVelocity.begin() + i);
-				}
+			}
+			if (eraseInput)
+			{
+				_inputMouseVelocity.erase(_inputMouseVelocity.begin(), _inputMouseVelocity.begin() + i);
 			}
 		}
 
@@ -187,7 +200,7 @@ namespace GDE
 		Magnum::Vector2 getNormalizedMouseVelocity(uint32_t id);
 
 		// -1 = 'negative' key; 1 = 'positive' key; 0 = both
-		//int getAxis(Key::Key negative, Key::Key positive);
+		int getAxis(Key::Key negative, Key::Key positive, uint32_t id);
 
 		//// -1 scroll down, 1 scroll up
 		//int getMouseScrollDirection();

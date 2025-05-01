@@ -1,5 +1,5 @@
 #include "Component/Component.h"
-#include "Functions/crc32.h"
+#include "Functions/Crc32.h"
 
 namespace GDE
 {

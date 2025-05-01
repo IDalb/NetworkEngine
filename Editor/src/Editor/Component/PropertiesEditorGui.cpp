@@ -140,7 +140,7 @@ namespace GDEEditor
 	void PropertiesEditorGuiComponent::updateAlternateLogic(const GDE::Timing& timing)
 	{
 		auto& inputSystem = GDE::InputSystem::getInstance();
-		if (inputSystem.isMouseButtonPressed(GDE::Mouse::LEFT))
+		if (inputSystem.isMouseButtonPressed(GDE::Mouse::Button::LEFT))
 		{
 			auto camera = GDE::Scene::findEntityWithTag("camera")->getComponent<GDE::CameraComponent>();
 			auto camera_transform = GDE::Scene::findEntityWithTag("camera")->getComponent<GDE::TransformComponent>();
@@ -188,7 +188,7 @@ namespace GDEEditor
 				removeSelection();
 			}
 		}
-		if (GDE::InputSystem::getInstance().isKeyPressed(GDE::Key::DEL))
+		if (GDE::InputSystem::getInstance().isKeyPressed(GDE::Key::Key::DEL))
 		{
 			if (_selectedEntity)
 			{

@@ -14,6 +14,7 @@ namespace GDE
         inline constexpr int  NB_ENTITY_BEGIN = NB_REMOVED_ENTITY_BEGIN + sizeof(uint16_t);
         inline constexpr int DATA_BEGIN = NB_ENTITY_BEGIN + sizeof(uint16_t);
         inline constexpr int ENTITY_ID_SIZE = sizeof(uint32_t);
+        inline static uint32_t entityIds = 1;
 
         struct EntityDescription
         {
@@ -53,13 +54,13 @@ namespace GDE
             EntityRef newEntity = Entity::create();
             if (id == 0)
             {
-                static uint32_t entityIds = 1;
                 newEntity->setId(entityIds);
                 entityIds++;
             }
             else
             {
-                newEntity->setId(id);
+                if(id != CLIENT_SIDE_ONLY) // client side only
+                    newEntity->setId(id);
             }
             parent->addChild(std::string(name), newEntity);
             for (const auto& component : description.components)
@@ -108,6 +109,7 @@ namespace GDE
 
         void clear()
         {
+            entityIds = 1;
             rootEntity()->clear();
             tagMap().clear();
         }
@@ -148,7 +150,7 @@ namespace GDE
             for (size_t i = 0; i < std::size(removedEntity); i++)
             {
                 uint32_t id = removedEntity[i]->getId();
-                memcpy(data.data() + i * sizeof(id), &id, sizeof(id));
+                memcpy(data.data() + sizeof(frame) + 3 * sizeof(uint16_t) + i * sizeof(id), &id, sizeof(id));
             }
 
             uint16_t entityCount = 0;
@@ -183,7 +185,8 @@ namespace GDE
                 uint32_t entityId;
                 memcpy(&entityId, data, sizeof(uint32_t));
 
-                EntitySystem::getInstance().remove(Scene::getEntityFromId(entityId)->shared_from_this());
+                Entity* entityToRemove = Scene::getEntityFromId(entityId);
+                entityToRemove->getParent()->removeChild(entityToRemove->shared_from_this());
                 data += sizeof(uint32_t);
             }
             uint16_t deserializedEntity = 0;
@@ -248,7 +251,7 @@ namespace GDE
 
         void addEntityId(uint32_t id, Entity* entity)
         {
-            idMap().insert({ id, entity });
+            idMap()[id] =  entity;
         }
 
         Entity* getEntityFromId(uint32_t id)

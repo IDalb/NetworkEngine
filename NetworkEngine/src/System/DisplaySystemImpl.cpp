@@ -49,8 +49,8 @@ namespace GDE
 		if(_enable)
 		{
 			renderScene(dt);
+			renderUi();
 		}
-		renderUi();
 	}
 
 	void DisplaySystemImpl::renderUi()
@@ -82,23 +82,26 @@ namespace GDE
 		}
 
 		auto c = Scene::findEntitiesWithTag("camera");
-		auto camera = Scene::findEntitiesWithTag("camera")->back()->getComponent<CameraComponent>()->getCamera();
-		camera->draw(_drawable);
-		_shader->setProjectionMatrix(camera->projectionMatrix());
-
-		for (auto& display_component : _displayComponents)
+		if(c)
 		{
-			if (display_component->enabled() && display_component->owner().active())
-			{
-				display_component->display(*_shader.get(), dt);
-			}
-		}
+			auto camera = Scene::findEntitiesWithTag("camera")->back()->getComponent<CameraComponent>()->getCamera();
+			camera->draw(_drawable);
+			_shader->setProjectionMatrix(camera->projectionMatrix());
 
-		Magnum::GL::Renderer::setDepthFunction(Magnum::GL::Renderer::DepthFunction::LessOrEqual);
-		PhysicsSystem::getInstance().getDebugDraw()->setTransformationProjectionMatrix(
-			camera->projectionMatrix() * camera->cameraMatrix());
-		PhysicsSystem::getInstance().getWorld()->debugDrawWorld();
-		Magnum::GL::Renderer::setDepthFunction(Magnum::GL::Renderer::DepthFunction::Less);
+			for (auto& display_component : _displayComponents)
+			{
+				if (display_component->enabled() && display_component->owner().active())
+				{
+					display_component->display(*_shader.get(), dt);
+				}
+			}
+
+			Magnum::GL::Renderer::setDepthFunction(Magnum::GL::Renderer::DepthFunction::LessOrEqual);
+			//PhysicsSystem::getInstance().getDebugDraw()->setTransformationProjectionMatrix(
+			//	camera->projectionMatrix() * camera->cameraMatrix());
+			//PhysicsSystem::getInstance().getWorld()->debugDrawWorld();
+			Magnum::GL::Renderer::setDepthFunction(Magnum::GL::Renderer::DepthFunction::Less);
+		}
 	}
 
 	void DisplaySystemImpl::registerComponent(DisplayComponent* display_component)

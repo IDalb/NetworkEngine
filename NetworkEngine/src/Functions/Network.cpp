@@ -92,5 +92,16 @@ namespace GDE
 		{
 			enet_peer_disconnect(peer, 0);
 		}
+		void disconnectEverybody(NetworkHost* host)
+		{
+			for (size_t i = 0; i < host->peerCount; ++i)
+			{
+				ENetPeer* peer = &host->peers[i];
+				if (peer->state == ENET_PEER_STATE_CONNECTED)
+				{
+					enet_peer_disconnect(peer, 0); // Clean disconnect (with flush and notification)
+				}
+			}
+		}
 	}
 }

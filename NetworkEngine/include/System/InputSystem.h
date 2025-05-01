@@ -93,7 +93,7 @@ namespace GDE
 		float getMouseScrollValue();
 
 		void setKeyState(Key::Key key, bool value)
-		{ 
+		{
 			keys_state_[key].state = State::Value(value); 
 			updated_keys_.push_back(key);
 		}

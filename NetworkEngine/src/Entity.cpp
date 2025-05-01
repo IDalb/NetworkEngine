@@ -3,16 +3,17 @@
 #include "System/EntitySystem.h"
 #include "Scene.h"
 namespace GDE {
-    static uint32_t id = 0;
     Entity::Entity()
     {
-        _id = id++;
-        Scene::addEntityId(_id, this);
+        _id = 0;
     }
 
     Entity::~Entity()
     {
-        Scene::removeEntityId(_id);
+        if(Scene::getEntityFromId(_id) == this)
+        {
+            Scene::removeEntityId(_id);
+        }
         _components.clear();
         _childrenByName.clear();
     }
@@ -31,6 +32,12 @@ namespace GDE {
         _components.clear();
     }
 
+
+    void Entity::setId(uint32_t id)
+    {
+        _id = id;
+        Scene::addEntityId(_id, this);
+    }
 
     EntityRef Entity::getChild(const std::string& name) const {
         if (_childrenByName.empty()) return nullptr;

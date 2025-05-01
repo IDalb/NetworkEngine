@@ -26,5 +26,6 @@ namespace GDE
 		NetworkConnection* connect(NetworkAddress* address, NetworkHost* host);
 
 		void disconnect(NetworkConnection* peer);
+		void disconnectEverybody(NetworkHost* host);
 	}
 }

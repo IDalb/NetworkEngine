@@ -11,4 +11,5 @@
       ColoredDrawable:
         color: [1,1,1]
         mesh_group: "SphereGroup"
+      Object:
       

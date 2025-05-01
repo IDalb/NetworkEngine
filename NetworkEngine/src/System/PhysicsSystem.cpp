@@ -10,9 +10,9 @@ namespace GDE
 
         _bWorld->setGravity({ 0.0f, 0.0f, -9.81f });
 
-        _debugDraw = std::make_unique<Magnum::BulletIntegration::DebugDraw>();
-        _debugDraw->setMode(Magnum::BulletIntegration::DebugDraw::Mode::DrawWireframe);
-        _bWorld->setDebugDrawer(_debugDraw.get());
+        //_debugDraw = std::make_unique<Magnum::BulletIntegration::DebugDraw>();
+        //_debugDraw->setMode(Magnum::BulletIntegration::DebugDraw::Mode::DrawWireframe);
+        //_bWorld->setDebugDrawer(_debugDraw.get());
     }
 
     PhysicsSystem& PhysicsSystem::getInstance()

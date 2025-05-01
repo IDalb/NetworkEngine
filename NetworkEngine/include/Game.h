@@ -24,7 +24,6 @@ namespace GDE
         float _fps = 60.f;
         void setFps(const float fps) { _fps = fps; }
         void setup();
-        virtual void setupScene() = 0;
         // Data
         std::vector<System*> _systems;
         template<typename T> void addSystem() { _systems.push_back(&T::getInstance()); }
@@ -38,8 +37,6 @@ namespace GDE
         bool _init = true;
     public:
         inline static Game* _app = nullptr;
-        inline static std::map<std::string, uint16_t> componentLinkingContext{};
-        inline static std::map<uint16_t, std::string> reverseComponentLinkingContext{};
 
         explicit Game(
             const Arguments& arguments,
@@ -50,6 +47,8 @@ namespace GDE
         virtual ~Game();
 
         virtual std::string getTemplatePath() const { return ""; }
+        virtual void startGame() {}
+        virtual void endGame() {}
         virtual void setupSystem() = 0;
         virtual void registerComponent() const = 0;
         virtual void registerBasicComponent() const;
@@ -64,5 +63,7 @@ namespace GDE
         virtual void textInputEvent(TextInputEvent& event) override;
 
         virtual void viewportEvent(ViewportEvent& event) override;
+
+        virtual void setupScene() = 0;
     };
 }

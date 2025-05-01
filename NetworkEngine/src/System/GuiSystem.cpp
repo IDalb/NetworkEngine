@@ -1,6 +1,7 @@
 #include "System/GuiSystem.h"
 #include "Component/GuiComponent.h"
-
+#include <Magnum/GL/DefaultFramebuffer.h>
+#include <Magnum/GL/Renderer.h>
 #include "Entity.h"
 #include "GlobalConstants.h"
 #include "Game.h"
@@ -74,6 +75,15 @@ namespace GDE
 		return false;
 	}
 
+
+	GuiSystem::GuiSystem()
+	{
+		_exist = true;
+		GL::Renderer::setBlendEquation(GL::Renderer::BlendEquation::Add,
+			GL::Renderer::BlendEquation::Add);
+		GL::Renderer::setBlendFunction(GL::Renderer::BlendFunction::SourceAlpha,
+			GL::Renderer::BlendFunction::OneMinusSourceAlpha);
+	}
 
 	void GuiSystem::iterate(const Timing& dt)
 	{

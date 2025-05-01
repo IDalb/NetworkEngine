@@ -19,7 +19,7 @@ namespace GDE
         std::unordered_set<PhysicsComponent*> _physicsComponent;
 
         std::unique_ptr<btDiscreteDynamicsWorld> _bWorld;
-        std::unique_ptr<Magnum::BulletIntegration::DebugDraw> _debugDraw;
+        //std::unique_ptr<Magnum::BulletIntegration::DebugDraw> _debugDraw;
 
         // Bullet world initialization
         btDbvtBroadphase _bBroadphase;
@@ -32,11 +32,11 @@ namespace GDE
         void iterate(const Timing &dt) override;
         void clean()
         {
-            _debugDraw.reset();
+            //_debugDraw.reset();
         }
         static PhysicsSystem& getInstance();
 
-        Magnum::BulletIntegration::DebugDraw* getDebugDraw() { return _debugDraw.get(); }
+        //Magnum::BulletIntegration::DebugDraw* getDebugDraw() { return _debugDraw.get(); }
         btDiscreteDynamicsWorld* getWorld() const { return _bWorld.get(); };
 
         void registerComponent(PhysicsComponent* physics_component);

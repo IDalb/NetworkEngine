@@ -1,15 +1,3 @@
-- name: Camera
-  tag: camera
-  description:
-    children: ~
-    components:
-      Transform:
-        position: [12, -35, 28.8]
-        rotation: [-20, -40, 0]
-        scale: [1, 1, 1]
-      Camera:
-        aspect_ratio: 1.7777778
-        far_distance: 1000
 - name: BoxGroup
   tag: BoxGroup
   description:
@@ -24,38 +12,351 @@
     components:
       MeshGroup:
         shape: sphere
-- name: BallShoot
-  description:
-    children: ~
-    components:
 - name: Ground
   description:
     children: ~
     components:
       Transform:
-        position: [0, 0, -1]
+        position: [0, 0, 0]
         rotation: [0, 0, 0]
         scale: [1, 1, 1]
       Shape:
         shape: box
-        size: [15, 15, 0.5]
+        size: [20, 20, 1]
       RigidBody:
         mass: 0
       ColoredDrawable:
         color: [1, 1, 1]
         mesh_group: BoxGroup
-- name: Cube100
+- name: Cube101
   description:
     children: ~
     components:
       Transform:
-        position: [0, 0, 7.6]
-        rotation: [13.900001, 0, 0]
+        position: [0, 0, 2]
+        rotation: [0, 0, 0]
         scale: [1, 1, 1]
       Shape:
         shape: box
-        size: [3, 3, 3]
+        size: [1, 25, 2]
+      RigidBody:
+        mass: 0
+      ColoredDrawable:
+        color: [0.582505, 0.582505, 0.582505]
+        mesh_group: BoxGroup
+- name: Cube
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [0, 0, 2]
+        rotation: [0, 0, 90]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 25, 2]
+      RigidBody:
+        mass: 0
+      ColoredDrawable:
+        color: [0.58431375, 0.58431375, 0.58431375]
+        mesh_group: BoxGroup
+- name: Cube102
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [7.5, 7.5, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
       RigidBody: ~
       ColoredDrawable:
-        color: [0, 0, 0]
+        color: [1, 0, 0]
+        mesh_group: BoxGroup
+- name: Cube1
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [7.5, 15, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [1, 0, 0]
+        mesh_group: BoxGroup
+- name: Cube2
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [15, 15, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [1, 0, 0]
+        mesh_group: BoxGroup
+- name: Cube3
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [15, 7.5, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [1, 0, 0]
+        mesh_group: BoxGroup
+- name: Cube4
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [15, -7.5, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube5
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-15, 7.5, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [1, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube6
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-7.5, 7.5, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [1, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube7
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-7.5, 15, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [1, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube8
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [7.5, -15, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube9
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-15, 15, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [1, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube10
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [15, -15, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube11
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [7.5, -7.5, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube12
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-7.5, -15, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 0, 1]
+        mesh_group: BoxGroup
+- name: Cube13
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-15, -15, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 0, 1]
+        mesh_group: BoxGroup
+- name: Cube14
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-15, -7.5, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 0, 1]
+        mesh_group: BoxGroup
+- name: Cube15
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-7.5, -7.5, 2.5]
+        rotation: [0, 0, 0]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 1]
+      RigidBody: ~
+      ColoredDrawable:
+        color: [0, 0, 1]
+        mesh_group: BoxGroup
+- name: Cube16
+  tag: "player"
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [5, 5, 15]
+        rotation: [45, 0, -45]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 2]
+      ColoredDrawable:
+        color: [1, 0, 0]
+        mesh_group: BoxGroup
+- name: Cube17
+  tag: "player"
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-5, 5, 15]
+        rotation: [45, 0, 45]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 2]
+      ColoredDrawable:
+        color: [1, 1, 0]
+        mesh_group: BoxGroup
+- name: Cube18
+  tag: "player"
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [-5, -5, 15]
+        rotation: [45, 0, 135]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 2]
+      ColoredDrawable:
+        color: [0, 0, 1]
+        mesh_group: BoxGroup
+- name: Cube19
+  tag: "player"
+  description:
+    children: ~
+    components:
+      Transform:
+        position: [5, -5, 15]
+        rotation: [45, 0, -135]
+        scale: [1, 1, 1]
+      Shape:
+        shape: box
+        size: [1, 1, 2]
+      ColoredDrawable:
+        color: [0, 1, 0]
         mesh_group: BoxGroup

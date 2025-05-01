@@ -21,54 +21,7 @@ namespace GDE
 
     void CameraComponent::update(const Timing& timing)
     {
-        auto input = InputSystem::getInstance();
-        _CameraView = owner().getComponent<TransformComponent>()->getTransform().transformation();
-        // Rotation
-        if (input.isMouseButtonHeld(GDE::Mouse::Button::RIGHT)) {
-            const Magnum::Vector2 mouseMvt = input.getMouseVelocity() * CAMERA_EDITOR_ROTATION_SPEED;
-            _xAngle += static_cast<Magnum::Deg>(mouseMvt.x());
-            _yAngle += static_cast<Magnum::Deg>(mouseMvt.y());
-
-            _CameraView[0] = _CameraViewBaseRotation[0];
-            _CameraView[1] = _CameraViewBaseRotation[1];
-            _CameraView[2] = _CameraViewBaseRotation[2];
-
-            _CameraView = _CameraView
-              * Magnum::Matrix4::rotation(-_xAngle, Magnum::Vector3::zAxis())
-              * Magnum::Matrix4::rotationX(-_yAngle);
-            _CameraView.lookAt(_CameraView.translation(), _CameraView.translation() - _CameraView.backward(), Magnum::Vector3::zAxis());
-
-        }
-
-        // Translation
-        const int xAxis = input.getAxis(Key::Key::A, Key::Key::D);
-        int yAxis = input.getAxis(Key::Key::S, Key::Key::W);
-        const int zAxis = input.getAxis(Key::Key::Q, Key::Key::E);
-
-        if (float value = input.getMouseScrollValue())
-        {
-            if (value > 0)
-            {
-                if(cameraEditorTranslationSpeed > .25f)
-                {
-                    cameraEditorTranslationSpeed /= 2;
-                    yAxis = cameraEditorTranslationSpeed * 10;
-                }
-            }
-            else
-            {
-                if(cameraEditorTranslationSpeed < 8)
-                {
-                    cameraEditorTranslationSpeed *= 2;
-                    yAxis = -cameraEditorTranslationSpeed * 2.5;
-                }
-            }
-        }
-
-        _CameraView[3] += cameraEditorTranslationSpeed * Magnum::Vector4(0, 0, static_cast<float>(zAxis), 0);
-        _CameraView = _CameraView * Magnum::Matrix4::translation(Magnum::Vector3(static_cast<float>(xAxis), 0, -1.5f * static_cast<float>(yAxis)) * cameraEditorTranslationSpeed);
-
-        owner().getComponent<TransformComponent>()->getTransform().setTransformation(_CameraView);
+        
     }
 
     void CameraComponent::setup(const ComponentDescription &init_value) {
@@ -85,33 +38,8 @@ namespace GDE
         _camera->setProjectionMatrix(Magnum::Matrix4::perspectiveProjection(
             operator ""_degf(_projectionAngle),_aspectRatio, _nearDistance, _farDistance));
         _camera->setViewport(Magnum::GL::defaultFramebuffer.viewport().size());
-
-        // Look at (0,0,0) with (0,0,1) as the up vector
-        _CameraView = Magnum::Matrix4();
-        _camera->cameraMatrix() = _CameraView;
-
-        _CameraViewBaseRotation[0] = _CameraView[0];
-        _CameraViewBaseRotation[1] = _CameraView[1];
-        _CameraViewBaseRotation[2] = _CameraView[2];
-
-        _CameraView = ComputeCameraView(*owner().getComponent<TransformComponent>());
-
-        //_CameraView = Magnum::Matrix4::lookAt(Magnum::Vector3{ owner().getComponent<TransformComponent>()->getTransform().absoluteTransformation().translation() }, Magnum::Vector3{ 0.0f, 0.0f, 0.0f }, Magnum::Vector3{ 0.0f, 0.0f, 1.0f });
-        owner().getComponent<TransformComponent>()->getTransform().setTransformation(_CameraView);
-
     }
 
-    Magnum::Matrix4 CameraComponent::ComputeCameraView(TransformComponent& transform) {
-        auto cameraView = Magnum::Matrix4();
-        _xAngle = static_cast<Magnum::Deg>(transform._rotationVector.x());
-        _yAngle = static_cast<Magnum::Deg>(transform._rotationVector.y());
-        cameraView = cameraView
-            * Magnum::Matrix4::translation(transform.getTransform().absoluteTransformation().translation())
-            * Magnum::Matrix4::rotation(static_cast<Magnum::Deg>(-transform._rotationVector.x()), Magnum::Vector3::zAxis())
-            * Magnum::Matrix4::rotationX(static_cast<Magnum::Deg>(90 + transform._rotationVector.y()));
-        ;
-
-        return cameraView;
-    }
+    
 
 }

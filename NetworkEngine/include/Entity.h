@@ -96,7 +96,7 @@ namespace GDE
 
         void setTag(const std::string& tag) { _tag = tag; }
         void setName(const std::string& name) { _name = name; }
-        void setId(uint32_t id) { _id = id; }
+        void setId(uint32_t id);
         void setTemplateName(const std::string& templateName) { _templateName = templateName; }
 
         EntityRef getParent() const { return _parent.lock(); }

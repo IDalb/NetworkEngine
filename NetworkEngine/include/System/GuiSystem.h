@@ -11,7 +11,7 @@ namespace GDE
         public System
     {
     public:
-        GuiSystem() { _exist = true; }
+        GuiSystem();
         GuiSystem(const GuiSystem&) = default;
         GuiSystem(GuiSystem&&) = default;
         GuiSystem& operator=(const GuiSystem&) = default;

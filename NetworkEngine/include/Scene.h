@@ -7,6 +7,8 @@ namespace GDE
 {
     namespace Scene
     {
+        constexpr uint32_t CLIENT_SIDE_ONLY = UINT32_MAX;
+        
         EntityRef createEntity(const Description& description, const EntityRef& parent, uint32_t id = 0);
         EntityRef createEntity(const Description& description, const EntityRef& parent, std::string_view templateName, uint32_t id = 0);
         EntityRef addEntityToRoot(const Description& description);

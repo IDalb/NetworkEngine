@@ -26,7 +26,9 @@ namespace GDE
 
             static ClientNetworkSystem& getInstance();
 
-            std::atomic_uint32_t _id = 0;
+            std::atomic_uint32_t _netId = 0;
+            std::atomic_uint32_t _gameId = 0;
+
         private:
             NetworkAddress _address;
             NetworkConnection* _server;
@@ -42,12 +44,15 @@ namespace GDE
             const float _serverFpsMs = ((1 / 60.f) * 1000);
             float _currentFrameMs = 0;
 
-            static constexpr int LATENCY_BUFFER_SIZE = 60;
+            static constexpr int LATENCY_BUFFER_SIZE = 10;
             std::array<uint32_t, LATENCY_BUFFER_SIZE> _latencyBuffer;
             size_t _latencyBufferCurrentIndex = 0;
             std::mutex _latencyLock;
             float _latency = 0;
 
+            bool _connected = false;
+            std::atomic_bool _startGame = false;
+            bool _gameStarted = false;
             void ping();
             void SendInput();
     };

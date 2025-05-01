@@ -37,9 +37,9 @@ namespace GDE
 		return mouse_buttons_state_[id][button].state == State::HELD || mouse_buttons_state_[id][button].state == State::PRESSED;
 	}
 
-	//int ServerInputSystem::getAxis(const Key::Key negative, const Key::Key positive) {
-	//	return (isKeyHeld(negative) ? -1 : 0) + (isKeyHeld(positive) ? 1 : 0);
-	//}
+	int ServerInputSystem::getAxis(const Key::Key negative, const Key::Key positive, uint32_t id) {
+		return (isKeyHeld(negative, id) ? -1 : 0) + (isKeyHeld(positive, id) ? 1 : 0);
+	}
 
 
 	Magnum::Vector2i ServerInputSystem::getScreenMousePosition(uint32_t id)

@@ -1,0 +1,9 @@
+- name: Camera
+  tag: camera
+  description:
+    children: ~
+    components:
+      Transform:
+      Camera:
+        aspect_ratio: 1.7777778
+        far_distance: 1000

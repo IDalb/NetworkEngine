@@ -12,7 +12,8 @@ namespace Server
 		BallShootComponent(GDE::Entity& parent) : GDE::Component(parent) {}
 		void setup(const GDE::ComponentDescription& init_value) override {}
 		void updateLogic(const GDE::Timing& timing);
-
+		void resolve() override;
 	private:
+		uint32_t _netId;
 	};
 }

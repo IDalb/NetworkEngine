@@ -105,6 +105,8 @@ namespace GDE
 
     void Game::keyPressEvent(KeyEvent& event)
     {
+        if (event.isRepeated())
+            return;
         if (GuiSystem::_exist)
             if (GuiSystem::getInstance().keyPressEvent(event))
                 return;
@@ -113,6 +115,8 @@ namespace GDE
 
     void Game::keyReleaseEvent(KeyEvent& event)
     {
+        if (event.isRepeated())
+            return;
         if (GuiSystem::_exist)
             if (GuiSystem::getInstance().keyReleaseEvent(event))
                 return;
@@ -189,10 +193,7 @@ namespace GDE
         registerComponent();
         setupLinkingContext();
 
-        for (auto& pair : componentLinkingContext)
-        {
-            reverseComponentLinkingContext.insert({ pair.second, pair.first });
-        }
+        Scene::getEntityFromId(0);
 
         setupScene();
 

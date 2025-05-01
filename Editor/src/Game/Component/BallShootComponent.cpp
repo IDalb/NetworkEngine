@@ -9,7 +9,7 @@ namespace Game
 {
 	void BallShootComponent::updateLogic(const GDE::Timing& timing)
 	{
-		if (GDE::InputSystem::getInstance().isMouseButtonPressed(GDE::Mouse::LEFT))
+		if (GDE::InputSystem::getInstance().isMouseButtonPressed(GDE::Mouse::Button::LEFT))
 		{
 			GDE::Description descr = GDE::Descr::load(std::string(SOURCE_DIR) + "/Editor/data/Game/template/ball.yaml");
 			auto camera_transform = GDE::Scene::findEntityWithTag("camera")->getComponent<GDE::TransformComponent>();

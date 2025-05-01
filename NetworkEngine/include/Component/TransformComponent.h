@@ -23,6 +23,7 @@ namespace GDE
         
 
         float _lastFrameDuration = (1 / 60.f) * 1000;
+        int sameValueCounter = 0;
 
         uint32_t lastSnapshotIndex = 0;
         enum Field

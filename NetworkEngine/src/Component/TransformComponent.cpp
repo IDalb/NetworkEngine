@@ -37,6 +37,7 @@ namespace GDE
 
                 _dRot = currentEuler - oldEuler;
                 _dRot /= (_interpolationRotationRef[1].second - _interpolationRotationRef[0].second);
+                //_dRot *= 0.85;
             }
         }
 
@@ -84,11 +85,17 @@ namespace GDE
             _rotationVector.x() = init_value.parameters.at("rotation")[0].as<float>();
             _rotationVector.y() = init_value.parameters.at("rotation")[1].as<float>();
 
-            //if (owner().getComponent<CameraComponent>() == nullptr) 
             {
-                _transform->rotateX(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[0].as<float>())));
-                _transform->rotateY(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[1].as<float>())));
-                _transform->rotateZ(Magnum::Rad(glm::radians(init_value.parameters.at("rotation")[2].as<float>())));
+                float x = glm::radians(init_value.parameters.at("rotation")[0].as<float>());
+                float y = glm::radians(init_value.parameters.at("rotation")[1].as<float>());
+                float z = glm::radians(init_value.parameters.at("rotation")[2].as<float>());
+
+                // Create quaternion from Euler angles (Z * Y * X order, which is common)
+                Magnum::Quaternion q = Magnum::Quaternion::rotation(Magnum::Rad(z), Magnum::Vector3::zAxis()) *
+                    Magnum::Quaternion::rotation(Magnum::Rad(y), Magnum::Vector3::yAxis()) *
+                    Magnum::Quaternion::rotation(Magnum::Rad(x), Magnum::Vector3::xAxis());
+
+                _transform->rotate(q);
             }
 
         }
@@ -250,7 +257,15 @@ namespace GDE
         // Convert to a quaternion
         glm::quat rotation = glm::normalize(glm::quat_cast(glmRotationScale));
 
-        if (position != _serializationOldPosition || rotation != _serializationOldRotation)
+        if (position == _serializationOldPosition && rotation == _serializationOldRotation)
+        {
+            sameValueCounter++;
+        }
+        else
+        {
+            sameValueCounter = 0;
+        }
+        if(sameValueCounter < 60)
         {
             _serializationOldPosition = position;
             _serializationOldRotation = rotation;

@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Functions/Serialization.h"
 #include "System/InputSystem.h"
+#include "Game.h"
 namespace GDE
 {
 	ClientNetworkSystem& ClientNetworkSystem::getInstance()
@@ -31,15 +32,15 @@ namespace GDE
     {
         std::string msg;
         NetworkMessage::NetworkMessage messageType = NetworkMessage::INPUT;
-        msg.resize(sizeof(NetworkMessage::NetworkMessage) + sizeof(_id) + sizeof(uint32_t));
+        msg.resize(sizeof(NetworkMessage::NetworkMessage) + sizeof(_netId) + sizeof(uint32_t));
         memcpy(msg.data(), &messageType, sizeof(NetworkMessage::NetworkMessage));
-        memcpy(msg.data() + sizeof(NetworkMessage::NetworkMessage), &_id, sizeof(_id));
+        memcpy(msg.data() + sizeof(NetworkMessage::NetworkMessage), &_netId, sizeof(_netId));
         uint32_t inputFrame;
         {
             std::lock_guard<std::mutex> lock(_latencyLock);
-            inputFrame = _ServerLastFrame + uint32_t(_latency / _serverFpsMs) + 10;
+            inputFrame = _ServerLastFrame + uint32_t(_latency / _serverFpsMs) + 15;
         }
-        memcpy(msg.data() + sizeof(NetworkMessage::NetworkMessage)+ sizeof(_id), &inputFrame, sizeof(inputFrame));
+        memcpy(msg.data() + sizeof(NetworkMessage::NetworkMessage)+ sizeof(_netId), &inputFrame, sizeof(inputFrame));
 
         std::string inputKeys;
         inputKeys.resize(1);
@@ -71,13 +72,13 @@ namespace GDE
             if (mouseState.second.state == InputSystem::State::PRESSED || mouseState.second.state == InputSystem::State::RELEASED)
             {
                 buttonCount++;
-                uint8_t button = static_cast<uint16_t>(mouseState.first);
+                uint8_t button = static_cast<uint8_t>(mouseState.first);
                 if (mouseState.second.state == InputSystem::State::PRESSED)
                 {
                     button |= (1 << 7);
                 }
                 std::string mouseData;
-                mouseData.resize(sizeof(uint16_t));
+                mouseData.resize(sizeof(uint8_t));
                 memcpy(mouseData.data(), &button, sizeof(button));
                 mouseButtons += mouseData;
             }
@@ -99,7 +100,7 @@ namespace GDE
 
         msg += mouseData;
 
-        Network::send(msg, _server);
+        Network::send(msg, _server, true);
     }
 
     ClientNetworkSystem::ClientNetworkSystem()
@@ -118,56 +119,78 @@ namespace GDE
 
     void ClientNetworkSystem::iterate(const Timing& dt)
 	{
-        _currentFrameMs += dt._dt;
-        if (_currentFrameMs > _serverFpsMs)
+        if (_startGame)
         {
-            _currentFrameMs -= _serverFpsMs;
-            _ServerLastFrame++;
+            _startGame = false;
+            Game::_app->startGame();
+            _gameStarted = true;
         }
-
-
-
-        int dataIndex = 1;
+        if(_connected)
         {
-            std::lock_guard<std::mutex> lock(_dataLock);
-            if (_writeToFirstArray)
+            _currentFrameMs += dt._dt;
+            if (_currentFrameMs > _serverFpsMs)
             {
-                dataIndex = 0;
+                _currentFrameMs -= _serverFpsMs;
+                _ServerLastFrame++;
             }
-            _writeToFirstArray = !_writeToFirstArray;
-        }
-            
 
-        while (std::size(_serverData[dataIndex]) > 0)
-        {
-            char* data = _serverData[dataIndex].back().data() + 1;
-            uint32_t serverFrame;
-            memcpy(&serverFrame, data, sizeof(serverFrame));
+
+
+            int dataIndex = 1;
             {
-                std::lock_guard<std::mutex> lock(_latencyLock);
-                if (_ServerLastFrame < serverFrame || serverFrame < _ServerLastFrame - 5000)
+                std::lock_guard<std::mutex> lock(_dataLock);
+                if (_writeToFirstArray)
                 {
-                    _ServerLastFrame = serverFrame;
+                    dataIndex = 0;
                 }
+                _writeToFirstArray = !_writeToFirstArray;
             }
-            Scene::deserialize(data);
-            _serverData[dataIndex].pop_back();
-        }
 
-        ping();
-        SendInput();
+
+            while (std::size(_serverData[dataIndex]) > 0)
+            {
+                char* data = _serverData[dataIndex].back().data() + 1;
+                uint32_t serverFrame;
+                memcpy(&serverFrame, data, sizeof(serverFrame));
+                {
+                    std::lock_guard<std::mutex> lock(_latencyLock);
+                    if (_ServerLastFrame < serverFrame || serverFrame < _ServerLastFrame - 5000)
+                    {
+                        _ServerLastFrame = serverFrame;
+                    }
+                }
+                Scene::deserialize(data);
+                _serverData[dataIndex].pop_back();
+            }
+
+            ping();
+            SendInput();
+        }
+        else
+        {
+            if (_gameStarted)
+            {
+                _gameStarted = false;
+                Game::_app->endGame();
+            }
+        }
 	}
 
 	void ClientNetworkSystem::connect(const std::string& ip, uint16_t port, NetworkAddressType addressType)
 	{
+        _connected = true;
+        _loop = true;
         Network::initClientTargetAddress(_address, addressType, port, ip);
 		_host = Network::createHost(static_cast<NetworkAddressType>(_address.type), nullptr, 1);
 		_server = Network::connect(&_address, _host);
+        if (_receiveThread.joinable())
+            _receiveThread.join();
         _receiveThread = std::thread(receiveThread, std::ref(*this));
 	}
 
 	void ClientNetworkSystem::disconnect()
 	{
+        _connected = false;
         _loop = false;
         if (_receiveThread.joinable())
         {
@@ -205,11 +228,23 @@ namespace GDE
                     {
                     case NetworkMessage::CONNECTION:
                     {
-                        uint32_t serverLastFrame;
+                        uint32_t serverLastFrame, gameId;
                         memcpy(&serverLastFrame, data.data() + sizeof(NetworkMessage::NetworkMessage), sizeof(uint32_t));
+                        memcpy(&gameId, data.data() + sizeof(NetworkMessage::NetworkMessage) + sizeof(uint32_t), sizeof(uint32_t));
                         
                         
                         clientSystem._ServerLastFrame = serverLastFrame;
+                        clientSystem._gameId = gameId;
+
+                        std::string data;
+                        data.resize(sizeof(NetworkMessage::NetworkMessage) + 2 * sizeof(uint32_t));
+                        uint32_t netId = clientSystem._netId;
+                        NetworkMessage::NetworkMessage connection = NetworkMessage::CONNECTION;
+
+                        memcpy(data.data(), &connection, sizeof(connection));
+                        memcpy(data.data() + sizeof(NetworkMessage::NetworkMessage), &gameId, sizeof(gameId));
+                        memcpy(data.data() + sizeof(NetworkMessage::NetworkMessage) + sizeof(gameId), &netId, sizeof(netId));
+                        Network::send(data, clientSystem._server, true);
                     }
                     break;
                     case NetworkMessage::SNAPSHOT:
@@ -236,13 +271,16 @@ namespace GDE
                             uint32_t sum = 0;
                             for (size_t i = 0; i < LATENCY_BUFFER_SIZE; i++)
                             {
-                                sum += (clientSystem._latencyBuffer[i] / 2.f);
+                                sum += (clientSystem._latencyBuffer[i]);
                             }
                             std::lock_guard<std::mutex> lock(clientSystem._latencyLock);
-                            clientSystem._latency = static_cast<float>(sum) / LATENCY_BUFFER_SIZE;
+                            clientSystem._latency = (static_cast<float>(sum) / LATENCY_BUFFER_SIZE) / 2.f;
                         }
 
                     }
+                        break;
+                    case NetworkMessage::START:
+                        clientSystem._startGame = true;
                         break;
                     default:
                         break;
@@ -251,18 +289,16 @@ namespace GDE
                 }
                 break;
                 case NETWORK_EVENT_TYPE_DISCONNECT:
-                    printf("(Client) Disconnected from server.\n");
+                    clientSystem._connected = false;
                     clientSystem._loop = false;
                     return;
 
                 case NETWORK_EVENT_TYPE_DISCONNECT_TIMEOUT:
-                    printf("(Client) Disconnected from server (timed out).\n");
+                    clientSystem._connected = false;
                     clientSystem._loop = false;
                     return;
                 }
-            }
-            // TODO : Ping
-            
+            }            
         }
     }
 }
