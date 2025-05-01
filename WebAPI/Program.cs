@@ -58,7 +58,7 @@ if (app.Environment.IsDevelopment()) {
 var users = app.MapGroup("/users");
 var stats = app.MapGroup("/stats");
 var achievements = app.MapGroup("/achievements");
-var match = app.MapGroup("/matchs");
+var match = app.MapGroup("/matches");
 
 app.MapGet("/", () => "Hello World!");
 app.MapPost("/login", RequestLogin);

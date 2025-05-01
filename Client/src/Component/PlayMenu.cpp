@@ -12,12 +12,13 @@ void Client::PlayMenu::setup(const GDE::ComponentDescription& init_value)
     // Achievements setup
     _achievements.clear();
 
+    // API CALL : achievements
     ostringstream request;
     request << std::string(WEB_API_URL)
         << "achievements/user/"
         << GDE::ClientNetworkSystem::getInstance()._netId;
 
-    if (cpr::Response response = cpr::Get(cpr::Url{request.str()}); response.status_code == 200) {
+    if (cpr::Response response = Get(cpr::Url{request.str()}); response.status_code == 200) {
         nlohmann::json r_data = nlohmann::json::parse(response.text);
         auto achievements_info = YAML::LoadFile(std::string(SOURCE_DIR) + "/Client/data/achievements.yaml");
 
@@ -40,7 +41,7 @@ void Client::PlayMenu::update(const GDE::Timing& dt)
     ImGui::Begin("Main Menu");
 
     // Calculate width for panels (third of window)
-    float panelWidth = ImGui::GetContentRegionAvail().x * 0.3f;
+    float panelWidth = ImGui::GetContentRegionAvail().x * 0.4f;
 
     // Left Panel: Play Button
     ImGui::BeginChild("LeftPanel", ImVec2(panelWidth, 0), true);
@@ -53,13 +54,42 @@ void Client::PlayMenu::update(const GDE::Timing& dt)
 
     if (ImGui::Button("Play", ImVec2(-FLT_MIN, 0))) 
     {
-        // API CALL
-        // get server ip and port to connect to is
-        const std::string ip = "127.0.0.1";
-        const uint16_t port = 1234;
+        // API CALL : get server
+        // get ip and port to connect to is
+        cpr::Response rGetServer = Get(cpr::Url{std::string(WEB_API_URL) + "matches/find"});
 
-        GDE::ClientNetworkSystem::getInstance().connect(ip, port, GDE::NetworkAddressType::NETWORK_ADDRESS_TYPE_ANY);
-        _waiting = true;
+        if (rGetServer.status_code != 200) {
+            _serverError = true;
+        }
+        else {
+            nlohmann::json r_data = nlohmann::json::parse(rGetServer.text);
+            const std::string ip = r_data["ip"];
+            const uint16_t port = r_data["port"];
+
+            cout << "IP address: " << ip << " Port: " << port << endl;
+
+            // API CALL : make player join the server
+            ostringstream request;
+            request << std::string(WEB_API_URL)
+                << "matches/connect/"
+                << r_data["id"];
+
+            ostringstream playerId; playerId << GDE::ClientNetworkSystem::getInstance()._netId;
+            cpr::Response rJoinServer = Post(
+                cpr::Url{request.str()},
+                cpr::Parameters{{"playerId", playerId.str()}}
+            );
+            if (rJoinServer.status_code != 200) {
+                cout << "Error " << rJoinServer.status_code << " when trying to join the server" << endl;
+            }
+
+            GDE::ClientNetworkSystem::getInstance().connect(ip, port, GDE::NetworkAddressType::NETWORK_ADDRESS_TYPE_ANY);
+            _waiting = true;
+        }
+    }
+    if (_serverError)
+    {
+        ImGui::Text("Unable to find a server");
     }
     if (endDisable)
     {
