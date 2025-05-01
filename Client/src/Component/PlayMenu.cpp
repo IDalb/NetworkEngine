@@ -1,22 +1,46 @@
 #include "Component/PlayMenu.h"
 #include <imgui.h>
+#include <iostream>
 #include <Scene.h>
-#include "source_dir.h"
 #include <System/ClientNetworkSystem.h>
+#include <cpr/cpr.h>
+#include <Utils/json.hpp>
+#include "Client.h"
 
 void Client::PlayMenu::setup(const GDE::ComponentDescription& init_value)
 {
-    // API CALL
-    //remplire _achievements avec les achievements
+    // Achievements setup
+    _achievements.clear();
+
+    ostringstream request;
+    request << std::string(WEB_API_URL)
+        << "achievements/user/"
+        << GDE::ClientNetworkSystem::getInstance()._netId;
+
+    if (cpr::Response response = cpr::Get(cpr::Url{request.str()}); response.status_code == 200) {
+        nlohmann::json r_data = nlohmann::json::parse(response.text);
+        auto achievements_info = YAML::LoadFile(std::string(SOURCE_DIR) + "/Client/data/achievements.yaml");
+
+        for (int i = 0; i < r_data.size(); i++) {
+            if (auto info = achievements_info[static_cast<string>(r_data[i])]) {
+                _achievements.push_back(info["name"].as<string>() + ": " + info["description"].as<string>());
+            }
+            else {
+                _achievements.push_back(r_data[i]);
+            }
+        }
+    }
+    else {
+        _achievements.push_back("Achievements fetching error");
+    }
 }
 
 void Client::PlayMenu::update(const GDE::Timing& dt)
-{// Dummy achievements data
-
+{
     ImGui::Begin("Main Menu");
 
-    // Calculate width for panels (half of window)
-    float panelWidth = ImGui::GetContentRegionAvail().x * 0.5f;
+    // Calculate width for panels (third of window)
+    float panelWidth = ImGui::GetContentRegionAvail().x * 0.3f;
 
     // Left Panel: Play Button
     ImGui::BeginChild("LeftPanel", ImVec2(panelWidth, 0), true);

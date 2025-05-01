@@ -4,9 +4,9 @@
 #include "source_dir.h"
 #include <System/ClientNetworkSystem.h>
 #include <cpr/cpr.h>
-#include "Utils/json.hpp"
 
-constexpr const char * WEB_API_URL = "http://localhost:5194/";
+#include "Client.h"
+#include "Utils/json.hpp"
 
 void Client::LoginMenu::setup(const GDE::ComponentDescription& init_value)
 {

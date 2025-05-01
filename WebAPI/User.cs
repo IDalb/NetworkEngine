@@ -9,28 +9,19 @@ public class User
 
 
     // Returns the list of changes
-    public AchievementChange[] UpdateAchievements(GameDb db) {
-        var changes = new List<AchievementChange>();
+    public int[] UpdateAchievements(GameDb db) {
+        var playerAchievements = new List<int>();
         
         var achievements = db.Achievements.Select(x => x).ToList();
         
         foreach(Achievement achievement in achievements) {
-            if (achievement.CheckAchievement(Id, db)) {
-                if (Achievements.Contains(achievement.Id)) continue;
-                
-                // Grant a new achievement
-                Achievements.Add(achievement.Id);
-                changes.Add(new AchievementChange(achievement.Id, true));
-            }
-            else {
-                if (!Achievements.Contains(achievement.Id)) continue;
-
-                // Revoke an achievement
-                Achievements.Remove(achievement.Id);
-                changes.Add(new AchievementChange(achievement.Id, false));
-            }
+            if (achievement.CheckAchievement(Id, db))
+                playerAchievements.Add(achievement.Id);
         }
         
-        return changes.ToArray();
+        Achievements = playerAchievements;
+        db.SaveChanges();
+        
+        return playerAchievements.ToArray();
     }
 }

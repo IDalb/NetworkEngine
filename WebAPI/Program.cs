@@ -76,6 +76,7 @@ stats.MapPut("/{playerId}", UpdateUserStatistic);
 
 achievements.MapGet("/", GetAllAchievements);
 achievements.MapGet("/{id}", GetAchievement);
+achievements.MapGet("/user/{id}", GetUserAchievements);
 
 match.MapGet("/", GetAllMatches);
 match.MapGet("/{id}", GetMatch);
@@ -232,6 +233,21 @@ static async Task<IResult> GetAchievement(int id, GameDb db) {
     var stat = await db.Achievements.Where(x => x.Id == id).FirstOrDefaultAsync();
     if (stat == null) return Results.NotFound();
     return TypedResults.Ok(stat);
+}
+
+static async Task<IResult> GetUserAchievements(int id, GameDb db) {
+    if (await db.Users.FindAsync(id) is not User user)
+        return Results.NotFound();
+    
+    int[] achievementsId = user.UpdateAchievements(db);
+    List<String> achievements = [];
+    
+    foreach (var aId in achievementsId) {
+        if (await db.Achievements.FindAsync(aId) is not Achievement a) continue;
+        achievements.Add(a.Name);
+    }
+
+    return Results.Ok(achievements);
 }
 
 static async Task<IResult> GetAllMatches(GameDb db) {
