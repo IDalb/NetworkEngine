@@ -172,7 +172,7 @@ IResult RequestLogin(UserDTO credentials, GameDb db)
     if (user is null) return Results.NotFound();
 
     var token = GenerateJwt(user);
-    return Results.Ok(new { token });
+    return Results.Ok(new { user.Id, token });
 }
 
 string GenerateJwt(User user) {
