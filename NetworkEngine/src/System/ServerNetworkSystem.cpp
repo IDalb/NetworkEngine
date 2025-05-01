@@ -27,6 +27,7 @@ namespace GDE
         Scene::clear();
         Game::_app->setupScene();
         _gameStarted = false;
+        ServerInputSystem::getInstance().clear();
         deleteFromWebApi();
         registerToWebApi();
     }
@@ -294,8 +295,10 @@ namespace GDE
                         uint32_t gameId, netId;
                         memcpy(&gameId, data.data() + +sizeof(NetworkMessage::NetworkMessage), sizeof(gameId));
                         memcpy(&netId, data.data() + +sizeof(NetworkMessage::NetworkMessage) + sizeof(gameId), sizeof(netId));
-                    
-                        serverSystem._gameIdToNetId.at(gameId) = netId;
+                        {
+                            std::lock_guard<std::mutex> lock(serverSystem._gameIdToNetIdLock);
+                            serverSystem._gameIdToNetId.at(gameId) = netId;
+                        }
                     }
                     break;
                     case NetworkMessage::INPUT:

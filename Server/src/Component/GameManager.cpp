@@ -22,11 +22,11 @@ void Server::GameManager::addPoint(uint32_t player)
 void Server::GameManager::saveStats(uint32_t winner)
 {
 	// API CALL : save stats
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < GDE::ServerNetworkSystem::getInstance()._gameIdToNetId.size(); i++)
 	{
 		uint32_t playerNetId = GDE::ServerNetworkSystem::getInstance()._gameIdToNetId[i];
 
-		std::ostringstream request;
+		std::ostringstream request, update_request;
 		std::ostringstream request_body;
 
 		// Get data
@@ -56,8 +56,7 @@ void Server::GameManager::saveStats(uint32_t winner)
 		float won = static_cast<float>(nlohmann::json::parse(rWon.text));
 
 		// Update values
-		request.clear();
-		request << std::string(constants::WEB_API_URL) << "stats/" << playerNetId;
+		update_request << std::string(constants::WEB_API_URL) << "stats/" << playerNetId;
 
 		// Cubes expelled
 		request_body.clear();
@@ -66,7 +65,7 @@ void Server::GameManager::saveStats(uint32_t winner)
 		   << R"("value": )" << cubes + _points[i]
 		   << "}";
 		cpr::Response rCubesPost = Put(
-			cpr::Url{request.str()},
+			cpr::Url{ update_request.str()},
 			cpr::Header{{"Content-Type", "application/json"}},
 			cpr::Body{request_body.str()}
 		);
@@ -74,13 +73,14 @@ void Server::GameManager::saveStats(uint32_t winner)
 			cout << "Error: " << rCubesPost.status_code << " when updating stat 'cubesExpelled'"<< endl;
 
 		// Games played
+		request_body.str("");
 		request_body.clear();
 		request_body << "{"
 		   << R"("name": "gamesPlayed")" << ", "
 		   << R"("value": )" << played + 1
 		   << "}";
 		cpr::Response rPlayedPost = Put(
-			cpr::Url{request.str()},
+			cpr::Url{ update_request.str()},
 			cpr::Header{{"Content-Type", "application/json"}},
 			cpr::Body{request_body.str()}
 		);
@@ -90,13 +90,14 @@ void Server::GameManager::saveStats(uint32_t winner)
 		// Gams won
 		if (winner == i)
 		{
+			request_body.str("");
 			request_body.clear();
 			request_body << "{"
 			   << R"("name": "gamesWon")" << ", "
 			   << R"("value": )" << won + 1
 			   << "}";
 			cpr::Response rWonPost = Put(
-				cpr::Url{request.str()},
+				cpr::Url{ update_request.str()},
 				cpr::Header{{"Content-Type", "application/json"}},
 				cpr::Body{request_body.str()}
 			);

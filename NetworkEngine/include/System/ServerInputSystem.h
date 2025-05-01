@@ -253,6 +253,18 @@ namespace GDE
 			_mouseVelocity[id] = vel;
 		}
 
+		void clear()
+		{
+			keys_state_.clear();
+			mouse_buttons_state_.clear();
+			updated_keys_.clear();
+			updated_mouse_buttons_.clear();
+			_inputKey.clear();
+			_inputMouseButton.clear();
+			_inputMousePos.clear();
+			_inputMouseVelocity.clear();
+		}
+
 	private:
 		// key : frame
 		std::vector<std::pair<uint32_t, InputKeyData>> _inputKey;
