@@ -153,8 +153,7 @@ namespace GDE
         _host = Network::createHost(NetworkAddressType::NETWORK_ADDRESS_TYPE_ANY, &_address, maxClient);
         _receiveThread = std::thread(receiveThread, std::ref(*this));
 
-        // API CALL
-        // register to the api
+        // API CALL : register to the api
 
         GDE::Description apiConfig = GDE::Descr::load(std::string(SOURCE_DIR) + "/config.yaml");
         _apiIp = apiConfig["api_ip"].as<std::string>();

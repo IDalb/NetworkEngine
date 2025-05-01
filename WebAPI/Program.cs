@@ -101,6 +101,10 @@ static async Task<IResult> GetUser(int id, GameDb db) {
 }
 
 static async Task<IResult> CreateUser(UserDTO userDTO, GameDb db) {
+    // Check if a user with that username already exists
+    if (await db.Users.Where(x => x.Username == userDTO.Username).FirstOrDefaultAsync() is User)
+        return Results.Forbid();
+
     var user = new User {
         Username = userDTO.Username,
         Password = userDTO.Password

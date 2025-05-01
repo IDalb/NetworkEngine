@@ -17,5 +17,6 @@ namespace Server
 		std::array<unsigned int, 4> _points{ 0,0,0,0 };
 		
 		void saveStats(uint32_t winner);
+		void resetServer();
 	};
 }

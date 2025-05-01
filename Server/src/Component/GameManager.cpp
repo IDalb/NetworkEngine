@@ -14,6 +14,7 @@ void Server::GameManager::addPoint(uint32_t player)
 	{
 		saveStats(player);
 		GDE::ServerNetworkSystem::getInstance().disconnectEverybody();
+		resetServer();
 	}
 }
 
@@ -103,3 +104,8 @@ void Server::GameManager::saveStats(uint32_t winner)
 		}
 	}
 }
+
+void Server::GameManager::resetServer() {
+
+}
+
