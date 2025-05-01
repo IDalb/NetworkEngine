@@ -7,6 +7,6 @@ EDITOR project : The starting project is editor, you can generate and play the g
 
 Based on [MagnumBootstrap](https://github.com/VALERE91/MagnumBootstrap) by [VALERE91](https://github.com/VALERE91)
 
-Made by
-GONON Lucas GONL14120200
-DALBERTO ISAAC
+**Made by**  
+GONON Lucas GONL14120200  
+DALBERTO ISAAC DALI22100300
