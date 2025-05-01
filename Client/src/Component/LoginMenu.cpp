@@ -5,6 +5,7 @@
 #include <System/ClientNetworkSystem.h>
 void Client::LoginMenu::setup(const GDE::ComponentDescription& init_value)
 {
+
 }
 
 void Client::LoginMenu::update(const GDE::Timing& dt)

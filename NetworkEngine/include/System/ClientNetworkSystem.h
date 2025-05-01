@@ -29,6 +29,8 @@ namespace GDE
             std::atomic_uint32_t _netId = 0;
             std::atomic_uint32_t _gameId = 0;
 
+            const std::string& getApiIp() const { return _apiIp; }
+            uint32_t getApiPort() const { return _apiPort; }
         private:
             NetworkAddress _address;
             NetworkConnection* _server;
@@ -55,6 +57,9 @@ namespace GDE
             bool _gameStarted = false;
             void ping();
             void SendInput();
+
+            std::string _apiIp;
+            uint32_t _apiPort;
     };
 }
 

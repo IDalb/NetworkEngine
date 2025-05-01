@@ -152,6 +152,13 @@ namespace GDE
         Network::initServerAddress(_address, addressType, port);
         _host = Network::createHost(NetworkAddressType::NETWORK_ADDRESS_TYPE_ANY, &_address, maxClient);
         _receiveThread = std::thread(receiveThread, std::ref(*this));
+
+        // API CALL
+        // register to the api
+
+        GDE::Description apiConfig = GDE::Descr::load(std::string(SOURCE_DIR) + "/config.yaml");
+        _apiIp = apiConfig["api_ip"].as<std::string>();
+        _apiPort = apiConfig["api_port"].as<uint32_t>();
     }
 
     void ServerNetworkSystem::destroyServer()
