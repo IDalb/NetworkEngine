@@ -79,10 +79,11 @@ namespace GameRestApi.Migrations
                 columns: new[] { "Id", "Aggregation", "Name", "StatisticName", "ThresholdValue" },
                 values: new object[,]
                 {
-                    { 1, 0, "win1", "gamesWon", 1f },
-                    { 2, 0, "win5", "gamesWon", 5f },
-                    { 3, 0, "cube20", "cubesExpelled", 20f },
-                    { 4, 1, "time30", "bestTime", 30f }
+                    { 1, 0, "play10", "gamesPlayed", 10f },
+                    { 2, 0, "win1", "gamesWon", 1f },
+                    { 3, 0, "win5", "gamesWon", 5f },
+                    { 4, 0, "cube20", "cubesExpelled", 20f },
+                    { 5, 1, "time30", "bestTime", 30f }
                 });
         }
 

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GameRestApi.Migrations
 {
     [DbContext(typeof(GameDb))]
-    [Migration("20250501101437_AddPlay10Achievement")]
-    partial class AddPlay10Achievement
+    [Migration("20250501135544_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
