@@ -205,11 +205,18 @@ static async Task<IResult> GetStatistic(int id, GameDb db) {
     return TypedResults.Ok(await db.Statistics.Where(x => x.Id == id).ToListAsync());
 }
 
-static async Task<IResult> GetUserStatistics(int playerId, GameDb db) {
+static async Task<IResult> GetUserStatistics(int playerId, string statName, GameDb db) {
     if (await db.Users.Where(x => x.Id == playerId).FirstOrDefaultAsync() == null)
         return Results.NotFound();
     
-    return TypedResults.Ok(await db.Statistics.Where(x => x.PlayerId == playerId).ToListAsync());
+    if (await db.Statistics.Where(x =>
+        x.PlayerId == playerId && x.Name == statName
+    ).FirstOrDefaultAsync() is Statistic stat) {
+        return TypedResults.Ok(stat.Value);
+    }
+    else {
+        return TypedResults.Ok(await db.Statistics.Where(x => x.PlayerId == playerId).ToListAsync());        
+    }
 }
 
 static async Task<IResult> UpdateUserStatistic(int playerId, StatisticDTO statDto, GameDb db) {

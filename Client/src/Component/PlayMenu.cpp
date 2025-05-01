@@ -66,8 +66,6 @@ void Client::PlayMenu::update(const GDE::Timing& dt)
             const std::string ip = r_data["ip"];
             const uint16_t port = r_data["port"];
 
-            cout << "IP address: " << ip << " Port: " << port << endl;
-
             // API CALL : make player join the server
             ostringstream request;
             request << std::string(WEB_API_URL)
