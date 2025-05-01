@@ -22,6 +22,7 @@ namespace Client
 		void update(const GDE::Timing& dt) override;
 	private:
 		std::vector<std::string> _achievements;
+		bool _serverError = false;
 		bool _waiting = false;
 	};
 }

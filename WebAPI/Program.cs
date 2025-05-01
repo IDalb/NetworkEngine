@@ -58,7 +58,7 @@ if (app.Environment.IsDevelopment()) {
 var users = app.MapGroup("/users");
 var stats = app.MapGroup("/stats");
 var achievements = app.MapGroup("/achievements");
-var match = app.MapGroup("/matchs");
+var match = app.MapGroup("/matches");
 
 app.MapGet("/", () => "Hello World!");
 app.MapPost("/login", RequestLogin);
@@ -76,6 +76,7 @@ stats.MapPut("/{playerId}", UpdateUserStatistic);
 
 achievements.MapGet("/", GetAllAchievements);
 achievements.MapGet("/{id}", GetAchievement);
+achievements.MapGet("/user/{id}", GetUserAchievements);
 
 match.MapGet("/", GetAllMatches);
 match.MapGet("/{id}", GetMatch);
@@ -100,6 +101,10 @@ static async Task<IResult> GetUser(int id, GameDb db) {
 }
 
 static async Task<IResult> CreateUser(UserDTO userDTO, GameDb db) {
+    // Check if a user with that username already exists
+    if (await db.Users.Where(x => x.Username == userDTO.Username).FirstOrDefaultAsync() is User)
+        return Results.Forbid();
+
     var user = new User {
         Username = userDTO.Username,
         Password = userDTO.Password
@@ -172,7 +177,7 @@ IResult RequestLogin(UserDTO credentials, GameDb db)
     if (user is null) return Results.NotFound();
 
     var token = GenerateJwt(user);
-    return Results.Ok(new { token });
+    return Results.Ok(new { user.Id, token });
 }
 
 string GenerateJwt(User user) {
@@ -204,11 +209,18 @@ static async Task<IResult> GetStatistic(int id, GameDb db) {
     return TypedResults.Ok(await db.Statistics.Where(x => x.Id == id).ToListAsync());
 }
 
-static async Task<IResult> GetUserStatistics(int playerId, GameDb db) {
+static async Task<IResult> GetUserStatistics(int playerId, string statName, GameDb db) {
     if (await db.Users.Where(x => x.Id == playerId).FirstOrDefaultAsync() == null)
         return Results.NotFound();
     
-    return TypedResults.Ok(await db.Statistics.Where(x => x.PlayerId == playerId).ToListAsync());
+    if (await db.Statistics.Where(x =>
+        x.PlayerId == playerId && x.Name == statName
+    ).FirstOrDefaultAsync() is Statistic stat) {
+        return TypedResults.Ok(stat.Value);
+    }
+    else {
+        return TypedResults.Ok(await db.Statistics.Where(x => x.PlayerId == playerId).ToListAsync());        
+    }
 }
 
 static async Task<IResult> UpdateUserStatistic(int playerId, StatisticDTO statDto, GameDb db) {
@@ -232,6 +244,21 @@ static async Task<IResult> GetAchievement(int id, GameDb db) {
     var stat = await db.Achievements.Where(x => x.Id == id).FirstOrDefaultAsync();
     if (stat == null) return Results.NotFound();
     return TypedResults.Ok(stat);
+}
+
+static async Task<IResult> GetUserAchievements(int id, GameDb db) {
+    if (await db.Users.FindAsync(id) is not User user)
+        return Results.NotFound();
+    
+    int[] achievementsId = user.UpdateAchievements(db);
+    List<String> achievements = [];
+    
+    foreach (var aId in achievementsId) {
+        if (await db.Achievements.FindAsync(aId) is not Achievement a) continue;
+        achievements.Add(a.Name);
+    }
+
+    return Results.Ok(achievements);
 }
 
 static async Task<IResult> GetAllMatches(GameDb db) {

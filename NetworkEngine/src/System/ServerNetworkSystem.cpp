@@ -159,8 +159,7 @@ namespace GDE
         _serverPort = port;
         _serverIp = ip;
 
-        // API CALL
-        // register to the api
+        // API CALL : register to the api
 
         GDE::Description apiConfig = GDE::Descr::load(std::string(SOURCE_DIR) + "/config.yaml");
         _apiIp = apiConfig["api_ip"].as<std::string>();

@@ -19,36 +19,43 @@ public class GameDb : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Hard-coded achievements
-        var win1 = new Achievement {
+        var play10 = new Achievement {
             Id = 1,
+            Name = "play10",
+            StatisticName = "gamesPlayed",
+            Aggregation = AchievementAggregation.GREATER_THAN,
+            ThresholdValue = 10f
+        };
+        var win1 = new Achievement {
+            Id = 2,
             Name = "win1",
             StatisticName = "gamesWon",
             Aggregation = AchievementAggregation.GREATER_THAN,
             ThresholdValue = 1f
         };
         var win5 = new Achievement {
-            Id = 2,
+            Id = 3,
             Name = "win5",
             StatisticName = "gamesWon",
             Aggregation = AchievementAggregation.GREATER_THAN,
             ThresholdValue = 5f
         };
         var cube20 = new Achievement {
-            Id = 3,
+            Id = 4,
             Name = "cube20",
             StatisticName = "cubesExpelled",
             Aggregation = AchievementAggregation.GREATER_THAN,
             ThresholdValue = 20f
         };
         var time30 = new Achievement {
-            Id = 4,
+            Id = 5,
             Name = "time30",
             StatisticName = "bestTime",
             Aggregation = AchievementAggregation.LESS_THAN,
             ThresholdValue = 30f
         };
 
-        modelBuilder.Entity<Achievement>().HasData(win1, win5, cube20, time30);
+        modelBuilder.Entity<Achievement>().HasData(play10, win1, win5, cube20, time30);
 
         base.OnModelCreating(modelBuilder);
     }

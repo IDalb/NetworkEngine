@@ -14,6 +14,7 @@
 #include "Component/PlayMenu.h"
 namespace Client
 {
+    constexpr const char * WEB_API_URL = "http://localhost:5194/";
     constexpr std::array<Magnum::Vector3, 4> PLAYERS_COLOR = { Magnum::Vector3(1,0,0), Magnum::Vector3(0,1,0) , Magnum::Vector3(0,0,1) , Magnum::Vector3(1,1,0) };
 
     class Client final : public GDE::Game

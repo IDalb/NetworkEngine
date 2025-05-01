@@ -27,6 +27,7 @@ namespace GDE
             static ClientNetworkSystem& getInstance();
 
             std::atomic_uint32_t _netId = 0;
+            std::string _netToken = "";
             std::atomic_uint32_t _gameId = 0;
 
             const std::string& getApiIp() const { return _apiIp; }

@@ -1,0 +1,16 @@
+---
+play10:
+  name: Grand joueur
+  description: Jouer 10 parties
+win1:
+  name: Médaille de bronze
+  description: Gagner une partie
+win5:
+  name: Médaiille d'or
+  description: Gagner 5 parties
+cube20:
+  name: Destructeur de cubes
+  description: Expluser 20 cubes
+time30:
+  name: Jeu express
+  description: Terminer une partie en moins de 30s

@@ -1,13 +1,3 @@
-public struct AchievementChange {
-    int AchievementId;
-    bool NewGrantedState;
-
-    public AchievementChange(int id, bool state) {
-        AchievementId = id;
-        NewGrantedState = state;
-    }
-}
-
 public enum AchievementAggregation {
     GREATER_THAN,   // Inclusive
     LESS_THAN       // Inclusive
