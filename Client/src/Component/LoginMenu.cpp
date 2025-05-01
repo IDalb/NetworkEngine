@@ -7,6 +7,7 @@
 
 #include "Client.h"
 #include "Utils/json.hpp"
+#include <GlobalConstants.h>
 
 void Client::LoginMenu::setup(const GDE::ComponentDescription& init_value)
 {
@@ -34,7 +35,7 @@ void Client::LoginMenu::update(const GDE::Timing& dt)
            << "}";
 
         cpr::Response r = cpr::Post(
-            cpr::Url{std::string(WEB_API_URL) + "login"},
+            cpr::Url{std::string(constants::WEB_API_URL) + "login"},
             cpr::Header{{"Content-Type", "application/json"}},
             cpr::Body{request_body.str()}
         );

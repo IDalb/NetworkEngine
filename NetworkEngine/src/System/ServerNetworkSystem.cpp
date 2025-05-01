@@ -6,8 +6,14 @@
 #include "System/ServerInputSystem.h"
 #include "Functions/Serialization.h"
 #include "Game.h"
+#include <cpr/cpr.h>
+#include "GlobalConstants.h"
+#include <iostream>
+#include "Utils/json.hpp"
 namespace GDE
 {
+
+
     ServerNetworkSystem& ServerNetworkSystem::getInstance()
     {
         static ServerNetworkSystem serverSystem;
@@ -21,6 +27,61 @@ namespace GDE
         Scene::clear();
         Game::_app->setupScene();
         _gameStarted = false;
+        deleteFromWebApi();
+        registerToWebApi();
+    }
+
+    void ServerNetworkSystem::registerToWebApi()
+    {
+        std::ostringstream request;
+
+        // Get data
+        request << std::string(constants::WEB_API_URL)
+            << "matches/connect";
+
+        // Build proper JSON body
+        std::ostringstream request_body;
+        request_body << "{"
+            << R"("ip": ")" << _serverIp << R"(",)"
+            << R"("port": ")" << _serverPort << R"(",)"
+            << R"("currentPlayers": [0])"
+            << "}";
+
+        // Send POST with proper headers
+        cpr::Response rJoinServer = cpr::Post(
+            cpr::Url{ request.str() },
+            cpr::Header{ {"Content-Type", "application/json"} },  // Fix 415
+            cpr::Body{ request_body.str() }
+        );
+
+        if (rJoinServer.status_code != 201) {
+            std::cout << "Error " << rJoinServer.status_code << " when trying to connect the server" << std::endl;
+        }
+        else
+        {
+            nlohmann::json r_data = nlohmann::json::parse(rJoinServer.text);
+            _apiId = r_data["id"];
+        }
+    }
+
+    void ServerNetworkSystem::deleteFromWebApi()
+    {
+        std::ostringstream request;
+
+        // Get data
+        request << std::string(constants::WEB_API_URL)
+            << "matches/disconnect/" << _apiId;
+
+     
+        // Send POST with proper headers
+        cpr::Response rJoinServer = cpr::Delete(
+            cpr::Url{ request.str() },
+            cpr::Header{ {"Content-Type", "application/json"} }
+        );
+
+        if (rJoinServer.status_code != 204) {
+            std::cout << "Error " << rJoinServer.status_code << " when trying to connect the server" << std::endl;
+        }
     }
 
     void ServerNetworkSystem::startGame()
@@ -40,6 +101,7 @@ namespace GDE
 
     ServerNetworkSystem::~ServerNetworkSystem()
     {
+        deleteFromWebApi();
         _loop = false;
         _receiveThread.join();
         if (_host != nullptr)
@@ -163,7 +225,8 @@ namespace GDE
 
         GDE::Description apiConfig = GDE::Descr::load(std::string(SOURCE_DIR) + "/config.yaml");
         _apiIp = apiConfig["api_ip"].as<std::string>();
-        _apiPort = apiConfig["api_port"].as<uint32_t>();
+
+        registerToWebApi();
     }
 
     void ServerNetworkSystem::destroyServer()

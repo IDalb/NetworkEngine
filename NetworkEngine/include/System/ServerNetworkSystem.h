@@ -35,6 +35,9 @@ namespace GDE
             
             const std::string& getServerIp() const { return _serverIp; }
             uint16_t getServerPort() const { return _serverPort; }
+
+            void registerToWebApi();
+            void deleteFromWebApi();
         private:
             NetworkAddress _address;
             NetworkHost* _host = nullptr;;
@@ -59,6 +62,8 @@ namespace GDE
 
             std::string _serverIp = "";
             uint16_t _serverPort = 0;
+
+            int _apiId = 0;
     };
 }
 

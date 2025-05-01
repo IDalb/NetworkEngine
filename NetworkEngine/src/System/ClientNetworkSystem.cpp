@@ -107,7 +107,6 @@ namespace GDE
     {
         GDE::Description apiConfig = GDE::Descr::load(std::string(SOURCE_DIR) + "/config.yaml");
         _apiIp = apiConfig["api_ip"].as<std::string>();
-        _apiPort = apiConfig["api_port"].as<uint32_t>();
         Network::initialize();
     }
 

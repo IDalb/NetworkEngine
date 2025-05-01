@@ -6,6 +6,7 @@
 #include "Server.h"
 #include <cpr/cpr.h>
 #include <Utils/json.hpp>
+#include <GlobalConstants.h>
 
 void Server::GameManager::addPoint(uint32_t player)
 {
@@ -29,7 +30,7 @@ void Server::GameManager::saveStats(uint32_t winner)
 		std::ostringstream request_body;
 
 		// Get data
-		request << std::string(WEB_API_URL)
+		request << std::string(constants::WEB_API_URL)
 			<< "stats/user/"
 			<< playerNetId;
 
@@ -56,7 +57,7 @@ void Server::GameManager::saveStats(uint32_t winner)
 
 		// Update values
 		request.clear();
-		request << std::string(WEB_API_URL) << "stats/" << playerNetId;
+		request << std::string(constants::WEB_API_URL) << "stats/" << playerNetId;
 
 		// Cubes expelled
 		request_body.clear();

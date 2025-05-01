@@ -6,7 +6,7 @@
 #include <cpr/cpr.h>
 #include <Utils/json.hpp>
 #include "Client.h"
-
+#include <GlobalConstants.h>
 void Client::PlayMenu::setup(const GDE::ComponentDescription& init_value)
 {
     // Achievements setup
@@ -14,7 +14,7 @@ void Client::PlayMenu::setup(const GDE::ComponentDescription& init_value)
 
     // API CALL : achievements
     ostringstream request;
-    request << std::string(WEB_API_URL)
+    request << std::string(constants::WEB_API_URL)
         << "achievements/user/"
         << GDE::ClientNetworkSystem::getInstance()._netId;
 
@@ -56,7 +56,7 @@ void Client::PlayMenu::update(const GDE::Timing& dt)
     {
         // API CALL : get server
         // get ip and port to connect to is
-        cpr::Response rGetServer = Get(cpr::Url{std::string(WEB_API_URL) + "matches/find"});
+        cpr::Response rGetServer = Get(cpr::Url{std::string(constants::WEB_API_URL) + "matches/find"});
 
         if (rGetServer.status_code != 200) {
             _serverError = true;
@@ -68,7 +68,7 @@ void Client::PlayMenu::update(const GDE::Timing& dt)
 
             // API CALL : make player join the server
             ostringstream request;
-            request << std::string(WEB_API_URL)
+            request << std::string(constants::WEB_API_URL)
                 << "matches/connect/"
                 << r_data["id"];
 
