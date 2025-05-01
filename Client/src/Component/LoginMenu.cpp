@@ -35,7 +35,7 @@ void Client::LoginMenu::update(const GDE::Timing& dt)
            << "}";
 
         cpr::Response r = cpr::Post(
-            cpr::Url{std::string(constants::WEB_API_URL) + "login"},
+            cpr::Url{constants::WEB_API_URL + "login"},
             cpr::Header{{"Content-Type", "application/json"}},
             cpr::Body{request_body.str()}
         );

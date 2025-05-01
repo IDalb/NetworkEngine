@@ -1,5 +1,5 @@
 #include "Server.h"
-
+#include "GlobalConstants.h"
 namespace Server
 {
     Server::Server(const Arguments& arguments) : Game(
@@ -9,6 +9,11 @@ namespace Server
         GDE::Windowed
     )
     {
+        GDE::Description apiConfig = GDE::Descr::load(std::string(SOURCE_DIR) + "/config.yaml");
+        std::string ip = apiConfig["api_ip"].as<std::string>();
+        std::string port = apiConfig["api_port"].as<std::string>();
+
+        constants::WEB_API_URL = "http://" + ip + ":" + port + "/";
     }
 
     void Server::setupSystem()

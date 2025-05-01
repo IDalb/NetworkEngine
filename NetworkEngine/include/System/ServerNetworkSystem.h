@@ -29,9 +29,6 @@ namespace GDE
 
             void setPlayerRequirement(int count) { _playerRequirement = count; }
             void disconnectEverybody();
-
-            const std::string& getApiIp() const { return _apiIp; }
-            uint32_t getApiPort() const { return _apiPort; }
             
             const std::string& getServerIp() const { return _serverIp; }
             uint16_t getServerPort() const { return _serverPort; }
@@ -56,9 +53,6 @@ namespace GDE
             bool _gameStarted = false;
 
             void startGame();
-
-            std::string _apiIp;
-            uint32_t _apiPort;
 
             std::string _serverIp = "";
             uint16_t _serverPort = 0;

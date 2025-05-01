@@ -30,7 +30,7 @@ void Server::GameManager::saveStats(uint32_t winner)
 		std::ostringstream request_body;
 
 		// Get data
-		request << std::string(constants::WEB_API_URL)
+		request << constants::WEB_API_URL
 			<< "stats/user/"
 			<< playerNetId;
 
@@ -56,7 +56,7 @@ void Server::GameManager::saveStats(uint32_t winner)
 		float won = static_cast<float>(nlohmann::json::parse(rWon.text));
 
 		// Update values
-		update_request << std::string(constants::WEB_API_URL) << "stats/" << playerNetId;
+		update_request << constants::WEB_API_URL << "stats/" << playerNetId;
 
 		// Cubes expelled
 		request_body.clear();

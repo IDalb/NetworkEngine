@@ -37,7 +37,7 @@ namespace GDE
         std::ostringstream request;
 
         // Get data
-        request << std::string(constants::WEB_API_URL)
+        request << constants::WEB_API_URL
             << "matches/connect";
 
         // Build proper JSON body
@@ -70,7 +70,7 @@ namespace GDE
         std::ostringstream request;
 
         // Get data
-        request << std::string(constants::WEB_API_URL)
+        request << constants::WEB_API_URL
             << "matches/disconnect/" << _apiId;
 
      
@@ -221,11 +221,6 @@ namespace GDE
         
         _serverPort = port;
         _serverIp = ip;
-
-        // API CALL : register to the api
-
-        GDE::Description apiConfig = GDE::Descr::load(std::string(SOURCE_DIR) + "/config.yaml");
-        _apiIp = apiConfig["api_ip"].as<std::string>();
 
         registerToWebApi();
     }
