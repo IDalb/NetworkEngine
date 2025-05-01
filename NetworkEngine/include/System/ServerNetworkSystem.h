@@ -18,7 +18,7 @@ namespace GDE
 
             void iterate(const Timing& dt) override;
 
-            void createServer(size_t maxClient, uint16_t port, NetworkAddressType addressType);
+            void createServer(const GDE::Description& config, NetworkAddressType addressType);
             void destroyServer();
 
             static void receiveThread(ServerNetworkSystem& serverSystem);
@@ -32,6 +32,9 @@ namespace GDE
 
             const std::string& getApiIp() const { return _apiIp; }
             uint32_t getApiPort() const { return _apiPort; }
+            
+            const std::string& getServerIp() const { return _serverIp; }
+            uint16_t getServerPort() const { return _serverPort; }
         private:
             NetworkAddress _address;
             NetworkHost* _host = nullptr;;
@@ -53,6 +56,9 @@ namespace GDE
 
             std::string _apiIp;
             uint32_t _apiPort;
+
+            std::string _serverIp = "";
+            uint16_t _serverPort = 0;
     };
 }
 

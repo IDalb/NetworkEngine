@@ -25,7 +25,9 @@ namespace Server
 
         GDE::InterpolationSystem::getInstance().setEnable(false);
 
-        GDE::ServerNetworkSystem::getInstance().createServer(4, 1234, GDE::NetworkAddressType::NETWORK_ADDRESS_TYPE_IPV6);
+        const GDE::Description serverConfig = GDE::Descr::load(std::string(SOURCE_DIR) + "/Server/server_config.yaml");
+
+        GDE::ServerNetworkSystem::getInstance().createServer(serverConfig, GDE::NetworkAddressType::NETWORK_ADDRESS_TYPE_IPV6);
     }
     void Server::setupLinkingContext()
     {

@@ -147,11 +147,17 @@ namespace GDE
         }
     }
 
-    void ServerNetworkSystem::createServer(size_t maxClient, uint16_t port, NetworkAddressType addressType)
+    void ServerNetworkSystem::createServer(const GDE::Description& config, NetworkAddressType addressType)
     {
+        std::string ip = config["server_ip"].as<std::string>();
+        uint16_t port = config["server_port"].as<uint16_t>();
+
         Network::initServerAddress(_address, addressType, port);
-        _host = Network::createHost(NetworkAddressType::NETWORK_ADDRESS_TYPE_ANY, &_address, maxClient);
+        _host = Network::createHost(NetworkAddressType::NETWORK_ADDRESS_TYPE_ANY, &_address, _playerRequirement);
         _receiveThread = std::thread(receiveThread, std::ref(*this));
+        
+        _serverPort = port;
+        _serverIp = ip;
 
         // API CALL
         // register to the api
